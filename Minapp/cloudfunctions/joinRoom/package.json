@@ -1,0 +1,9 @@
+{
+    "name": "joinRoom",
+    "version": "1.0.0",
+    "description": "Atomic Join Room",
+    "main": "index.js",
+    "dependencies": {
+        "wx-server-sdk": "latest"
+    }
+}

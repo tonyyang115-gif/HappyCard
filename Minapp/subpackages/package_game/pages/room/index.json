@@ -1,0 +1,13 @@
+{
+    "usingComponents": {
+        "avatar": "/components/avatar/index",
+        "btn": "/components/button/index",
+        "trend-chart": "/components/trend-chart/index"
+    },
+    "componentPlaceholder": {
+        "trend-chart": "view"
+    },
+    "navigationBarTitleText": "房间",
+    "enablePullDownRefresh": false,
+    "disableScroll": true
+}

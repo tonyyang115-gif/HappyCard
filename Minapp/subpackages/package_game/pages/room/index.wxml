@@ -1,0 +1,559 @@
+<page-meta page-style="{{ showScoreDetailModal || showTransferModal || showSettlementModal || showChartModal ? 'overflow: hidden;' : '' }}" />
+<view class="container room-container">
+  <!-- Logo (Top Left) -->
+  <view class="logo-container" style="position: absolute; top: calc(env(safe-area-inset-top) + 12px); left: 30rpx; z-index: 50; display: flex; flex-direction: row; align-items: center; gap: 8rpx;">
+        <view style="width: 70rpx; height: 70rpx; border-radius: 12rpx; overflow: hidden; display: flex; align-items: center; justify-content: center; background: transparent;">
+             <image src="{{appIconUrl}}" mode="aspectFit" style="width: 100%; height: 100%;" wx:if="{{appIconUrl}}"></image>
+        </view>
+        <text style="font-size: 30rpx; font-weight: bold; color: #3b82f6;">快乐打牌记</text>
+  </view>
+    <view class="header-bg" style="width: 100%; box-sizing: border-box;">
+        <!-- 连接状态指示器 -->
+        <view class="connection-status-bar" wx:if="{{loadingState.roomWatcher || loadingState.roundsWatcher}}">
+            <view class="status-dot {{loadingState.roomWatcher ? 'pulse' : ''}}"></view>
+            <text class="status-text" style="font-size: 12px; color: #999;">
+                {{loadingState.roomWatcher ? '房间数据同步中...' : '回合数据同步中...'}}
+            </text>
+        </view>
+        <!-- Profile Row -->
+    <view class="flex-row items-center gap-4 mb-4 mt-2">
+        <avatar url="{{userInfo.avatarUrl}}" size="xl" className="border-2 border-white"></avatar>
+        <view class="flex-col gap-4" style="margin-left: 12px;">
+            <text class="text-2xl font-bold text-gray-900 leading-none">{{userInfo.name}}</text>
+            <text class="text-sm text-gray-400" style="position: relative; left: 0rpx; top: 35rpx">欢迎使用，祝你玩的开心~</text>
+        </view>
+        <view class="ml-auto" bindtap="openProfile" style="flex-shrink: 0;">
+             <text class="profile-link">个人中心</text>
+        </view>
+    </view>
+    <view class="score-card mt-4">
+        <!-- Top Section -->
+        <view class="score-main relative z-10">
+            <view class="text-sm font-medium opacity-90 mb-4">我的积分</view>
+            <view class="text-6xl font-bold tracking-tight">{{myScore}}</view>
+        </view>
+
+        <!-- Floating Refresh Button -->
+        <view class="refresh-btn-absolute" bindtap="manualRefresh" wx:if="{{!isReadOnly}}">
+            <text class="refresh-icon">↺</text>
+        </view>
+
+        <!-- Footer Strip -->
+        <view class="score-footer relative" style="z-index: 60;">
+            <text>我的排名: {{myRank}}</text>
+            <view class="flex-row items-center gap-1" style="position: relative; z-index: 70;">
+                <view catchtap="openChartModal" class="flex-row items-center mr-3" style="padding: 10px; margin: -10px 0 -10px -10px; background: transparent; position: relative; z-index: 100;">
+                    <text>📈 走势</text>
+                </view>
+                <view style="width: 1px; height: 12px; background-color: rgba(255,255,255,0.4); margin-right: 12px;"></view>
+                <view bindtap="showScoreDetail" class="flex-row items-center gap-1">
+                    <text>积分明细</text>
+                    <text class="arrow-right">></text>
+                </view>
+            </view>
+        </view>
+        
+        <!-- Decoration -->
+        <view class="trophy-icon-text">🏆</view>
+    </view>
+    
+  </view>
+
+  <!-- Skeleton Loading State -->
+  <view wx:if="{{loading}}" class="skeleton-container" style="padding: 20rpx;">
+      <view class="skeleton-header flex-row items-center gap-4 mb-8">
+          <view class="skeleton-avatar bg-gray-200 rounded-full" style="width: 120rpx; height: 120rpx;"></view>
+          <view class="flex-col gap-2">
+              <view class="skeleton-text bg-gray-200" style="width: 200rpx; height: 40rpx;"></view>
+              <view class="skeleton-text bg-gray-200" style="width: 300rpx; height: 30rpx;"></view>
+          </view>
+      </view>
+      <view class="skeleton-card bg-gray-200 rounded-xl w-full mb-8" style="height: 300rpx;"></view>
+      <view class="skeleton-list flex-col gap-4">
+          <view class="skeleton-row bg-gray-200 rounded-lg w-full" style="height: 120rpx;"></view>
+          <view class="skeleton-row bg-gray-200 rounded-lg w-full" style="height: 120rpx;"></view>
+          <view class="skeleton-row bg-gray-200 rounded-lg w-full" style="height: 120rpx;"></view>
+      </view>
+  </view>
+
+  <!-- Main Content -->
+  <view class="main-content" wx:if="{{!loading}}">
+     <view class="flex-row justify-between items-center mb-2 px-2">
+          <!-- Left Side Group: Room ID & Base Score -->
+          <view class="flex-row items-center gap-3">
+             <!-- Room ID Pill -->
+             <view class="flex-row items-center bg-blue-50 px-3 py-1.5 rounded-lg">
+                 <text class="text-sm font-bold text-blue-500 mr-2">房间号：</text>
+                 <text class="text-base font-bold text-blue-700">{{roomId}}</text>
+             </view>
+
+             <!-- Base Score Pill (Changed to Blue) -->
+             <view bindtap="openBaseScoreModal" class="flex-row items-center bg-blue-50 px-3 py-1.5 rounded-lg">
+                <text class="text-sm font-bold text-blue-500 mr-2">底分：</text>
+                <text class="text-base font-bold text-blue-700">{{baseScore}}</text>
+                <text wx:if="{{room.host.id === userInfo.id && !isReadOnly}}" style="font-size: 12px; color: #3b82f6; margin-left: 6px;">✎</text>
+             </view>
+
+             <!-- Read Only Badge -->
+             <view wx:if="{{isReadOnly}}" class="bg-gray-100 px-2 py-1 rounded-lg">
+                 <text class="text-xs font-bold text-gray-500">历史快照</text>
+             </view>
+          </view>
+          
+          <!-- Right Side: Player Count -->
+          <view class="flex-row items-center gap-2">
+              <view class="flex-row items-center bg-gray-50 px-3 py-1.5 rounded-lg">
+                  <text class="text-sm font-bold text-gray-500 mr-2">人数：</text>
+                  <text class="text-base font-bold text-gray-500">{{activePlayersCount}}/{{room.players.length}}</text>
+              </view>
+              
+              <!-- Share Button -->
+              <button open-type="share" class="invite-square-btn" style="width: 64rpx; height: 64rpx; display: flex; align-items: center; justify-content: center; margin: 0;" wx:if="{{!isReadOnly}}">
+                  <text class="plus-icon-lg" style="margin-top: -4rpx;">+</text>
+              </button>
+          </view>
+     </view>
+
+     <!-- Player List -->
+     <view class="player-list">
+        <block wx:if="{{room.players.length === 0}}">
+            <view class="empty-state">
+                <text>等待玩家加入...</text>
+                <btn openType="share" size="sm" className="mt-4">邀请好友</btn>
+            </view>
+        </block>
+        <block wx:else>
+
+            <scroll-view scroll-y class="player-scroll-view" enable-flex="true">
+            <view wx:for="{{sortedPlayers}}" wx:key="id" class="player-item {{item.isMe ? 'is-me' : ''}} {{item.hasLeft ? 'player-left' : ''}}" bindtap="handlePlayerClick" data-player="{{item}}">
+                 <!-- Rank Section -->
+                 <view class="rank-area">
+                    <block wx:if="{{index < 3}}">
+                        <!-- Using an icon image or text for medal, tweaking size -->
+                        <view class="rank-medal-icon" wx:if="{{index === 0}}">🥇</view>
+                        <view class="rank-medal-icon" wx:elif="{{index === 1}}">🥈</view>
+                        <view class="rank-medal-icon" wx:else>🥉</view>
+                    </block>
+                    <block wx:else>
+                        <view class="rank-badge">{{index + 1}}</view>
+                    </block>
+                 </view>
+                 
+                 <!-- Avatar Section -->
+                 <view class="relative avatar-wrapper">
+                    <avatar url="{{item.avatarUrl}}" size="md" className="player-avatar-border {{item.hasLeft ? 'avatar-left' : ''}}"></avatar>
+                    <view wx:if="{{item.isHost}}" class="host-tag-pill">房主</view>
+                    <view wx:if="{{item.hasLeft}}" class="left-tag-pill">已退出房间</view>
+                 </view>
+
+                 <!-- Info Section -->
+                 <view class="flex-col ml-3 flex-1 gap-1">
+                    <view class="flex-row items-center gap-2">
+                        <text class="player-name">{{item.name}}</text>
+                        <view wx:if="{{item.id === userInfo.id}}" class="tag-me-circle">我</view>
+                    </view>
+                    <view class="flex-row">
+                        <view wx:if="{{index === 0}}" class="tag-first-pill">当前第一</view>
+                    </view>
+                 </view>
+
+                 <!-- Score Section -->
+                 <view class="flex-col items-end justify-center ml-auto" style="text-align: right;">
+                    <text class="text-2xl font-bold {{item.totalScore > 0 ? 'text-orange-500' : (item.totalScore < 0 ? 'text-green-500' : 'text-gray-400')}}" style="line-height: 1;">{{item.totalScore}}</text>
+                 </view>
+            </view>
+            </scroll-view>
+        </block>
+     </view>
+  </view>
+
+  <!-- Floating Action Button -->
+
+
+
+
+  <!-- Fixed Bottom Action Bar -->
+  <view class="bottom-action-bar" wx:if="{{room.status !== 'settled'}}">
+     <view class="action-btn-secondary" bindtap="handleLeave">
+        {{ isClubRoom ? '返回圈子' : '退出房间' }}
+     </view>
+     <view class="action-btn-primary" bindtap="openSettlementModal">结算积分</view>
+  </view>
+
+  <!-- Modals -->
+  
+  <!-- Add Score Modal -->
+  <view class="modal-overlay" wx:if="{{showAddScoreModal}}">
+      <view class="modal-content">
+          <view class="modal-header">
+              <text class="font-bold">记分</text>
+              <text class="close-btn" bindtap="closeAddScoreModal">×</text>
+          </view>
+          
+          <!-- Mode Switch -->
+          <view class="flex-row bg-gray-100 p-1 rounded-lg mb-4">
+              <view class="mode-tab {{scoreMode === 'quick' ? 'active' : ''}}" bindtap="setScoreMode" data-mode="quick">快捷模式</view>
+              <view class="mode-tab {{scoreMode === 'manual' ? 'active' : ''}}" bindtap="setScoreMode" data-mode="manual">手动模式</view>
+          </view>
+
+          <!-- Quick Mode -->
+          <view wx:if="{{scoreMode === 'quick'}}" class="quick-mode-form">
+               <view class="section-title">赢家 (单选)</view>
+               <scroll-view scroll-x class="avatar-scroll">
+                   <view wx:for="{{inputPlayers}}" wx:key="id" class="avatar-select-item {{selectedWinner === item.id ? 'selected-win' : ''}}" bindtap="selectWinner" data-id="{{item.id}}">
+                       <avatar url="{{item.avatarUrl}}" size="sm"></avatar>
+                       <text class="name-xs">{{item.name}}</text>
+                   </view>
+               </scroll-view>
+
+               <view class="section-title mt-4">输家 (多选)</view>
+               <scroll-view scroll-x class="avatar-scroll">
+                   <view wx:for="{{inputPlayers}}" wx:key="id" class="avatar-select-item {{utils.includes(selectedLosers, item.id) ? 'selected-lose' : ''}}" bindtap="toggleLoser" data-id="{{item.id}}">
+                       <avatar url="{{item.avatarUrl}}" size="sm"></avatar>
+                       <text class="name-xs">{{item.name}}</text>
+                   </view>
+               </scroll-view>
+               
+               <view class="section-title mt-4">每人输分</view>
+               <input class="input-big" type="number" placeholder="0" value="{{quickScoreAmount}}" bindinput="onQuickScoreInput" />
+          </view>
+          
+          <!-- Manual Mode -->
+          <view wx:else class="manual-mode-form">
+              <scroll-view scroll-y style="max-height: 300px;">
+                  <view wx:for="{{inputPlayers}}" wx:key="id" class="manual-row">
+                      <view class="flex-row items-center gap-2">
+                          <avatar url="{{item.avatarUrl}}" size="sm"></avatar>
+                          <text class="text-sm w-20 truncate">{{item.name}}</text>
+                      </view>
+                      <input class="input-sm" type="number" placeholder="0" data-id="{{item.id}}" bindinput="onManualScoreInput" />
+                  </view>
+              </scroll-view>
+          </view>
+
+          <view class="mt-6">
+              <btn fullWidth bind:click="submitRound">提交</btn>
+          </view>
+      </view>
+  </view>
+
+  <!-- Transfer Action Sheet -->
+  <view class="action-sheet-overlay" wx:if="{{showTransferModal}}" bindtap="closeTransferModal">
+      <view class="action-sheet-panel" catchtap="preventBubble" style="background-color: #f6f7f9; border-top-left-radius: 20px; border-top-right-radius: 20px;">
+          <!-- Header -->
+           <view style="position: relative; display: flex; align-items: center; justify-content: center; height: 56px; background-color: white;">
+               <view class="close-btn" bindtap="closeTransferModal" style="position: absolute; left: 16px; font-size: 24px; padding: 8px; color: #1f2937;">×</view>
+               <text class="font-bold text-base" style="color: #111827;">转账</text>
+           </view>
+          
+          <!-- Transfer Flow Visual -->
+          <view class="flex-row items-center justify-center py-6 bg-white shrink-0">
+             <view class="flex-col items-center gap-2">
+                 <avatar url="{{userInfo.avatarUrl}}" size="lg" className="border-2 border-white"></avatar>
+                 <text class="text-sm font-bold text-gray-800">{{userInfo.name}}</text>
+             </view>
+             
+             <view class="flex-col items-center gap-1" style="margin: 0 40px;">
+                 <text class="text-lg font-black text-blue-500" style="margin-bottom: 4px;">转给</text>
+                 <view class="transfer-arrow-icon" style="position: relative; width: 40px; height: 16px; display: flex; align-items: center; justify-content: center;">
+                     <!-- Main Line -->
+                     <view style="width: 100%; height: 2px; background-color: #3b82f6; border-radius: 1px;"></view>
+                     <!-- Arrow Tip -->
+                     <view style="position: absolute; right: 0; width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 8px solid #3b82f6;"></view>
+                 </view>
+             </view>
+
+             <view class="flex-col items-center gap-2">
+                 <avatar url="{{transferTarget.avatarUrl}}" size="lg" className="border-2 border-white"></avatar>
+                 <text class="text-sm font-bold text-gray-800">{{transferTarget.name}}</text>
+             </view>
+          </view>
+
+           <!-- Input Display -->
+           <view class="p-4 bg-white mb-2 shrink-0">
+               <view style="background-color: #ffffff; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                    <text style="font-size: 32px; font-weight: bold; color: #111827;">{{transferAmount || ''}}<text wx:if="{{!transferAmount}}" class="text-gray-300">|</text></text>
+               </view>
+               <view class="text-center mt-2">
+                   <text class="text-xs text-gray-500">底分: {{baseScore}} (必须是底分的倍数)</text>
+               </view>
+           </view>
+
+          <!-- Keypad -->
+          <view class="shrink-0" style="padding: 12px; padding-bottom: calc(12px + env(safe-area-inset-bottom)); width: 100%; box-sizing: border-box;">
+              <view style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 100%;">
+                  <view wx:for="{{['1','2','3']}}" wx:key="*this" bindtap="onKeypadTap" data-value="{{item}}" class="bg-white rounded-lg" style="height: 56px; font-size: 24px; font-weight: bold; box-shadow: 0 6px 12px rgba(0,0,0,0.12); display: flex; align-items: center; justify-content: center;">{{item}}</view>
+                  
+                  <!-- Backspace -->
+                  <view bindtap="onBackspaceTap" class="bg-white rounded-lg" style="height: 56px; box-shadow: 0 6px 12px rgba(0,0,0,0.12); display: flex; align-items: center; justify-content: center;">
+                       <text style="color: #ef4444; font-weight: bold;">⌫</text>
+                  </view>
+
+                  <view wx:for="{{['4','5','6']}}" wx:key="*this" bindtap="onKeypadTap" data-value="{{item}}" class="bg-white rounded-lg" style="height: 56px; font-size: 24px; font-weight: bold; box-shadow: 0 6px 12px rgba(0,0,0,0.12); display: flex; align-items: center; justify-content: center;">{{item}}</view>
+                  
+                  <!-- Placeholders / Confirm spans rows -->
+                  <view bindtap="submitTransfer" class="rounded-lg" style="grid-row: span 3; height: 100%; color: white; font-weight: bold; font-size: 18px; box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4); background-color: #3b82f6; display: flex; align-items: center; justify-content: center;">
+                      确认
+                  </view>
+
+                  <view wx:for="{{['7','8','9']}}" wx:key="*this" bindtap="onKeypadTap" data-value="{{item}}" class="bg-white rounded-lg" style="height: 56px; font-size: 24px; font-weight: bold; box-shadow: 0 6px 12px rgba(0,0,0,0.12); display: flex; align-items: center; justify-content: center;">{{item}}</view>
+                  
+                  <view bindtap="onKeypadTap" data-value="0" class="bg-white rounded-lg" style="grid-column: span 3; height: 56px; font-size: 24px; font-weight: bold; box-shadow: 0 6px 12px rgba(0,0,0,0.12); display: flex; align-items: center; justify-content: center;">0</view>
+              </view>
+          </view>
+      </view>
+      <!-- Safe Area Spacer -->
+      <view class="safe-area-spacer bg-white"></view>
+  </view>
+
+  <!-- Score Detail Action Sheet -->
+  <view class="action-sheet-overlay" wx:if="{{showScoreDetailModal}}" bindtap="closeScoreDetailModal">
+      <view class="action-sheet-panel" catchtap="true" style="max-height: 80vh; display: flex; flex-direction: column; background-color: #ffffff; border-top-left-radius: 20px; border-top-right-radius: 20px;">
+          <!-- Header: Clean White, Center Title, Left Close -->
+          <view style="position: relative; display: flex; align-items: center; justify-content: center; height: 56px; border-bottom: 1px solid #f3f4f6;">
+              <view class="close-btn" bindtap="closeScoreDetailModal" style="position: absolute; left: 16px; font-size: 24px; padding: 8px; color: #1f2937;">×</view>
+              <text class="font-bold text-lg" style="color: #111827;">转账记录</text>
+          </view>
+          
+          <scroll-view scroll-y style="flex: 1; min-height: 0;">
+             <block wx:if="{{scoreDetailList.length === 0}}">
+                <view class="empty-state py-8">
+                    <text class="text-gray-400">暂无记录</text>
+                </view>
+             </block>
+             <block wx:else>
+                <view class="flex-col">
+                    <view wx:for="{{scoreDetailList}}" wx:key="uniqueId" class="transaction-item p-4 border-b border-gray-50">
+                        <view class="flex-row justify-between items-center mb-3">
+                             <text class="text-xs text-gray-400 font-medium">{{item.time}}</text>
+                        </view>
+                        
+                        <view class="flex-row items-center justify-between">
+                             <!-- Sender Left -->
+                             <view style="flex: 1; min-width: 0; overflow: hidden; display: flex; align-items: center; justify-content: flex-start;">
+                                 <view style="display: flex; align-items: center; flex-shrink: 0; position: relative;">
+                                     <avatar url="{{item.senderAvatar}}" size="sm"></avatar>
+                                 </view>
+                                 <view class="text-sm font-bold text-gray-800 truncate ml-3">{{item.senderName}}</view>
+                             </view>
+
+                             <!-- Middle: Score & Dynamic Arrow -->
+                             <view class="flex-col items-center mx-4" style="min-width: 80rpx; flex-shrink: 0;">
+                                 <text class="text-xl font-bold text-blue-600" style="line-height: 1; margin-bottom: 4px;">{{item.amount}}</text>
+                                 <view style="width: 40px; height: 2px; background: linear-gradient(90deg, #e5e7eb, #3b82f6, #e5e7eb); border-radius: 1px;"></view>
+                                 <text class="text-gray-300 text-xs" style="font-size: 10px; margin-top: 2px;">转给</text> 
+                             </view>
+
+                             <!-- Receiver Right -->
+                             <view style="flex: 1; min-width: 0; overflow: hidden; display: flex; align-items: center; justify-content: flex-end;">
+                                 <view class="text-sm font-bold text-gray-800 truncate mr-3" style="text-align: right;">{{item.receiverName}}</view>
+                                 <view style="display: flex; align-items: center; flex-shrink: 0;">
+                                     <avatar url="{{item.receiverAvatar}}" size="sm"></avatar>
+                                 </view>
+                             </view>
+                        </view>
+                    </view>
+
+                    <!-- Pagination Footer -->
+                    <view class="py-4 w-full" style="display: flex; align-items: center; justify-content: center;">
+                        <block wx:if="{{scoreDetailHasMore}}">
+                             <view class="load-more-btn text-blue-500 font-bold text-sm" bindtap="loadMoreScoreDetails">展示更多</view>
+                        </block>
+                        <block wx:else>
+                             <text class="text-xs text-gray-400">已显示全部</text>
+                        </block>
+                    </view>
+                </view>
+             </block>
+          </scroll-view>
+      </view>
+      <!-- Safe Area Spacer -->
+      <view class="safe-area-spacer bg-white"></view>
+  </view>
+
+  <!-- Leave Room Action Sheet -->
+  <view class="action-sheet-overlay" wx:if="{{showLeaveModal}}" bindtap="closeLeaveModal">
+      <view class="action-sheet-panel" catchtap="true">
+          <view class="action-sheet-btn text-danger" bindtap="confirmLeave">确认</view>
+          <view class="action-sheet-divider"></view>
+          <view class="action-sheet-btn" bindtap="closeLeaveModal">取消</view>
+      </view>
+      <!-- Safe Area Spacer -->
+      <view class="safe-area-spacer bg-white"></view>
+  </view>
+
+  <!-- Settlement Modal -->
+  <view class="action-sheet-overlay" wx:if="{{showSettlementModal}}" bindtap="closeSettlementModal">
+      <view class="action-sheet-panel" catchtap="preventBubble" style="background-color: #f6f7f9; border-top-left-radius: 20px; border-top-right-radius: 20px; max-height: 85vh; display: flex; flex-direction: column;">
+          <!-- Header (Matching Transfer Modal) -->
+          <view style="position: relative; display: flex; align-items: center; justify-content: center; height: 56px; background-color: white; flex-shrink: 0; border-bottom: 1px solid #f3f4f6;">
+              <view class="close-btn" bindtap="closeSettlementModal" style="position: absolute; left: 16px; font-size: 24px; padding: 8px; color: #1f2937;">×</view>
+              <text class="font-bold text-base" style="color: #111827;">最终结算</text>
+          </view>
+          
+           <!-- Fixed Content: Hero Card -->
+           <view class="p-4 pb-0">
+               <view class="settle-hero-card">
+                   <!-- Crown Icon -->
+                   <text class="hero-crown">👑</text>
+                   
+                   <view class="hero-avatar-wrapper">
+                       <avatar url="{{settlementBigWinner.avatarUrl}}" size="lg" className="border-4 border-white"></avatar>
+                   </view>
+                   
+                   <text class="hero-name">{{settlementBigWinner.name}}</text>
+                   <view class="hero-tag">大赢家</view>
+                   <text class="hero-score">{{settlementBigWinner.totalScore}}</text>
+               </view>
+           </view>
+
+           <!-- Fixed Content: Details Title -->
+           <view class="mx-4 mt-2 mb-4">
+               <view class="bg-gray-100 rounded-lg py-2 flex-row justify-center items-center">
+                   <text class="text-sm font-bold text-gray-600">结算明细</text>
+               </view>
+           </view>
+           
+           <!-- Scrollable Content: Transfer List -->
+           <scroll-view scroll-y style="flex: 1; overflow-y: auto; min-height: 0;">
+               <view class="flex-col gap-4 p-4 pt-0" style="padding-bottom: calc(env(safe-area-inset-bottom) + 40rpx);">
+
+                   <!-- Transfer List -->
+                   <view class="flex-col">
+                      
+                      <view wx:if="{{settlementGroups.length === 0}}" class="empty-transfer">
+                          <text>无结算信息</text>
+                      </view>
+                      
+                      <view wx:for="{{settlementGroups}}" wx:key="index" class="transfer-card">
+                          <!-- Zero-Gap Layout for Seamless Tree Connector -->
+                          <view class="flex-row items-center w-full gap-0">
+                              <!-- Left: List of Payers with Embedded Spine -->
+                              <view class="flex-col gap-0 w-full">
+                                  <view wx:for="{{item.payers}}" wx:for-item="payer" wx:for-index="idx" wx:key="name" class="payer-row">
+                                      <!-- Stacked Payer Info -->
+                                      <!-- Fixed width ensures avatar centers align vertically regardless of name length -->
+                                      <view class="flex-col items-center justify-center text-center" style="width: 160rpx;">
+                                          <!-- Increased Avatar Size -->
+                                          <avatar url="{{payer.avatar}}" size="sm"></avatar>
+                                          <!-- Increased Font Size, Stacked Below -->
+                                          <text class="text-sm font-bold text-gray-700 truncate mt-1" style="max-width: 160rpx;">{{payer.name}}</text>
+                                      </view>
+                                      
+                                      <view class="payer-amount-badge ml-auto">-{{payer.amount}}</view>
+                                      
+                                      <!-- Embedded Connector Node (Absolute Position) -->
+                                      <view class="fork-node {{idx===0?'first':''}} {{idx===item.payers.length-1?'last':''}} {{item.payers.length===1?'single':''}}">
+                                      </view>
+                                  </view>
+                              </view>
+
+                              <!-- Middle: Merge Line -->
+                              <!-- Connects from the center of the Payers Block to the Winner -->
+                              <view class="merge-line"></view>
+
+                              <!-- Right: Receiver (Winner) -->
+                              <view class="receiver-box">
+                                  <avatar url="{{item.receiver.avatar}}" size="md" className="border-2 border-white shadow-sm"></avatar>
+                                  <text class="text-xs font-bold text-gray-900 mt-1 truncate" style="max-width: 140rpx;">{{item.receiver.name}}</text>
+                                  <!-- Removed + sign -->
+                                  <text class="text-xl font-bold text-blue-600 mt-1">{{item.totalAmount}}</text>
+                               </view>
+                           </view>
+                       </view>
+                   </view>
+               </view>
+             </scroll-view>
+             <!-- Settlement Footer: Host Action -->
+             <view class="p-4 bg-white" wx:if="{{canSettle}}">
+                 <btn fullWidth bind:click="confirmSettlement" className="shadow-lg">结束对局(锁定积分)</btn>
+             </view>
+
+             <!-- After Settlement Buttons (Inside Modal) -->
+             <view class="p-4 bg-white" wx:if="{{room.status === 'settled'}}">
+                 <!-- 结算弹窗内按钮已恢复初试状态：结算后不显示额外跳转按钮，仅供查看及手动关闭 -->
+             </view>
+
+             <!-- Safe Area Spacer (Outside Scroll View to ensure bottom lift) -->
+             <view class="safe-area-spacer"></view>
+        </view>
+    </view>
+
+    <!-- 房间底部按钮区域（已结算房间显示） -->
+    <view class="flex-row gap-4 px-4" style="padding-bottom: calc(40rpx + env(safe-area-inset-bottom));" wx:if="{{room.status === 'settled'}}">
+        <btn fullWidth bind:click="openSettlementModal" className="shadow-lg" style="flex: 1;">查看结算</btn>
+        <btn wx:if="{{isClubRoom}}" fullWidth bind:click="backToClubDetail" className="shadow-lg" style="flex: 1;">返回圈子</btn>
+        <btn wx:else fullWidth bind:click="goToIndex" className="shadow-lg" style="flex: 1;">返回首页</btn>
+    </view>
+
+   <!-- Chart Modal -->
+   <view class="action-sheet-overlay" wx:if="{{showChartModal}}" bindtap="closeChartModal" catchtouchmove="preventOverlayScroll">
+       <view class="action-sheet-panel" catchtap="preventBubble" catchtouchmove="preventBubble" style="padding: 24px; background-color: #f6f7f9;">
+            <view class="section-title mb-4">对局走势</view>
+            <view style="position: relative; min-height: 200px;">
+                <trend-chart rounds="{{chartRounds}}" players="{{chartPlayers}}"></trend-chart>
+                <view wx:if="{{chartLoading}}" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.8); display: flex; align-items: center; justify-content: center; z-index: 10;">
+                    <text class="text-gray-500">加载数据中...</text>
+                </view>
+            </view>
+
+            <!-- 加载更多按钮 -->
+            <view wx:if="{{hasMoreRounds && !isLoadingMoreRounds}}" class="mt-4" style="width: 100%">
+                <view class="action-sheet-btn" style="border-radius: 8px; background-color: #f0f0f0; color: #666;" bindtap="loadMoreRounds">加载更多历史</view>
+            </view>
+            <view wx:if="{{isLoadingMoreRounds}}" class="mt-4" style="width: 100%">
+                <view class="action-sheet-btn" style="border-radius: 8px; background-color: #f0f0f0; color: #999;">加载中...</view>
+            </view>
+
+            <view class="mt-6" style="width: 100%">
+                <view class="action-sheet-btn" style="border-radius: 8px; background-color: #3b82f6; color: white;" bindtap="closeChartModal">关闭</view>
+            </view>
+            <view class="safe-area-spacer"></view>
+        </view>
+    </view>
+
+
+
+  <!-- Base Score Setting Modal -->
+  <view class="modal-overlay" wx:if="{{showBaseScoreModal}}" catchtap="closeBaseScoreModal">
+      <view class="modal-content" catchtap="preventBubble" style="width: 85%; border-radius: 16px; overflow: hidden;">
+          <!-- Header: Relative for absolute close btn, centered title -->
+          <view class="relative flex-row justify-center items-center p-4 border-b border-gray-100">
+              <text class="text-lg font-bold text-gray-800">设置底分</text>
+              <view catchtap="closeBaseScoreModal" class="absolute right-2 p-2">
+                <text class="text-xl text-gray-400 font-bold">×</text>
+              </view>
+          </view>
+          
+          <view class="p-6 flex-col items-center">
+              <!-- Hint: Centered and Blue -->
+              <text class="text-sm text-blue-500 mb-6 text-center font-medium">请输入房间底分\n(转账金额必须为此数值的倍数)</text>
+              
+              <!-- Lighter background bg-gray-100, Smaller Size -->
+              <view class="bg-gray-100 rounded-xl p-3 w-3/4 mb-8 flex-row justify-center">
+                  <input class="text-2xl font-bold text-center text-gray-800" type="number" value="{{newBaseScore}}" bindinput="onBaseScoreInput" focus="{{showBaseScoreModal}}" style="height: 60rpx;" />
+              </view>
+              
+              <view class="flex-row gap-4 w-full">
+                  <view class="flex-1">
+                     <!-- Cancel: Black bg, White text -->
+                     <button class="w-full py-2.5 rounded-lg bg-gray-900 text-white font-bold text-base" bindtap="closeBaseScoreModal" style="margin: 0;">取消</button>
+                  </view>
+                  <view class="flex-1">
+                      <!-- Confirm: Blue bg, White text -->
+                      <button class="w-full py-2.5 rounded-lg bg-blue-600 text-white font-bold text-base" bindtap="submitBaseScore" style="margin: 0;">确定</button>
+                  </view>
+              </view>
+          </view>
+      </view>
+  </view>
+
+</view>
+
+<wxs module="utils">
+module.exports = {
+  includes: function(arr, item) {
+    return arr.indexOf(item) > -1;
+  }
+}
+</wxs>

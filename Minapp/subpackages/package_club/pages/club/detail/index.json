@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "圈子详情",
+  "usingComponents": {
+    "btn": "/components/button/index",
+    "avatar": "/components/avatar/index",
+    "trend-chart": "/components/trend-chart/index"
+  },
+  "disableScroll": true
+}

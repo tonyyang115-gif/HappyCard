@@ -1,0 +1,211 @@
+<view class="page-container">
+    <!-- Custom Back Button (since custom nav is on) -->
+    <view class="custom-back-btn" style="top: {{backButtonTop}}px;" bindtap="handleBack">
+        <text style="font-size: 16px; color: #1f2937; font-weight: bold;">❮ 返回</text>
+    </view>
+
+    <!-- Header Section -->
+    <view class="profile-header">
+        <view class="avatar-container">
+            <avatar url="{{userInfo.avatarUrl}}" size="xl" className="rounded-lg"></avatar>
+        </view>
+        <text class="user-name">{{userInfo.name}}</text>
+    </view>
+
+    <!-- Stats Row - 四栏统计 -->
+    <view class="stats-row">
+        <!-- 加载状态 -->
+        <block wx:if="{{isLoadingStats}}">
+            <view class="stats-loading">
+                <text class="loading-text">加载中...</text>
+            </view>
+        </block>
+        
+        <!-- 加载失败状态 -->
+        <block wx:elif="{{statsLoadFailed}}">
+            <view class="stats-error" bindtap="fetchStats">
+                <text class="error-icon">⚠️</text>
+                <text class="error-text">加载失败，点击重试</text>
+            </view>
+        </block>
+        
+        <!-- 空状态：没有对局记录 -->
+        <block wx:elif="{{stats.totalGames === 0}}">
+            <view class="stats-empty">
+                <text class="empty-icon">🎴</text>
+                <text class="empty-title">还没有对局记录</text>
+                <text class="empty-desc">开始一场牌局，积累你的战绩吧！</text>
+                <text class="empty-hint">💡 加入圈子或创建房间开始对局</text>
+            </view>
+        </block>
+        
+        <!-- 正常统计数据展示 -->
+        <block wx:else>
+            <!-- 历史场次（总） -->
+            <view class="stat-item stat-item-clickable" bindtap="openHistory">
+                <text class="stat-value">{{stats.totalGames}}</text>
+                <view class="stat-label-row">
+                    <text class="stat-label">历史场次</text>
+                    <text class="stat-hint">总</text>
+                </view>
+            </view>
+            
+            <view class="stat-divider"></view>
+
+            <!-- 自由房间和圈子房间显示区域（已注释移除） -->
+            <!--
+            <view class="stat-item stat-item-readonly">
+                <text class="stat-value stat-free">{{stats.freeRooms}}</text>
+                <text class="stat-label">自由房间</text>
+            </view>
+
+            <view class="stat-divider"></view>
+
+            <view class="stat-item stat-item-readonly">
+                <text class="stat-value stat-club">{{stats.clubRooms}}</text>
+                <text class="stat-label">圈子房间</text>
+            </view>
+
+            <view class="stat-divider"></view>
+            -->
+
+            <!-- 胜局数（轮次） -->
+            <view class="stat-item stat-item-readonly">
+                <text class="stat-value stat-win">{{stats.winCount}}</text>
+                <view class="stat-label-row">
+                    <text class="stat-label">胜局</text>
+                    <text class="stat-rate-badge" wx:if="{{stats.winCount > 0}}">({{stats.winRate || 0}}%)</text>
+                </view>
+            </view>
+            
+            <view class="stat-divider"></view>
+            
+            <!-- 平局数（轮次） -->
+            <view class="stat-item stat-item-readonly">
+                <text class="stat-value stat-draw">{{stats.drawCount}}</text>
+                <text class="stat-label">平局</text>
+            </view>
+            
+            <view class="stat-divider"></view>
+            
+            <!-- 负局数（轮次） -->
+            <view class="stat-item stat-item-readonly">
+                <text class="stat-value stat-lose">{{stats.loseCount}}</text>
+                <text class="stat-label">负局</text>
+            </view>
+            
+            <view class="stat-divider"></view>
+
+            <!-- 总轮次数（已注释移除） -->
+            <!--
+            <view class="stat-item stat-item-readonly">
+                <text class="stat-value stat-total">{{stats.totalRounds}}</text>
+                <text class="stat-label">总轮次</text>
+            </view>
+            -->
+        </block>
+    </view>
+
+    <!-- Settings Group 1 -->
+    <view class="settings-group">
+        <view class="settings-item" bindtap="openAvatarModal">
+            <view class="item-icon">🖼️</view>
+            <text class="item-label">头像</text>
+            <view class="item-value-row">
+                <!-- Tiny preview of avatar -->
+                <avatar url="{{userInfo.avatarUrl}}" size="xs"></avatar>
+                <text class="arrow-right">></text>
+            </view>
+        </view>
+        <view class="settings-item" style="border-top: 1px solid #f3f4f6" bindtap="openNameModal">
+            <view class="item-icon">👤</view>
+            <text class="item-label">昵称</text>
+            <view class="item-value-row">
+                <text class="item-value-text">{{userInfo.name}}</text>
+                <text class="arrow-right">></text>
+            </view>
+        </view>
+    </view>
+
+    <!-- Settings Group 2 -->
+    <view class="settings-group">
+        <view class="settings-item" bindtap="openAbout">
+            <view class="item-icon">ℹ️</view>
+            <text class="item-label">关于我们</text>
+            <view class="item-value-row">
+                <text class="arrow-right">></text>
+            </view>
+        </view>
+        <view class="settings-item" style="border-top: 1px solid #f3f4f6" bindtap="openDisclaimer">
+            <view class="item-icon">⚠️</view>
+            <text class="item-label">免责声明</text>
+            <view class="item-value-row">
+                <text class="arrow-right">></text>
+            </view>
+        </view>
+    </view>
+
+    <!-- Environment Indicator -->
+    <view class="env-indicator" wx:if="{{envLabel}}" style="text-align: center; margin-top: 20px; margin-bottom: 20px;">
+        <text style="font-size: 12px; color: #9ca3af;">{{envLabel}}</text>
+    </view>
+
+    <!-- Modals -->
+    <!-- Avatar Selection Modal -->
+    <view class="modal-overlay" wx:if="{{showAvatarModal}}">
+        <view class="modal-content profile-modal-content">
+            <view class="modal-header">
+                <text class="font-bold text-lg">选择头像</text>
+                <text class="close-btn" bindtap="closeAvatarModal">×</text>
+            </view>
+            
+            <!-- 主题切换 Tab -->
+            <scroll-view class="theme-scroll" scroll-x="true" show-scrollbar="false">
+                <view class="theme-tabs">
+                    <view wx:for="{{themes}}" wx:key="id" 
+                          class="theme-tab {{currentTheme === item.id ? 'active-theme' : ''}}"
+                          bindtap="switchTheme" data-id="{{item.id}}">
+                        {{item.label}}
+                    </view>
+                </view>
+            </scroll-view>
+
+            <view class="avatar-grid theme-grid">
+                <view wx:for="{{presetAvatars}}" wx:key="*this" 
+                      class="avatar-item {{tempAvatar === item ? 'selected' : ''}}"
+                      bindtap="selectAvatar" data-url="{{item}}">
+                    <avatar url="{{item}}" size="md" style="border-radius: 50%; overflow: hidden;"></avatar>
+                </view>
+            </view>
+
+            <view class="modal-footer theme-footer">
+                <view class="refresh-action" bindtap="refreshAvatars">
+                    <text class="refresh-icon">🔄</text>
+                    <text class="refresh-text">换一批</text>
+                </view>
+                <view class="footer-btns">
+                    <btn size="sm" type="secondary" bind:click="closeAvatarModal">取消</btn>
+                    <btn size="sm" bind:click="saveAvatar">保存</btn>
+                </view>
+            </view>
+        </view>
+    </view>
+
+    <!-- Name Edit Modal -->
+    <view class="modal-overlay" wx:if="{{showNameModal}}">
+        <view class="modal-content">
+            <view class="modal-header">
+                <text class="font-bold text-lg">修改昵称</text>
+                <text class="close-btn" bindtap="closeNameModal">×</text>
+            </view>
+            <view class="flex-col gap-2 my-4">
+                <input class="input-field" value="{{tempName}}" bindinput="onNameInput" placeholder="请输入新昵称"/>
+            </view>
+            <view class="modal-footer">
+                <btn size="sm" bind:click="closeNameModal">取消</btn>
+                <btn size="sm" bind:click="saveName">保存</btn>
+            </view>
+        </view>
+    </view>
+
+</view>

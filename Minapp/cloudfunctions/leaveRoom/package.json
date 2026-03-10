@@ -1,0 +1,9 @@
+{
+    "name": "leave-room",
+    "version": "1.0.0",
+    "description": "处理玩家退出自由房间的云函数",
+    "main": "index.js",
+    "dependencies": {
+        "wx-server-sdk": "~2.6.3"
+    }
+}

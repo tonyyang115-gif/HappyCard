@@ -1,0 +1,91 @@
+<page-meta>
+  <navigation-bar title="创建牌友圈" back="{{true}}" color="black" background="#dce9ff"></navigation-bar>
+</page-meta>
+
+<view class="page-container pb-safe box-border flex-col justify-center" style="min-height: 100vh; padding-left: 80rpx; padding-right: 80rpx;">
+  <!-- Header Title -->
+  <view class="header w-full fade-in" style="margin-bottom: 60rpx; text-align: center;">
+    <text class="text-3xl font-bold text-gray-900 block">创建新俱乐部</text>
+  </view>
+
+  <!-- Form Section -->
+  <view class="form-card w-full fade-in" style="animation-delay: 0.1s;">
+      
+      <!-- Name Input -->
+      <view class="mb-10">
+          <text class="text-sm font-bold text-gray-900 mb-4 block">圈子名称</text>
+          <input class="club-input" placeholder="给圈子起个好名字 (如: 周五麻将局)" placeholder-class="text-gray-400" bindinput="onInputName" />
+      </view>
+
+      <!-- Avatar Selection Trigger -->
+      <view class="mb-14" style="margin-top: 40rpx;">
+        <text class="text-sm font-bold text-gray-900 mb-4 block">圈子头像</text>
+        <view class="club-input club-avatar-trigger" bindtap="openAvatarModal">
+            <view class="flex-row items-center">
+                <image src="{{avatarUrl}}" class="club-avatar-trigger-img" mode="aspectFill"></image>
+                <text class="text-gray-900">点击更换头像</text>
+            </view>
+        </view>
+      </view>
+
+      <!-- Desc Input -->
+      <view class="mb-4" style="margin-top: 80rpx;">
+          <text class="text-sm font-bold text-gray-900 mb-4 block">简介 <text class="text-gray-400 text-sm font-normal">(选填)</text></text>
+          <input class="club-input" placeholder="简单的介绍一下..." placeholder-class="text-gray-400" bindinput="onInputDesc" />
+      </view>
+  </view>
+
+  <!-- Submit Buttons -->
+  <view class="w-full flex-col" style="margin-top: 100rpx;">
+      <btn fullWidth size="lg" className="rounded-xl shadow-blue" bind:click="submitCreate" disabled="{{loading}}">立即创建</btn>
+      <view class="w-full" style="margin-top: 32rpx;">
+         <btn fullWidth size="lg" className="rounded-xl bg-white text-gray-900 shadow-sm border border-gray-200" bind:click="goHome">返回首页</btn>
+      </view>
+  </view>
+</view>
+
+<!-- Avatar Selection Modal -->
+<view class="club-modal-overlay {{showAvatarModal ? 'show' : ''}}" bindtap="closeAvatarModal">
+    <view class="club-modal-content {{showAvatarModal ? 'show' : ''}}" catchtap="true">
+        <view class="flex-row justify-between items-center mb-6">
+            <text class="text-lg font-bold">选择头像</text>
+            <view class="p-2" bindtap="closeAvatarModal">
+                <text class="text-gray-400 text-xl">×</text>
+            </view>
+        </view>
+
+        <!-- Current / Upload Custom -->
+        <view class="club-action-row">
+            <!-- Upload Card -->
+            <view class="club-action-card club-upload-card" bindtap="onUploadTempImage">
+                <text class="club-upload-icon">📷</text>
+                <text class="text-xs text-blue-500">上传图片</text>
+            </view>
+            
+            <!-- Preview Card -->
+            <view class="club-action-card club-preview-card">
+                <text class="club-preview-label">当前选择</text>
+                <image src="{{tempAvatarUrl}}" class="club-preview-large" mode="aspectFill"></image>
+            </view>
+        </view>
+
+        <!-- Presets Grid -->
+        <text class="text-sm text-gray-500 mb-4 block">推荐头像</text>
+        <scroll-view scroll-y class="mb-6" style="height: 400rpx;">
+            <view class="club-grid">
+                <block wx:for="{{presets}}" wx:key="*this">
+                    <view class="club-avatar-option" bindtap="onSelectTempPreset" data-url="{{item}}">
+                        <image 
+                            src="{{item}}" 
+                            class="club-avatar-img border-2 {{tempAvatarUrl === item ? 'border-blue-500' : 'border-transparent'}}" 
+                            mode="aspectFill"
+                        ></image>
+                    </view>
+                </block>
+            </view>
+        </scroll-view>
+
+        <btn fullWidth size="lg" className="rounded-xl shadow-blue" bind:click="confirmAvatarSelection">确定</btn>
+        <view class="h-safe-bottom"></view>
+    </view>
+</view>

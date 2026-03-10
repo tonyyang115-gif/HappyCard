@@ -1,0 +1,58 @@
+<view class="page-container">
+    <view class="custom-nav">
+        <view class="back-btn" bindtap="handleBack">
+            <image class="back-icon" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0ibm9uZSIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHJva2U9IiMxMTE4MjciIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cG9seWxpbmUgcG9pbnRzPSIxNSAxOCA5IDEyIDE1IDYiPjwvcG9seWxpbmU+PC9zdmc+" mode="aspectFit"></image>
+            <text class="back-text">历史战绩</text>
+        </view>
+    </view>
+
+    <scroll-view class="content-area" scroll-y="true" bindscrolltolower="onScrollToLower" lower-threshold="100" enable-flex enable-passive="true">
+        <block wx:if="{{isLoading}}">
+            <view class="loading-state">
+                <text>加载中...</text>
+            </view>
+        </block>
+        <block wx:elif="{{historyList.length === 0}}">
+            <view class="empty-state">
+                <text class="emoji">📭</text>
+                <text class="text">暂无历史记录</text>
+            </view>
+        </block>
+        <block wx:else>
+            <view class="history-list">
+                <view wx:for="{{historyList}}" wx:key="_id" class="history-card" bindtap="goToRoom" data-id="{{item.id}}">
+                    <!-- Card Header -->
+                    <view class="card-header">
+                        <view class="time-wrapper">
+                            <text class="calendar-icon">📅</text>
+                            <text class="time-text">{{item.time}}</text>
+                        </view>
+
+                    </view>
+
+                    <!-- Players Row -->
+                    <view class="players-row">
+                        <view wx:for="{{item.players}}" wx:for-item="player" wx:key="id" class="player-col">
+                            <avatar url="{{player.avatarUrl}}" size="md" className="rounded-lg mb-2"></avatar>
+                            <text class="player-name-sm">{{player.name}}</text>
+                            <text class="score-text {{player.isPositive ? 'text-orange' : (player.isNegative ? 'text-green' : 'text-gray')}}">
+                                {{player.score > 0 ? '+' : ''}}{{player.score}}
+                            </text>
+                        </view>
+                    </view>
+                </view>
+
+                <!-- Footer states -->
+                <view class="list-footer" wx:if="{{historyList.length > 0}}">
+                    <view class="footer-loading" wx:if="{{isLoading}}">
+                        <text class="loading-spinner"></text>
+                        <text>正在加载更多...</text>
+                    </view>
+                    <view class="footer-no-more" wx:elif="{{!hasMore}}">
+                        <text>— 已经到底啦 —</text>
+                    </view>
+                </view>
+            </view>
+        </block>
+    </scroll-view>
+</view>

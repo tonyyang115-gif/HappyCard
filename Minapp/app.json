@@ -1,0 +1,33 @@
+{
+    "pages": [
+        "pages/index/index",
+        "pages/profile/index"
+    ],
+    "subpackages": [
+        {
+            "root": "subpackages/package_club",
+            "pages": [
+                "pages/club/list/index",
+                "pages/club/create/index",
+                "pages/club/detail/index",
+                "pages/club/members/index"
+            ]
+        },
+        {
+            "root": "subpackages/package_game",
+            "pages": [
+                "pages/room/index",
+                "pages/history/index"
+            ]
+        }
+    ],
+    "window": {
+        "backgroundTextStyle": "light",
+        "navigationBarBackgroundColor": "#fff",
+        "navigationBarTitleText": "欢乐打牌记",
+        "navigationBarTextStyle": "black",
+        "navigationStyle": "custom"
+    },
+    "sitemapLocation": "sitemap.json",
+    "lazyCodeLoading": "requiredComponents"
+}

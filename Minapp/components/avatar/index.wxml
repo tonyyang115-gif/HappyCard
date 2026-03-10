@@ -1,0 +1,3 @@
+<view class="avatar-container {{className}}" style="width: {{sizeMap[size]}}px; height: {{sizeMap[size]}}px;">
+  <image class="avatar-img" src="{{url}}" mode="aspectFill" binderror="onImageError"></image>
+</view>

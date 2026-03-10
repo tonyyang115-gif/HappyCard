@@ -1,0 +1,9 @@
+{
+    "name": "dissolveClub",
+    "version": "1.0.0",
+    "description": "Cascading Club Delete",
+    "main": "index.js",
+    "dependencies": {
+        "wx-server-sdk": "latest"
+    }
+}

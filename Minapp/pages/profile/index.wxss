@@ -1,0 +1,471 @@
+/* Page Container */
+.page-container {
+  min-height: 100vh;
+  background-color: #f8fafc; /* 更高级的微蓝灰 */
+  padding-bottom: 40px;
+  box-sizing: border-box;
+}
+
+/* Header Section */
+.profile-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: calc(70px + env(safe-area-inset-top)); /* 稍微减小顶部间距 */
+  padding-bottom: 20px; /* 从 30px 减小 */
+}
+
+.avatar-container {
+  background: white;
+  padding: 6px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.15); 
+  margin-bottom: 12px; /* 从 20px 减小 */
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.avatar-container:active {
+  transform: scale(0.95);
+}
+
+.user-name {
+  font-size: 24px;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 24px; /* 从 32px 减小 */
+}
+
+/* Stats Row */
+.stats-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 92%;
+  margin: 0 auto 16px auto; /* 从 28px 减小 */
+  padding: 20px 0; /* 从 24px 减小 */
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* 加载状态 */
+.stats-loading {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.loading-text {
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+/* 加载失败状态 */
+.stats-error {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0;
+  cursor: pointer;
+}
+
+.error-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.error-text {
+  font-size: 13px;
+  color: #f43f5e;
+  text-decoration: underline;
+}
+
+/* 空状态：没有对局记录 */
+.stats-empty {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px; /* 从 40px 减小 */
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 36px; /* 从 48px 减小 */
+  margin-bottom: 8px; /* 从 16px 减小 */
+  opacity: 0.6;
+}
+
+.empty-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 8px;
+}
+
+.empty-desc {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 12px;
+}
+
+.empty-hint {
+  font-size: 12px;
+  color: #94a3b8;
+  background: #f1f5f9;
+  padding: 8px 16px;
+  border-radius: 12px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+/* 可点击的统计项 */
+.stat-item-clickable {
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.stat-item-clickable::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 3px;
+  background: #3b82f6;
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.stat-item-clickable:active::after {
+  opacity: 0.6;
+}
+
+.stat-item-clickable:active .stat-value {
+  transform: scale(0.95);
+}
+
+/* 只读统计项 */
+.stat-item-readonly {
+  opacity: 0.8;
+}
+
+.stat-value {
+  font-size: 26px;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 2px;
+  transition: transform 0.15s ease;
+}
+
+.stat-win { color: #10b981; }
+.stat-draw { color: #64748b; }
+.stat-lose { color: #f43f5e; }
+/* 自由房间、圈子房间和总轮次样式（已注释移除） */
+/* .stat-free { color: #3b82f6; }
+.stat-club { color: #8b5cf6; }
+.stat-total { color: #6b7280; } */
+
+.stat-label-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+/* 统计提示（如"总"） */
+.stat-hint {
+  font-size: 9px;
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+/* 胜率徽章样式 */
+.stat-rate-badge {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-size: 9px;
+  margin-top: 2px;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+}
+
+.stat-icon {
+  font-size: 10px;
+  color: #3b82f6;
+  opacity: 0.6;
+  transition: transform 0.2s ease;
+}
+
+.stat-item-clickable:active .stat-icon {
+  transform: translateX(2px);
+}
+
+.stat-divider {
+  width: 1px;
+  height: 24px;
+  background-color: #f1f5f9;
+}
+
+/* Settings List */
+.settings-group {
+  background: white;
+  border-radius: 24px;
+  margin: 0 16px 16px 16px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.settings-item {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px; /* 从 22px 减小 */
+  background: white;
+  transition: background-color 0.2s;
+}
+
+.settings-item:active {
+  background-color: #f1f5f9;
+}
+
+.item-icon {
+  width: 28px;
+  height: 28px;
+  margin-right: 14px;
+  background: #f8fafc;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Use emoji or text icons if svgs not available, for now using text/emoji placeholders to match structure */
+.icon-text {
+  font-size: 18px;
+  color: #4b5563; 
+}
+
+.item-label {
+  flex: 1;
+  font-size: 16px;
+  color: #334155;
+  font-weight: 600;
+}
+
+.item-value-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.item-value-text {
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+.arrow-right {
+  font-size: 12px;
+  color: #cbd5e1;
+  margin-left: 6px;
+}
+
+/* Modals (Reused styles mostly) */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 32px;
+  width: 85%;
+  max-width: 340px;
+  padding: 30px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.close-btn {
+  font-size: 24px;
+  color: #9ca3af;
+  line-height: 1;
+  padding: 8px;
+  margin: -8px;
+}
+
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.avatar-item {
+  border-radius: 18px;
+  padding: 4px;
+  border: 4px solid transparent;
+  transition: all 0.2s;
+}
+
+.avatar-item.selected {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+  transform: scale(1.05);
+}
+
+.input-field {
+  background: #f1f5f9;
+  padding: 0 30rpx;
+  height: 100rpx;
+  border-radius: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  font-weight: 500;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 30px;
+}
+
+@keyframes modalIn {
+  from { transform: translateY(20px) scale(0.95); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* --- 主题头像系统扩展样式 --- */
+.profile-modal-content {
+    max-width: 360px !important;
+    width: 90% !important;
+    padding: 24px !important;
+}
+
+.theme-scroll {
+    width: 100%;
+    white-space: nowrap;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.theme-tabs {
+    display: flex;
+    padding: 8px 4px;
+}
+
+.theme-tab {
+    display: inline-block;
+    padding: 6px 16px;
+    font-size: 14px;
+    color: #64748b;
+    border-radius: 100px;
+    margin-right: 8px;
+    transition: all 0.2s;
+    background: #f8fafc;
+}
+
+.theme-tab.active-theme {
+    background: #3b82f6;
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.theme-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 12px !important;
+    padding: 8px 2px !important;
+}
+
+.theme-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between !important;
+    margin-top: 24px !important;
+}
+
+.refresh-action {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 12px;
+    background: #f0f9ff;
+    border-radius: 12px;
+    transition: all 0.2s;
+}
+
+.refresh-action:active {
+    transform: rotate(15deg) scale(0.95);
+    background: #e0f2fe;
+}
+
+.refresh-icon {
+    font-size: 16px;
+}
+
+.refresh-text {
+    font-size: 12px;
+    color: #0369a1;
+    font-weight: 600;
+}
+
+.footer-btns {
+    display: flex;
+    gap: 10px;
+}
+
+/* Back Button Restyled */
+.custom-back-btn {
+    position: fixed;
+    left: 20px;
+    z-index: 100;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border-radius: 100px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.custom-back-btn text {
+    font-size: 14px;
+    color: #475569;
+    font-weight: 600;
+}

@@ -1,0 +1,7 @@
+{
+    "usingComponents": {
+        "avatar": "../../components/avatar/index",
+        "btn": "../../components/button/index"
+    },
+    "navigationBarTitleText": "欢乐打牌记"
+}

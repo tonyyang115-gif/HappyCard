@@ -1,0 +1,258 @@
+<page-meta page-scrolling="false">
+  <navigation-bar title="圈子详情" back="{{true}}" color="black" background="#F8F9FA"></navigation-bar>
+</page-meta>
+
+<!-- Custom Pill Back Button -->
+<view class="fixed z-50 flex-row items-center bg-white rounded-full border border-gray-100 shadow-sm back-btn-pill" 
+      style="top: {{navTop}}px; left: 24rpx; height: {{navHeight}}px;" 
+      bindtap="goBack">
+    <text class="text-gray-900 font-bold text-lg">❮</text>
+    <text class="back-btn-text">返回</text>
+</view>
+
+<view class="container flex-col" style="height: 100vh; background-color: #f6f7f9; overflow: hidden;">
+    
+  <!-- Static Fixed Header Area -->
+  <view class="flex-none w-full" style="padding: 0 24rpx; box-sizing: border-box;">
+      <!-- Header Card -->
+      <!-- Header Card -->
+      <!-- Header Card -->
+      <view class="header-card-refined mb-4 rounded-2xl relative">
+          <!-- Top Row: Avatar + Info + Invite (Top Right) -->
+          <view class="flex-row items-center">
+              <image src="{{club.avatar || 'https://api.dicebear.com/7.x/adventurer/svg?seed=' + club._id}}" class="rounded-2xl bg-gray-100 shadow-sm" mode="aspectFill" style="width: 110rpx; height: 110rpx; margin-right: 32rpx; border: 1rpx solid #f1f5f9;" binderror="onImageError"></image>
+              <view class="flex-col flex-1 justify-center">
+                  <block wx:if="{{!isHydrating}}">
+                    <text class="club-name-premium mb-1 fade-in">{{club.name}}</text>
+                    <view class="flex-row items-center fade-in">
+                        <text class="club-id-highlight">圈子ID: {{club.id_short}}</text>
+                    </view>
+                    <text class="club-description-text fade-in" wx:if="{{club.description}}" style="margin-top: 8rpx; opacity: 0.8;">{{club.description}}</text>
+                  </block>
+                  <block wx:else>
+                    <view class="skeleton skeleton-text-lg mb-2"></view>
+                    <view class="skeleton skeleton-text-sm"></view>
+                  </block>
+              </view>
+              <view class="flex-col items-end gap-2">
+                  <!-- Common: Invite -->
+                  <button open-type="share" class="header-btn header-btn-blue">
+                      邀请
+                  </button>
+
+                  <!-- Owner Actions -->
+                  <block wx:if="{{isOwner}}">
+                      <view class="header-btn header-btn-blue" bindtap="goToMemberManage">
+                          管理
+                      </view>
+                      <view class="header-btn header-btn-red" bindtap="dissolveClub">
+                          解散
+                      </view>
+                  </block>
+
+                  <!-- Member Actions (Non-Owner) -->
+                  <block wx:elif="{{isMember}}">
+                      <view class="header-btn header-btn-red" bindtap="leaveClub">
+                          退出
+                      </view>
+                  </block>
+              </view>
+          </view>
+          
+          
+          <view class="divider-fade"></view>
+
+          <!-- Members Preview -->
+          <view class="flex-row items-center justify-between">
+              <view class="flex-row items-center">
+                   <view class="flex-row items-center mr-3">
+                      <block wx:if="{{!isHydrating}}">
+                        <block wx:for="{{club.members}}" wx:key="openId" wx:if="{{index < 6}}">
+                            <image src="{{item.avatar}}" class="member-preview-stack-item fade-in" mode="aspectFill"></image>
+                        </block>
+                      </block>
+                      <block wx:else>
+                        <view class="member-preview-stack-item skeleton"></view>
+                        <view class="member-preview-stack-item skeleton"></view>
+                        <view class="member-preview-stack-item skeleton"></view>
+                      </block>
+                  </view>
+                  <block wx:if="{{!isHydrating}}">
+                    <text class="ml-2 fade-in" style="font-size: 22rpx; color: #94a3b8; font-weight: 500;">已有 {{club.members.length}} 位团员</text>
+                  </block>
+                  <view wx:else class="skeleton ml-2" style="height: 24rpx; width: 150rpx;"></view>
+              </view>
+          </view>
+      </view>
+
+      <!-- Stats Grid (Increased gap) -->
+      <view class="grid grid-cols-2 gap-4 mb-4">
+          <!-- Total Wins Champion -->
+          <view class="stats-card-champion rounded-xl border relative overflow-hidden shadow-sm" bindtap="showStatsRules">
+              <view class="flex-row justify-between items-center w-full">
+                  <text class="stats-title text-orange-600">🏆 总胜场冠军</text>
+                  <text class="rules-hint">ℹ️</text>
+              </view>
+              
+              <view class="stats-value-box">
+                  <text class="stats-label-small text-orange-400">TOTAL WINS</text>
+                  <text wx:if="{{!isHydrating}}" class="stats-value-large text-orange-600 fade-in">{{stats.champion.wins || 0}}</text>
+                  <view wx:else class="skeleton skeleton-text-lg mt-2"></view>
+              </view>
+
+              <view class="player-info-row">
+                 <block wx:if="{{!isHydrating}}">
+                    <image src="{{stats.champion.avatar}}" class="w-12 h-12 rounded-full bg-gray-100 avatar-honor-gold fade-in" mode="aspectFill"></image>
+                    <view class="flex-col">
+                        <text class="player-name-hero truncate fade-in">{{stats.champion.name || '虚位以待'}}</text>
+                        <text wx:if="{{stats.champion.games > 0}}" class="stats-detail text-gray-400">{{stats.champion.games}}局 胜率{{stats.champion.winRate}}%</text>
+                    </view>
+                 </block>
+                 <block wx:else>
+                    <view class="skeleton skeleton-avatar"></view>
+                    <view class="skeleton skeleton-text-sm flex-1"></view>
+                 </block>
+              </view>
+          </view>
+
+          <!-- All-time Champion (Win Rate) -->
+          <view class="stats-card-winrate rounded-xl border relative overflow-hidden shadow-sm" bindtap="showStatsRules">
+              <view class="flex-row justify-between items-center w-full">
+                  <text class="stats-title text-blue-600">🏅 常胜将军</text>
+                  <text class="rules-hint">ℹ️</text>
+              </view>
+
+              <view class="stats-value-box">
+                  <text class="stats-label-small text-blue-400">WIN RATE</text>
+                  <text wx:if="{{!isHydrating}}" class="stats-value-large text-blue-600 fade-in">{{stats.winRate}}%</text>
+                  <view wx:else class="skeleton skeleton-text-lg mt-2"></view>
+              </view>
+
+              <view class="player-info-row">
+                 <block wx:if="{{!isHydrating}}">
+                    <image src="{{stats.bestPlayer.avatar}}" class="w-12 h-12 rounded-full bg-gray-100 avatar-honor-blue fade-in" mode="aspectFill"></image>
+                    <view class="flex-col">
+                        <text class="player-name-hero truncate fade-in">{{stats.bestPlayer.name || '虚位以待'}}</text>
+                        <text wx:if="{{stats.bestPlayer.games > 0}}" class="stats-detail text-gray-400">{{stats.bestPlayer.wins}}/{{stats.bestPlayer.games}}局</text>
+                    </view>
+                 </block>
+                 <block wx:else>
+                    <view class="skeleton skeleton-avatar"></view>
+                    <view class="skeleton skeleton-text-sm flex-1"></view>
+                 </block>
+              </view>
+          </view>
+      </view>
+
+      <!-- Pinned History Title -->
+      <view class="flex-row items-center justify-between mb-3">
+          <text class="font-bold text-gray-900 text-base">对局记录</text>
+          <text wx:if="{{!isHydrating}}" class="text-xs text-gray-400 fade-in">
+              累计 {{stats.totalGames}} 局{{stats.totalGames === 0 && rooms.length > 0 ? ' ('+rooms.length+'个房间)' : ''}}
+          </text>
+          <view wx:else class="skeleton" style="height: 24rpx; width: 120rpx;"></view>
+      </view>
+  </view>
+    
+  <!-- Internal Scrollable Content Area (Records only) -->
+  <scroll-view class="flex-1 w-full" scroll-y bindscrolltolower="loadMoreRooms" refresher-enabled="{{true}}" bindrefresherrefresh="onRefreshDetail" refresher-triggered="{{refreshingDetail}}" refresher-background="{{refreshBg}}" enhanced="{{true}}" show-scrollbar="{{false}}" enable-flex enable-passive="true" style="padding: 0 24rpx; box-sizing: border-box;">
+      <block wx:if="{{rooms.length === 0}}">
+          <view class="flex-col items-center py-8">
+                <view class="text-4xl opacity-30 mb-2">📝</view>
+              <text class="text-gray-400 text-xs">暂无对局记录</text>
+          </view>
+      </block>
+      <block wx:else>
+            <view wx:for="{{rooms}}" wx:key="_id" class="history-card" bindtap="goToRoom" data-id="{{item._id}}">
+                <!-- Card Header -->
+                <view class="card-header">
+                    <view class="time-wrapper">
+                        <text class="calendar-icon">📅</text>
+                        <text class="time-text">{{item.createDate}}</text>
+                    </view>
+
+                </view>
+
+                <!-- Players Row -->
+                <scroll-view scroll-x class="players-row" enable-flex>
+                    <view wx:for="{{item.players}}" wx:for-item="p" wx:key="id" class="player-col">
+                        <image src="{{p.avatarUrl}}" class="history-avatar" mode="aspectFill"></image>
+                        <text class="player-name-sm">{{p.name}}</text>
+                        <text class="score-text {{p.totalScore > 0 ? 'text-orange' : (p.totalScore < 0 ? 'text-green' : 'text-gray')}}">
+                            {{p.totalScore > 0 ? '+' : ''}}{{p.totalScore}}
+                        </text>
+                    </view>
+                </scroll-view>
+            </view>
+      </block>
+
+      <!-- Pagination Status -->
+      <view class="py-4 flex-row justify-center items-center">
+          <text wx:if="{{isLoading}}" class="text-xs text-gray-400">加载中...</text>
+          <text wx:elif="{{!hasMore && rooms.length > 0}}" class="text-xs text-gray-400">没有更多记录了</text>
+      </view>
+      <!-- Leave Club (Moved to Header) -->
+  </scroll-view>
+
+  <!-- Pinned Footer Area -->
+  <view wx:if="{{isMember}}" class="flex-none w-full bg-[#f6f7f9] flex-row justify-center gap-3" style="padding: 20rpx 30rpx calc(env(safe-area-inset-bottom) + 20rpx); box-sizing: border-box;">
+      <view class="flex-1">
+          <btn fullWidth size="lg" className="rounded-xl bg-white text-blue-500 shadow-sm border border-blue-100 font-bold flex-row justify-center items-center gap-2" bind:click="openJoinModal">
+              <text class="text-xl">🚪</text>
+              <text>进入房间</text>
+          </btn>
+      </view>
+      <view style="flex: 1.5;">
+          <btn fullWidth size="lg" className="rounded-xl shadow-blue font-bold flex-row justify-center items-center gap-2 text-white" bind:click="createRoom">
+              <text class="text-xl">🎮</text>
+              <text>创建房间</text>
+          </btn>
+      </view>
+  </view>
+
+  <!-- Join Room Modal -->
+  <view class="modal-overlay" wx:if="{{showJoinModal}}" bindtap="closeJoinModal">
+    <view class="modal-content" catchtap="true">
+        <view class="modal-header">
+            <text class="font-bold text-lg">加入房间</text>
+            <text class="close-btn" bindtap="closeJoinModal">×</text>
+        </view>
+        <view class="modal-body flex-col gap-6 mt-6">
+            <view class="flex-col gap-2">
+                <text class="text-sm text-gray-400">请输入6位房间号</text>
+                <input 
+                    class="join-input-field" 
+                    type="number" 
+                    maxlength="6" 
+                    placeholder="例如: 123456" 
+                    focus="{{showJoinModal}}"
+                    bindinput="onJoinInput" 
+                />
+                <text wx:if="{{joinError}}" class="text-xs text-red-500 mt-1">{{joinError}}</text>
+            </view>
+            
+            <btn fullWidth size="lg" className="rounded-xl shadow-blue" bind:click="confirmJoin">立即加入</btn>
+        </view>
+    </view>
+  </view>
+
+  <!-- Join Confirmation Modal -->
+  <view class="modal-overlay" wx:if="{{showConfirmJoinModal}}">
+    <view class="modal-content" style="width: 560rpx;">
+        <view class="flex-col items-center">
+             <text class="text-4xl mb-4">📨</text>
+             <text class="text-xl font-bold text-gray-900 mb-2">邀请加入</text>
+             <text class="text-gray-500 text-center mb-6">您确定要加入“{{club.name}}”牌友圈吗？</text>
+             
+             <view class="flex-row gap-3 w-full">
+                 <view class="flex-1">
+                     <btn fullWidth size="lg" className="bg-gray-100 text-gray-500 rounded-xl" bind:click="cancelJoinIntent">取消</btn>
+                 </view>
+                 <view class="flex-1">
+                     <btn fullWidth size="lg" className="shadow-blue rounded-xl" bind:click="confirmJoinIntent">确认加入</btn>
+                 </view>
+             </view>
+        </view>
+    </view>
+  </view>
+</view>

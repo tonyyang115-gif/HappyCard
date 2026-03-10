@@ -1,0 +1,9 @@
+{
+    "name": "create-club",
+    "version": "1.0.0",
+    "description": "Atomic Club Creation with Unique ID",
+    "main": "index.js",
+    "dependencies": {
+        "wx-server-sdk": "latest"
+    }
+}

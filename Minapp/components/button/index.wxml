@@ -1,0 +1,9 @@
+<button 
+  class="btn {{variant}} {{size}} {{fullWidth ? 'w-full' : ''}} {{className}}" 
+  style="{{style}}"
+  bindtap="handleTap"
+  open-type="{{openType}}"
+  bindgetuserinfo="onGetUserInfo"
+>
+  <slot></slot>
+</button>

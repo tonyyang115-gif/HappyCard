@@ -1,0 +1,153 @@
+<view class="container">
+  <view class="flex-1 flex-col items-center pt-24 px-6 w-full" style="height: 1437rpx; display: flex; box-sizing: border-box; position: relative; left: 0rpx; top: 127rpx">
+    <!-- User Profile Area -->
+    <view class="relative mb-4 cursor-pointer group" bindtap="navigateToProfile">
+       <avatar url="{{userInfo.avatarUrl}}" size="xl" className="border-4 border-white shadow-sm"></avatar>
+       <view class="edit-icon-bg">
+         <text class="edit-icon">✎</text>
+       </view>
+    </view>
+    
+    <view class="flex-row items-center gap-2 mb-8 cursor-pointer p-2 rounded-lg hover-bg-gray-100" bindtap="navigateToProfile">
+      <text class="text-2xl font-bold text-gray-900">{{userInfo.name}}</text>
+      <text class="text-gray-400">✎</text>
+    </view>
+    
+    <view class="text-gray-400 text-sm mb-20">点击头像或昵称可修改信息</view>
+
+    <!-- Actions -->
+    <view class="w-full max-w-xs flex-col gap-4">
+        <btn fullWidth size="lg" className="rounded-xl shadow-blue" bind:click="createRoom">创建房间</btn>
+        
+        <!-- Join Room Button -->
+        <btn fullWidth size="lg" className="rounded-xl shadow-blue" bind:click="openJoinModal">加入房间</btn>
+
+        <!-- Player Clubs Entry -->
+        <btn fullWidth size="lg" className="rounded-xl shadow-blue bg-white text-blue-500 border border-blue-100" bind:click="navigateToClubs">我的牌友圈 👥</btn>
+    </view>
+
+    <view style="position: relative; width: 100%; height: 0;">
+        <view class="flex-row items-center justify-center gap-2" style="position: absolute; top: 250rpx; left: 0; width: 100%;">
+            <view style="width: 70rpx; height: 70rpx; border-radius: 12rpx; overflow: hidden; display: flex; align-items: center; justify-content: center; background: transparent;">
+                <image src="{{appIconUrl}}" mode="aspectFit" style="width: 100%; height: 100%;" wx:if="{{appIconUrl}}"></image>
+            </view>
+            <text class="text-xl font-bold text-blue-500">快乐打牌记</text>
+        </view>
+    </view>
+
+    <view class="text-gray-500 text-sm border-b border-gray-400 pb-0.5 inline-block mt-8 mb-20" style="position: relative; left: 0rpx; top: 299rpx" bindtap="openHelpModal">使用说明</view>
+  </view>
+
+  <!-- Footer -->
+  <view class="pb-10 flex-col items-center gap-2 text-center">
+    <view class="text-xs text-gray-400 max-w-200 leading-tight">
+      <text>本程序仅供娱乐，请勿用于非法活动\n远离赌博，快乐生活</text>
+    </view>
+    <view class="text-xs text-gray-300 mt-1">版本号 V1.3.0</view>
+  </view>
+
+  <!-- Simple Profile Edit Modal (Overlay) -->
+  <view class="modal-overlay" wx:if="{{showProfileModal}}">
+    <view class="modal-content">
+        <view class="modal-header">
+            <text class="font-bold text-lg">修改信息</text>
+            <text class="close-btn" bindtap="closeProfileModal">×</text>
+        </view>
+        <view class="modal-body flex-col gap-4 mt-4">
+            <view class="flex-row items-center gap-2">
+                <text>昵称:</text>
+                <input class="input-field" value="{{tempName}}" bindinput="onNameInput" />
+            </view>
+             <view class="flex-col gap-2">
+                <text>选择头像:</text>
+                <view class="avatar-grid">
+                    <view wx:for="{{presetAvatars}}" wx:key="*this" 
+                          class="avatar-item {{tempAvatar === item ? 'selected' : ''}}"
+                          bindtap="selectAvatar" data-url="{{item}}">
+                        <avatar url="{{item}}" size="md"></avatar>
+                    </view>
+                </view>
+            </view>
+        </view>
+         <view class="modal-footer">
+            <btn size="sm" bind:click="closeProfileModal">取消</btn>
+            <btn size="sm" bind:click="saveProfile">确定</btn>
+        </view>
+    </view>
+  </view>
+
+  <!-- Join Room Modal -->
+  <view class="modal-overlay" wx:if="{{showJoinRoomModal}}">
+    <view class="modal-content">
+        <view class="modal-header">
+            <text class="font-bold text-lg">加入房间</text>
+            <text class="close-btn" bindtap="closeJoinModal">×</text>
+        </view>
+        <view class="modal-body flex-col gap-4 mt-4">
+            <view class="flex-col gap-2">
+                <input class="input-field text-center text-lg" placeholder="请输入6位房间号" type="number" maxlength="6" bindinput="onRoomIdInput" value="{{inputRoomId}}" />
+                <text class="text-xs text-red-500 mt-1" wx:if="{{joinError}}">{{joinError}}</text>
+            </view>
+        </view>
+         <view class="modal-footer">
+            <btn size="sm" bind:click="closeJoinModal">取消</btn>
+            <btn size="sm" bind:click="joinRoom">确定</btn>
+        </view>
+    </view>
+  </view>
+  <!-- Help Modal (Native Page Container) -->
+  <page-container 
+    show="{{showHelpModal}}" 
+    position="bottom" 
+    round 
+    bind:leave="closeHelpModal"
+    custom-style="background: #F7F8FA; padding-bottom: env(safe-area-inset-bottom);"
+  >
+    <view class="p-6 relative bg-white rounded-t-2xl">
+        <!-- Header with Centered Title -->
+        <view class="relative flex-row items-center justify-center mb-6 mt-12">
+            <text class="font-bold text-lg text-blue-500">使用说明</text>
+            <view 
+                class="absolute right-0 top-0 bottom-0 my-auto text-gray-400 text-2xl active:text-gray-600 flex items-center justify-center" 
+                bindtap="closeHelpModal"
+                style="width: 80rpx; height: 80rpx;"
+            >
+                ×
+            </view>
+        </view>
+        
+        <view class="flex-col items-center">
+            <!-- Image Container with Shadow -->
+            <image 
+                src="{{helpImages[helpIndex]}}" 
+                mode="widthFix" 
+                class="w-full rounded-xl transition-all duration-300" 
+                style="box-shadow: var(--shadow-md); max-height: 60vh;" 
+            />
+            
+            <!-- Navigation -->
+            <view class="flex-row items-center justify-between w-full mt-8 mb-2">
+                <view 
+                    class="skill-btn-secondary {{helpIndex === 0 ? 'opacity-50 pointer-events-none' : ''}}" 
+                    bindtap="prevHelp"
+                    style="min-width: 180rpx;"
+                >
+                    <text>上一页</text>
+                </view>
+                
+                <view class="text-gray-500 font-medium page-indicator bg-gray-100 px-3 py-1 rounded-full text-xs">
+                    {{helpIndex + 1}} / {{helpImages.length}}
+                </view>
+                
+                <view 
+                    class="skill-btn-primary {{helpIndex === helpImages.length - 1 ? 'opacity-50 pointer-events-none' : ''}}" 
+                    bindtap="nextHelp"
+                    style="min-width: 180rpx;"
+                >
+                    <text>下一页</text>
+                </view>
+            </view>
+        </view>
+    </view>
+  </page-container>
+</view>

@@ -1,0 +1,9 @@
+{
+    "name": "updateProfile",
+    "version": "1.0.0",
+    "description": "Atomic Profile Sync",
+    "main": "index.js",
+    "dependencies": {
+        "wx-server-sdk": "latest"
+    }
+}

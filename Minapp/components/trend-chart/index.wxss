@@ -1,0 +1,116 @@
+.chart-container {
+  padding: 16rpx;
+  background-color: #fff;
+  border-radius: 12rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  margin-bottom: 24rpx;
+  justify-content: center;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  font-size: 24rpx;
+  color: #374151;
+}
+
+.legend-avatar {
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: 50%;
+  margin-right: 8rpx;
+  border-width: 2rpx;
+  border-style: solid;
+}
+
+/* 已退出玩家的图例样式 */
+.legend-item.legend-left {
+  opacity: 0.7;
+}
+
+.legend-item.legend-left .player-name {
+  color: #9ca3af;
+}
+
+.legend-item.legend-left .legend-avatar.avatar-gray {
+  filter: grayscale(100%);
+  opacity: 0.7;
+}
+
+.player-name {
+  margin-right: 8rpx;
+  font-weight: bold;
+}
+
+.current-score {
+  font-weight: bold;
+}
+
+.chart-scroll-container {
+  width: 100%;
+  position: relative;
+  height: 200px; /* Fixed height for container */
+  background-color: #f9fafb;
+  border-radius: 8rpx;
+  overflow: hidden;
+}
+
+.chart-scroll-view {
+  width: 100%;
+  height: 100%;
+  white-space: nowrap; /* Ensure horizontal scrolling */
+}
+
+/* Ensure wrapper inside scroll view respects content width */
+.svg-wrapper {
+  position: relative;
+  height: 100%;
+  /* width is set inline by WXML */
+  background-color: transparent;
+}
+
+.fixed-y-labels {
+  position: absolute;
+  top: 0;
+  left: 8rpx;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 10; /* Ensure on top of scroll view */
+}
+
+.label-max, .label-min {
+  font-size: 20rpx;
+  color: #9ca3af;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 2rpx 4rpx;
+  border-radius: 4rpx;
+  backdrop-filter: blur(2px);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.chart-avatar-marker {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  z-index: 5;
+  background-color: #fff;
+}
+
+/* 已退出玩家的头像标记样式 */
+.chart-avatar-marker.avatar-left {
+  filter: grayscale(100%);
+  opacity: 0.6;
+}

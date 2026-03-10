@@ -1,0 +1,11 @@
+{
+  "name": "recordRankHistory",
+  "version": "1.0.0",
+  "description": "Record rank history for club members",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}
+
+

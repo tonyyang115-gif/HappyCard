@@ -1,0 +1,45 @@
+<view class="chart-container">
+  <!-- Legend -->
+  <view class="legend">
+    <view wx:for="{{paths}}" wx:key="id" class="legend-item {{item.hasLeft ? 'legend-left' : ''}}">
+      <image class="legend-avatar {{item.hasLeft ? 'avatar-gray' : ''}}" src="{{item.avatar}}" mode="aspectFill" style="border-color: {{item.color}}"></image>
+      <text class="player-name">{{item.name}}</text>
+      <text class="current-score" style="color: {{item.hasLeft ? '#9ca3af' : item.color}}">{{item.lastScore}}</text>
+    </view>
+  </view>
+
+  <!-- Chart Area -->
+  <view class="chart-scroll-container" style="position: relative;">
+      <!-- Fixed Y-Axis Labels -->
+      <view class="y-labels fixed-y-labels">
+        <text class="label-max">{{maxScore}}</text>
+        <text class="label-min">{{minScore}}</text>
+     </view>
+
+      <!-- Scrollable Chart -->
+      <scroll-view 
+        scroll-x 
+        class="chart-scroll-view"
+        enhanced="{{true}}"
+        show-scrollbar="{{false}}"
+        fast-deceleration="{{true}}"
+        catchtouchmove="preventTouchMove"
+        bindtouchstart="onTouchStart"
+        bindtouchmove="onTouchMove"
+        bindtouchend="onTouchEnd">
+         <view class="svg-wrapper" style="width: {{chartWidth}}px; height: 200px; position: relative;">
+            <image class="chart-svg" src="{{chartUrl}}" mode="aspectFill" style="width: 100%; height: 100%; display: block;"></image>
+            
+            <!-- Avatar Markers -->
+            <block wx:for="{{avatarMarkers}}" wx:key="id">
+                <image
+                    class="chart-avatar-marker {{item.hasLeft ? 'avatar-left' : ''}}"
+                    src="{{item.avatar}}"
+                    mode="aspectFill"
+                    style="left: {{item.x - 10}}px; top: {{item.y - 10}}px; border-color: {{item.color}};"
+                ></image>
+            </block>
+         </view>
+      </scroll-view>
+  </view>
+</view>

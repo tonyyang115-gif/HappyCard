@@ -1,0 +1,101 @@
+<page-meta>
+  <navigation-bar title="我的牌友圈" back="{{true}}" color="black" background="#dce9ff"></navigation-bar>
+</page-meta>
+
+<view class="container pb-safe box-border" style="padding-top: 200rpx; padding-left: 24rpx; padding-right: 24rpx;">
+  <view class="header flex-col items-center" style="margin-top: 40rpx; margin-bottom: 80rpx;">
+    <text class="text-3xl font-bold text-blue-500 block text-center" style="margin-bottom: 30rpx;">我的牌友圈</text>
+    <text class="text-sm text-gray-500 block text-center">管理和朋友们的长期战局</text>
+  </view>
+
+  <!-- Club List -->
+  <view class="club-list flex-col gap-4 flex-1 {{clubs.length === 0 ? 'justify-center' : ''}}" style="min-height: 50vh; width: 100%;">
+    <block wx:if="{{loading && clubs.length === 0}}">
+        <view wx:for="{{[1,2,3]}}" wx:key="*this" class="club-card" style="opacity: 0.6;">
+            <view class="skeleton" style="width: 110rpx; height: 110rpx; border-radius: 16rpx;"></view>
+            <view class="club-info flex-col flex-1 gap-2">
+                <view class="skeleton skeleton-text-lg"></view>
+                <view class="skeleton skeleton-text-sm" style="width: 40%;"></view>
+            </view>
+        </view>
+    </block>
+    <block wx:elif="{{clubs.length === 0}}">
+        <view class="empty-state flex-col items-center">
+            <view class="text-6xl opacity-80 animate-bounce" style="margin-bottom: 60rpx;">👥</view>
+            <text class="text-gray-500 font-bold text-lg" style="margin-bottom: 40rpx;">还没有加入任何圈子</text>
+            <view class="bg-white px-6 py-3 rounded-full shadow-sm">
+                <text class="text-blue-500 text-sm font-medium">✨ 快创建一个邀请朋友吧！</text>
+            </view>
+        </view>
+    </block>
+    <block wx:else>
+        <!-- Similar list content ... -->
+        <view wx:for="{{clubs}}" wx:key="_id" bindtap="gotoDetail" data-id="{{item._id}}" class="club-card">
+            <!-- Left: Club Icon -->
+            <image src="{{item.avatar}}" class="club-icon" mode="aspectFill"></image>
+            
+            <!-- Right: Info -->
+            <view class="club-info flex-col flex-1">
+                <view class="flex-row items-center justify-between">
+                    <text class="club-name">{{item.name}}</text>
+                </view>
+                
+                <view class="club-stats flex-row items-center">
+                    <!-- Members Avatars -->
+                    <view class="flex-row items-center mr-3">
+                        <view class="flex-row">
+                             <block wx:for="{{item.members}}" wx:for-item="member" wx:key="openId" wx:if="{{index < 3}}">
+                                <image src="{{member.avatar}}" class="avatar-stack-item {{index > 0 ? '-ml-2' : ''}}" mode="aspectFill"></image>
+                            </block>
+                        </view>
+                        <text class="text-xs text-gray-500 ml-2">{{item.members.length}}人</text>
+                    </view>
+
+                    <view class="w-px h-3 bg-gray-300 mx-2"></view>
+
+                    <!-- Game Count -->
+                    <text class="text-xs text-gray-500">{{item.totalGames || 0}}局</text>
+                </view>
+            </view>
+        </view>
+    </block>
+  </view>
+
+  <!-- Action Buttons -->
+  <view class="footer-action w-full flex-col" style="padding-left: 60rpx; padding-right: 60rpx; margin-top: 100rpx; margin-bottom: 60rpx; box-sizing: border-box;">
+      <view class="flex-row gap-3 w-full mb-4">
+          <view class="flex-1">
+              <btn fullWidth size="lg" className="rounded-xl bg-white text-blue-500 shadow-sm border border-blue-100 font-bold" bind:click="openSearchModal">🔍 加入圈子</btn>
+          </view>
+          <view class="flex-1">
+              <btn fullWidth size="lg" className="rounded-xl shadow-blue font-bold" bind:click="gotoCreate">✨ 创建圈子</btn>
+          </view>
+      </view>
+      <btn fullWidth size="lg" className="rounded-xl bg-gray-50 text-gray-500 shadow-xs border border-gray-200" bind:click="goHome">返回首页</btn>
+  </view>
+
+  <!-- Search Club Modal -->
+  <view class="modal-overlay" wx:if="{{showSearchModal}}" bindtap="closeSearchModal">
+    <view class="modal-content" catchtap="true">
+        <view class="modal-header">
+            <text class="font-bold text-lg">搜索圈子</text>
+            <text class="close-btn" bindtap="closeSearchModal">×</text>
+        </view>
+        <view class="modal-body flex-col gap-6 mt-6">
+            <view class="flex-col gap-2">
+                <text class="text-sm text-gray-400">请输入6位圈子ID号</text>
+                <input 
+                    class="search-input-field" 
+                    placeholder="例如：123456"
+                    maxlength="6"
+                    focus="{{showSearchModal}}"
+                    bindinput="onSearchInput" 
+                />
+                <text wx:if="{{searchError}}" class="text-xs text-red-500 mt-1">{{searchError}}</text>
+            </view>
+            
+            <btn fullWidth size="lg" className="rounded-xl shadow-blue" bind:click="confirmSearch">立即搜索</btn>
+        </view>
+    </view>
+  </view>
+</view>

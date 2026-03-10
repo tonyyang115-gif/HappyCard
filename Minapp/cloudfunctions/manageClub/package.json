@@ -1,0 +1,9 @@
+{
+    "name": "manageClub",
+    "version": "1.0.0",
+    "description": "Atomic Club Management (Leave/Kick)",
+    "main": "index.js",
+    "dependencies": {
+        "wx-server-sdk": "latest"
+    }
+}

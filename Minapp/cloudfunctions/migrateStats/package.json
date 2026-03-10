@@ -1,0 +1,11 @@
+{
+    "name": "migrateStats",
+    "version": "1.0.0",
+    "description": "Migration script for club stats",
+    "main": "index.js",
+    "author": "Antigravity",
+    "license": "ISC",
+    "dependencies": {
+        "wx-server-sdk": "latest"
+    }
+}

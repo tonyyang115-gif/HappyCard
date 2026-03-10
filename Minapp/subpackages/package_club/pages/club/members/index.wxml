@@ -1,0 +1,105 @@
+    <!-- Tab Header -->
+    <view class="tabs-header">
+        <view class="tab-item {{currentTab === 0 ? 'active' : ''}}" bindtap="onTabChange" data-tab="0">
+            <text>基础设置</text>
+            <view class="indicator" wx:if="{{currentTab === 0}}"></view>
+        </view>
+        <view class="tab-item {{currentTab === 1 ? 'active' : ''}}" bindtap="onTabChange" data-tab="1">
+            <text>成员管理</text>
+            <view class="indicator" wx:if="{{currentTab === 1}}"></view>
+        </view>
+    </view>
+
+    <!-- Tab 0: Settings -->
+    <block wx:if="{{currentTab === 0}}">
+        <view class="p-4 mt-2">
+            <view class="bg-white rounded-xl p-4 shadow-sm mb-4">
+                <view class="mb-2 text-sm text-gray-500">圈子名称</view>
+                <input class="w-full bg-gray-50 p-3 rounded-lg text-base" value="{{clubInfo.name}}" bindinput="onNameInput" maxlength="20" />
+                
+                <view class="mb-2 mt-4 text-sm text-gray-500">圈子简介</view>
+                <textarea class="w-full bg-gray-50 p-3 rounded-lg text-base" style="height: 160rpx;" value="{{clubInfo.description}}" bindinput="onDescInput" maxlength="200" placeholder="介绍一下你的圈子..." />
+            </view>
+            
+            <btn fullWidth size="lg" className="rounded-xl shadow-blue font-bold" bind:click="saveSetting">保存修改</btn>
+
+            <!-- Danger Zone -->
+            <view class="mt-8 pt-6 border-t border-gray-100">
+                <view class="text-xs text-red-500 mb-4 font-bold">⚠️ 危险区域</view>
+                <btn fullWidth size="lg" className="rounded-xl bg-red-50 text-red-500 border border-red-100" bind:click="onDissolveTap">解散圈子</btn>
+            </view>
+        </view>
+    </block>
+
+    <!-- Tab 1: Members (Existing Layout) -->
+    <block wx:if="{{currentTab === 1}}">
+        <!-- 搜索栏 -->
+        <view class="search-bar">
+            <view class="search-input-wrapper">
+                <text class="search-icon">🔍</text>
+                <input 
+                    class="search-input"
+                    type="text"
+                    placeholder="搜索成员昵称"
+                    value="{{searchKeyword}}"
+                    bindinput="onSearchInput"
+                    bindconfirm="onSearchConfirm"
+                />
+                <text wx:if="{{searchKeyword}}" class="clear-icon" bindtap="clearSearch">✕</text>
+            </view>
+        </view>
+
+        <!-- 下拉刷新 -->
+        <scroll-view scroll-y style="width: 100%; height: calc(100vh - 280rpx);" bindscrolltolower="loadMoreMembers" refresher-enabled="{{true}}" bindrefresherrefresh="onRefreshMembers" refresher-triggered="{{refreshingMembers}}">
+            <view class="member-list">
+                <block wx:for="{{members}}" wx:key="openId">
+                    <view class="member-item">
+                        <image class="member-avatar" src="{{item.avatar || 'https://api.dicebear.com/7.x/initials/svg?seed=?backgroundColor=c0aede'}}" mode="aspectFill"></image>
+                        
+                        <view class="member-info">
+                            <text class="member-name">{{item.name}}</text>
+                            <view class="flex-row items-center mt-1">
+                                <!-- Owner Badge -->
+                                <view wx:if="{{item.openId === ownerId}}" class="badge-owner">圈主</view>
+                                <!-- ID Preview (Optional) -->
+                                <text class="text-xs text-gray-400 ml-2">加入时间: {{item.joinDate || '未知'}}</text>
+                            </view>
+                        </view>
+
+                        <!-- Remove Button (Only for Owner and not self) -->
+                        <view wx:if="{{isOwner && item.openId !== ownerId}}" 
+                              class="remove-btn" 
+                              bindtap="onRemoveTap" 
+                              data-openid="{{item.openId}}" 
+                              data-name="{{item.name}}">
+                            移除
+                        </view>
+                    </view>
+                </block>
+
+                <!-- Loading State -->
+                <view wx:if="{{isLoading && members.length === 0}}" class="loading-state">
+                    <view class="skeleton"></view>
+                    <view class="skeleton" style="margin-left: 120rpx; width: 200rpx;"></view>
+                </view>
+
+                <!-- Load More Indicator -->
+                <view wx:if="{{hasMore && members.length > 0}}" class="load-more-indicator">
+                    <text wx:if="{{isLoading}}" class="text-xs text-gray-400">加载中...</text>
+                    <text wx:else class="text-xs text-gray-400">上拉加载更多</text>
+                </view>
+
+                <!-- No More Indicator -->
+                <view wx:if="{{!hasMore && members.length > 0}}" class="no-more-indicator">
+                    <text class="text-xs text-gray-400">没有更多成员了</text>
+                </view>
+            </view>
+        </scroll-view>
+
+        <!-- Empty State -->
+        <view wx:if="{{!isLoading && members.length === 0}}" class="empty-state">
+            <view class="text-6xl opacity-80">👥</view>
+            <view class="text-gray-500 font-bold text-lg mb-4">暂无成员</view>
+            <view class="text-sm text-gray-400">圈子还没有成员，快邀请朋友加入吧！</view>
+        </view>
+    </block>

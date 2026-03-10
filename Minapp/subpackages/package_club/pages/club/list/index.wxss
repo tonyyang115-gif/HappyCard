@@ -1,0 +1,152 @@
+/* Pages background */
+page {
+    /* Exact gradient from room/index.wxss */
+    background: linear-gradient(180deg, #dce9ff 0%, #f5f7fa 25%, #f5f7fa 100%);
+    min-height: 100vh;
+}
+
+.container {
+    width: 100%;
+}
+
+/* Card Styles */
+.club-card {
+    background: #FFFFFF;
+    border-radius: 20rpx;
+    box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+    transition: all 0.2s ease;
+    padding: 30rpx; /* Increased padding for "Lengthen" / more substantial feel */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 24rpx;
+}
+
+.club-card:active {
+    background: #F9FAFB;
+    transform: scale(0.99);
+}
+
+/* New Left Icon */
+.club-icon {
+    width: 110rpx;
+    height: 110rpx;
+    border-radius: 16rpx;
+    background-color: #f3f4f6;
+    border: 1rpx solid #e5e7eb;
+    flex-shrink: 0;
+}
+
+/* Right Info Area */
+.club-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12rpx; /* Spacing between name row and stats row */
+}
+
+.club-name {
+    font-family: 'PingFang SC', sans-serif; /* Ensure clean font */
+    font-size: 34rpx;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 380rpx; /* Prevent overlap with arrow if long name */
+}
+
+.club-stats {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+/* Avatar Stack in Stats */
+.avatar-stack-item {
+    width: 40rpx;
+    height: 40rpx;
+    border-radius: 50%;
+    border: 3rpx solid #ffffff;
+    background-color: #e5e7eb;
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4rpx);
+}
+
+.modal-content {
+    width: 600rpx;
+    background-color: #ffffff;
+    border-radius: 32rpx;
+    padding: 40rpx;
+    box-sizing: border-box;
+    box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20rpx;
+}
+
+.close-btn {
+    font-size: 48rpx;
+    color: #94a3b8;
+    padding: 10rpx;
+}
+
+.search-input-field {
+    background-color: #f1f5f9;
+    height: 100rpx;
+    border-radius: 20rpx;
+    padding: 0 32rpx;
+    font-size: 40rpx;
+    font-weight: bold;
+    color: #1e293b;
+    letter-spacing: 4rpx;
+}
+
+/* Utility / Refined Colors */
+.text-xs {
+    font-size: 24rpx;
+}
+
+/* Skeleton Loading Effects */
+.skeleton {
+    position: relative;
+    overflow: hidden;
+    background-color: #f1f5f9;
+    border-radius: 8rpx;
+    color: transparent !important;
+}
+
+.skeleton::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(90deg, 
+        rgba(255,255,255,0) 0%, 
+        rgba(255,255,255,0.6) 50%, 
+        rgba(255,255,255,0) 100%
+    );
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.skeleton-text-lg { height: 40rpx; width: 70%; margin-bottom: 8rpx; }
+.skeleton-text-sm { height: 28rpx; width: 40%; }

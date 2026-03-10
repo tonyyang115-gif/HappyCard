@@ -1,0 +1,10 @@
+{
+    "name": "debugMembers",
+    "version": "1.0.0",
+    "description": "Debug Member Stats",
+    "main": "index.js",
+    "dependencies": {
+        "wx-server-sdk": "latest"
+    },
+    "author": "Antigravity"
+}

@@ -1,0 +1,11 @@
+{
+    "name": "cleanup-rooms",
+    "version": "1.0.0",
+    "description": "Automatically settles inactive rooms",
+    "main": "index.js",
+    "author": "Antigravity",
+    "license": "ISC",
+    "dependencies": {
+        "wx-server-sdk": "latest"
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "name": "auto-settle-room",
+    "version": "1.0.0",
+    "description": "Auto Settle Room Function",
+    "main": "index.js",
+    "dependencies": {
+        "wx-server-sdk": "latest"
+    }
+}

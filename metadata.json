@@ -1,0 +1,7 @@
+{
+  "name": "快乐打牌记",
+  "description": "一款模拟微信小程序风格的打牌计分工具，支持创建房间、邀请好友、实时计分。",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+    "navigationBarTitleText": "个人中心",
+    "usingComponents": {
+        "avatar": "/components/avatar/index",
+        "btn": "/components/button/index"
+    },
+    "navigationStyle": "custom",
+    "enablePullDownRefresh": true,
+    "backgroundColor": "#f8fafc"
+}
