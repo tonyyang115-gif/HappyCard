@@ -95,12 +95,7 @@ Page({
         showLeaveModal: false,
         showChartModal: false,
         chartRounds: [],
-
-        // Rounds pagination
-        roundsPage: 1,
-        roundsPageSize: 20,
-        hasMoreRounds: true,
-        isLoadingMoreRounds: false,
+        chartFullRounds: [],
 
         // Score detail pagination (for full history)
         scoreDetailRoundsPage: 1,
@@ -867,10 +862,6 @@ Page({
                 // 新数据到达，清除缓存并重新计算
                 _this.invalidateClusterCache();
 
-                // 更新是否有更多数据的状态
-                _this.batchUpdater.set({
-                    hasMoreRounds: snapshot.docs.length >= roundsLimit
-                });
                 _this.updateLocalRoom(currentUser);
             },
             onError: function (err) {
@@ -933,59 +924,6 @@ Page({
                 }
             }
         });
-    },
-
-    // 加载更多历史回合数据
-    async loadMoreRounds() {
-        if (this.data.isLoadingMoreRounds || !this.data.hasMoreRounds) {
-            return;
-        }
-
-        this.setData({ isLoadingMoreRounds: true });
-        wx.showLoading({ title: '加载中...', mask: true });
-
-        try {
-            const db = wx.cloud.database();
-            const currentPage = this.data.roundsPage;
-            const pageSize = this.data.roundsPageSize;
-
-            // 获取下一页数据
-            const res = await db.collection(cloudApi.collectionName('rounds'))
-                .where({ roomId: this.data.roomId })
-                .orderBy('timestamp', 'desc')
-                .skip(currentPage * pageSize)
-                .limit(pageSize)
-                .get();
-
-            if (res.data && res.data.length > 0) {
-                // 合并新数据到现有数据
-                const newRounds = [...this.currentRoundsData, ...res.data];
-                this.currentRoundsData = newRounds;
-
-                // 更新UI
-                this.setData({
-                    roundsPage: currentPage + 1,
-                    hasMoreRounds: res.data.length >= pageSize,
-                    isLoadingMoreRounds: false
-                });
-
-                // 刷新本地房间数据（包括走势图）
-                this.updateLocalRoom(this.data.userInfo);
-                this.invalidateClusterCache();
-
-                wx.showToast({ title: `已加载 ${res.data.length} 条记录`, icon: 'success' });
-            } else {
-                // 没有更多数据
-                this.setData({ hasMoreRounds: false, isLoadingMoreRounds: false });
-                wx.showToast({ title: '没有更多数据', icon: 'none' });
-            }
-        } catch (err) {
-            console.error('Load more rounds error:', err);
-            this.setData({ isLoadingMoreRounds: false });
-            wx.showToast({ title: '加载失败，请重试', icon: 'none' });
-        } finally {
-            wx.hideLoading();
-        }
     },
 
     // 生成数据哈希(简单版本)
@@ -1728,11 +1666,7 @@ Page({
     // --- Chart Modal ---
     async openChartModal() {
         this.setData({ showChartModal: true });
-
-        // Independent fetch for chart data (Full history needed)
-        if (!this.data.chartDataLoaded) {
-            await this.fetchChartData();
-        }
+        await this.fetchChartData();
     },
 
     async fetchChartData() {
@@ -1758,8 +1692,7 @@ Page({
                 const clustered = this.clusterRounds(chronological);
 
                 this.setData({
-                    chartRounds: clustered,
-                    chartDataLoaded: true
+                    chartFullRounds: clustered
                 });
             }
         } catch (err) {

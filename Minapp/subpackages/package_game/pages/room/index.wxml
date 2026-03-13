@@ -491,18 +491,10 @@
        <view class="action-sheet-panel" catchtap="preventBubble" catchtouchmove="preventBubble" style="padding: 24px; background-color: #f6f7f9;">
             <view class="section-title mb-4">对局走势</view>
             <view style="position: relative; min-height: 200px;">
-                <trend-chart rounds="{{chartRounds}}" players="{{chartPlayers}}"></trend-chart>
+                <trend-chart rounds="{{chartFullRounds}}" players="{{chartPlayers}}"></trend-chart>
                 <view wx:if="{{chartLoading}}" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.8); display: flex; align-items: center; justify-content: center; z-index: 10;">
                     <text class="text-gray-500">加载数据中...</text>
                 </view>
-            </view>
-
-            <!-- 加载更多按钮 -->
-            <view wx:if="{{hasMoreRounds && !isLoadingMoreRounds}}" class="mt-4" style="width: 100%">
-                <view class="action-sheet-btn" style="border-radius: 8px; background-color: #f0f0f0; color: #666;" bindtap="loadMoreRounds">加载更多历史</view>
-            </view>
-            <view wx:if="{{isLoadingMoreRounds}}" class="mt-4" style="width: 100%">
-                <view class="action-sheet-btn" style="border-radius: 8px; background-color: #f0f0f0; color: #999;">加载中...</view>
             </view>
 
             <view class="mt-6" style="width: 100%">
