@@ -211,15 +211,19 @@ Component({
             // Sort by Y Descending to group close scores
             avatarMarkers.sort((a, b) => b.y - a.y || (a.id > b.id ? 1 : -1));
 
-            for (let i = 1; i < avatarMarkers.length; i++) {
-                const prev = avatarMarkers[i - 1];
-                const curr = avatarMarkers[i];
-
-                // If vertical gap is small (Collision or near-collision)
-                if (Math.abs(prev.y - curr.y) < 15) {
-                    // Shift current LEFT (Decrease X) to stack horizontally
-                    // This creates a card-stack effect to the left of the actual data point
-                    curr.x = prev.x - 15;
+            // Multi-pass collision resolution for 3+ avatars with close scores.
+            let hasCollision = true;
+            const MAX_ITER = 10;
+            let iter = 0;
+            while (hasCollision && iter++ < MAX_ITER) {
+                hasCollision = false;
+                for (let i = 1; i < avatarMarkers.length; i++) {
+                    const prev = avatarMarkers[i - 1];
+                    const curr = avatarMarkers[i];
+                    if (Math.abs(prev.y - curr.y) < 20) {
+                        curr.x = Math.max(10, prev.x - 15);
+                        hasCollision = true;
+                    }
                 }
             }
 
