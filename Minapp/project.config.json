@@ -46,24 +46,25 @@
   "packOptions": {
     "ignore": [
       {
-        "type": "folder",
-        "value": "/minitest"
+        "value": "/minitest",
+        "type": "folder"
       },
       {
-        "type": "glob",
-        "value": "Minapp_backup_*"
+        "value": "Minapp_backup_*",
+        "type": "glob"
       },
       {
-        "type": "glob",
-        "value": "**/*.md"
+        "value": "**/*.md",
+        "type": "glob"
       },
       {
-        "type": "glob",
-        "value": "cloudfunctions/**"
+        "value": "cloudfunctions/**",
+        "type": "glob"
       }
     ],
     "include": []
   },
   "editorSetting": {},
-  "cloudfunctionTemplateRoot": "cloudfunctionTemplate/"
+  "cloudfunctionTemplateRoot": "cloudfunctionTemplate/",
+  "libVersion": "3.12.0"
 }
