@@ -1,6 +1,19 @@
 const app = getApp();
 const cloudApi = require('../../../../utils/cloudApi');
 
+function getIdentityCandidates(entity) {
+    if (!entity) return [];
+    return [entity.id, entity.openId, entity.openid]
+        .filter(value => value !== undefined && value !== null && value !== '')
+        .map(value => String(value));
+}
+
+function isSameUser(left, right) {
+    const leftIds = getIdentityCandidates(left);
+    const rightIds = getIdentityCandidates(right);
+    return leftIds.some(id => rightIds.includes(id));
+}
+
 // 批量setData工具类
 function BatchSetData(pageContext) {
     this.context = pageContext;
@@ -1067,7 +1080,7 @@ Page({
         const activePlayers = roomData.players.filter(p => p.hasLeft !== true);
 
         // 计算是否可以结算
-        const isHost = roomData.host?.id === currentUser.id || roomData.host?.openId === currentUser.id;
+        const isHost = isSameUser(roomData.host, currentUser);
         const canSettle = !this.data.isReadOnly && isHost && roomData.status === 'active';
 
         // 判定是否为圈子房间（全系统统一判定标准）
@@ -1364,7 +1377,7 @@ Page({
     openBaseScoreModal() {
         if (!this.canPerformAction('view')) return; // Check general permission
         // Double check host permission
-        const isHost = this.data.room.host?.id === this.data.userInfo.id || this.data.room.host?.openId === this.data.userInfo.id;
+        const isHost = isSameUser(this.data.room.host, this.data.userInfo);
         if (!isHost) {
             wx.showToast({ title: '仅房主可设置底分', icon: 'none' });
             return;
@@ -1821,7 +1834,7 @@ Page({
             return;
         }
 
-        const isHost = this.data.room.host.id === this.data.userInfo.id || this.data.room.host.openId === this.data.userInfo.id;
+        const isHost = isSameUser(this.data.room.host, this.data.userInfo);
         if (!isHost) {
             wx.showToast({ title: '仅房主可执行结算', icon: 'none' });
             return;
