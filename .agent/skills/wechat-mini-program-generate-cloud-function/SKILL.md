@@ -1,6 +1,6 @@
 ---
-name: generate-cloud-function
-description: Generates complete cloud functions with the required trinity files (index.js, package.json, config.json). Use when user needs backend logic or server-side operations.
+name: wechat-mini-program-generate-cloud-function
+description: "Generate production-ready WeChat cloud functions with index.js, package.json, config.json, validation, and permissions. Use when implementing backend logic, server-side workflows, OpenAPI calls, or database operations in cloud functions."
 ---
 
 # Cloud Function Generator

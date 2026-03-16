@@ -1,6 +1,6 @@
 ---
-name: generate-page
-description: Generates Skyline-optimized pages with `Component` constructor, native scrollbar hiding, and grid layouts. Use for "create page", "list", "feed".
+name: wechat-mini-program-generate-page
+description: "Generate Skyline-first WeChat page implementations for list, grid, waterfall, and scroll-heavy views. Use when asked to create a new page, feed, list, masonry layout, or high-performance scrolling UI."
 ---
 
 # Skyline Page Generator

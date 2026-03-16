@@ -1,6 +1,6 @@
 ---
-name: code-refactor-engine
-description: Modernizes legacy code by migrating deprecated APIs to current standards. Use when user mentions "refactor", "upgrade", "modernize", "migrate", or when detecting old API patterns.
+name: wechat-mini-program-code-refactor-engine
+description: "Refactor legacy WeChat Mini Program code to modern APIs, async patterns, and safer migration steps. Use when upgrading old codebases, replacing deprecated APIs, modernizing implementation style, or performing compatibility migrations."
 ---
 
 # Code Refactoring Engine

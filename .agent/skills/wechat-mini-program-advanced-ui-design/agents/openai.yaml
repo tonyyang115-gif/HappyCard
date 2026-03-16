@@ -1,0 +1,4 @@
+interface:
+  display_name: "WeChat Mini Program - Advanced UI Design"
+  short_description: "Craft polished iOS-style mini program components"
+  default_prompt: "Use \$wechat-mini-program-advanced-ui-design to design a polished mini program component with motion and tokens."

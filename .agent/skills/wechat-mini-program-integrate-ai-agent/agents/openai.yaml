@@ -1,0 +1,4 @@
+interface:
+  display_name: "WeChat Mini Program - Integrate AI Agent"
+  short_description: "Add WeChat Cloud AI agent chat capabilities"
+  default_prompt: "Use \$wechat-mini-program-integrate-ai-agent to add WeChat Cloud AI Agent messaging with streaming responses."

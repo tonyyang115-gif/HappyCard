@@ -1,0 +1,4 @@
+interface:
+  display_name: "WeChat Mini Program - Code Refactor Engine"
+  short_description: "Modernize legacy WeChat APIs safely and quickly"
+  default_prompt: "Use \$wechat-mini-program-code-refactor-engine to migrate deprecated APIs to modern async and current standards."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "WeChat Mini Program - Generate Cloud Function"
+  short_description: "Create complete cloud function trinity files"
+  default_prompt: "Use \$wechat-mini-program-generate-cloud-function to generate index.js, package.json, and config.json for a cloud function."

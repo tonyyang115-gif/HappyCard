@@ -1,6 +1,6 @@
 ---
-name: database-schema-design
-description: Designs cloud database schemas with indexes, permissions, and auto-generates CRUD functions. Use when user mentions "database", "data model", "collection", "schema", or describes data structures.
+name: wechat-mini-program-database-schema-design
+description: "Design CloudBase data models with collection schema strategy, permission rules, indexes, and CRUD templates. Use when defining backend data structures, modeling entities, creating collections, or planning secure database operations."
 ---
 
 # Database Schema Designer

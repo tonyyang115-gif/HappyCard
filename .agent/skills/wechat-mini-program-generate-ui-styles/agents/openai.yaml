@@ -1,0 +1,4 @@
+interface:
+  display_name: "WeChat Mini Program - Generate UI Styles"
+  short_description: "Generate clean WXSS styles with native feel"
+  default_prompt: "Use \$wechat-mini-program-generate-ui-styles to produce WXSS styles for cards, buttons, forms, and safe areas."

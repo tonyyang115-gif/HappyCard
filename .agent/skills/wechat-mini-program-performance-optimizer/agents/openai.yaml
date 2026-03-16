@@ -1,0 +1,4 @@
+interface:
+  display_name: "WeChat Mini Program - Performance Optimizer"
+  short_description: "Find and fix mini program performance bottlenecks"
+  default_prompt: "Use \$wechat-mini-program-performance-optimizer to analyze lag and optimize setData, lists, and media usage."

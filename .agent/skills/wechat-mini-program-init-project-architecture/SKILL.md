@@ -1,6 +1,6 @@
 ---
-name: init-project-architecture
-description: Initializes WeChat Mini Program global architecture with Skyline support and official navigation patterns. Use when user says "new project", "create miniprogram", "initialize", or "scaffold project".
+name: wechat-mini-program-init-project-architecture
+description: "Bootstrap WeChat Mini Program foundations with Skyline renderer, glass-easel config, and global app structure. Use when creating a new mini program, scaffolding project architecture, or resetting app.json/app.js/app.wxss baselines."
 ---
 
 # Project Architecture Initialization
