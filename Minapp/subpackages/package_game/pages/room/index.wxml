@@ -1,4 +1,4 @@
-<page-meta page-style="{{ showScoreDetailModal || showTransferModal || showSettlementModal || showChartModal ? 'overflow: hidden;' : '' }}" />
+<page-meta page-style="{{ showScoreDetailModal || showTransferModal || showSettlementModal || showChartModal || showBaseScoreModal ? 'overflow: hidden;' : '' }}" />
 <view class="container room-container">
   <!-- Logo (Top Left) -->
   <view class="logo-container" style="position: absolute; top: calc(env(safe-area-inset-top) + 12px); left: 30rpx; z-index: 50; display: flex; flex-direction: row; align-items: center; gap: 8rpx;">
@@ -506,38 +506,40 @@
 
 
 
-  <!-- Base Score Setting Modal -->
-  <view class="modal-overlay" wx:if="{{showBaseScoreModal}}" catchtap="closeBaseScoreModal">
-      <view class="modal-content" catchtap="preventBubble" style="width: 85%; border-radius: 16px; overflow: hidden;">
-          <!-- Header: Relative for absolute close btn, centered title -->
-          <view class="relative flex-row justify-center items-center p-4 border-b border-gray-100">
-              <text class="text-lg font-bold text-gray-800">设置底分</text>
-              <view catchtap="closeBaseScoreModal" class="absolute right-2 p-2">
-                <text class="text-xl text-gray-400 font-bold">×</text>
-              </view>
+  <!-- Base Score Setting Action Sheet -->
+  <view class="action-sheet-overlay" wx:if="{{showBaseScoreModal}}" bindtap="closeBaseScoreModal">
+      <view class="action-sheet-panel base-score-sheet" catchtap="preventBubble">
+          <view class="base-score-header">
+              <view class="close-btn base-score-close" bindtap="closeBaseScoreModal">×</view>
+              <text class="base-score-title">设置底分</text>
           </view>
-          
-          <view class="p-6 flex-col items-center">
-              <!-- Hint: Centered and Blue -->
-              <text class="text-sm text-blue-500 mb-6 text-center font-medium">请输入房间底分\n(转账金额必须为此数值的倍数)</text>
-              
-              <!-- Lighter background bg-gray-100, Smaller Size -->
-              <view class="bg-gray-100 rounded-xl p-3 w-3/4 mb-8 flex-row justify-center">
-                  <input class="text-2xl font-bold text-center text-gray-800" type="number" value="{{newBaseScore}}" bindinput="onBaseScoreInput" focus="{{showBaseScoreModal}}" style="height: 60rpx;" />
+
+          <view class="base-score-body">
+              <text class="base-score-desc">设置房间底分，后续转账需为底分倍数</text>
+
+              <view class="base-score-input-row">
+                  <text class="base-score-input-label">底分</text>
+                  <input
+                    class="base-score-input"
+                    type="number"
+                    value="{{newBaseScore}}"
+                    bindinput="onBaseScoreInput"
+                    focus="{{showBaseScoreModal}}"
+                    placeholder="请输入"
+                    placeholder-style="color:#9ca3af;"
+                  />
+                  <text class="base-score-input-unit">分</text>
               </view>
-              
-              <view class="flex-row gap-4 w-full">
-                  <view class="flex-1">
-                     <!-- Cancel: Black bg, White text -->
-                     <button class="w-full py-2.5 rounded-lg bg-gray-900 text-white font-bold text-base" bindtap="closeBaseScoreModal" style="margin: 0;">取消</button>
-                  </view>
-                  <view class="flex-1">
-                      <!-- Confirm: Blue bg, White text -->
-                      <button class="w-full py-2.5 rounded-lg bg-blue-600 text-white font-bold text-base" bindtap="submitBaseScore" style="margin: 0;">确定</button>
-                  </view>
-              </view>
+
+              <text class="base-score-hint">提示：转账金额需为底分的整数倍</text>
+          </view>
+
+          <view class="base-score-footer">
+              <view class="base-score-btn base-score-btn-secondary" bindtap="closeBaseScoreModal">取消</view>
+              <view class="base-score-btn base-score-btn-primary" bindtap="submitBaseScore">确定</view>
           </view>
       </view>
+      <view class="safe-area-spacer bg-white"></view>
   </view>
 
 </view>
