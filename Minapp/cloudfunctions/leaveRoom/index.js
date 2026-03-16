@@ -74,6 +74,19 @@ function getIdentityCandidates(entity) {
         .map(value => String(value));
 }
 
+function isSameUser(left, right) {
+    const leftIds = getIdentityCandidates(left);
+    const rightIds = getIdentityCandidates(right);
+    return leftIds.some(id => rightIds.includes(id));
+}
+
+function syncHostFlags(players, hostPlayer) {
+    return players.map(player => ({
+        ...player,
+        isHost: hostPlayer ? isSameUser(player, hostPlayer) : false
+    }));
+}
+
 exports.main = async (event, context) => {
     const wxContext = cloud.getWXContext();
     const openId = wxContext.OPENID;
@@ -114,9 +127,8 @@ exports.main = async (event, context) => {
             }
 
             // 4. 检查玩家是否在房间中
-            const playerIndex = room.players.findIndex(p =>
-                String(p.id) === String(openId) || String(p.openid) === String(openId)
-            );
+            const currentPlayerIdentity = { id: openId, openId: openId, openid: openId };
+            const playerIndex = room.players.findIndex(p => isSameUser(p, currentPlayerIdentity));
 
             if (playerIndex === -1) {
                 return { success: true, msg: '您不在房间中' };
@@ -128,6 +140,7 @@ exports.main = async (event, context) => {
 
             // 软删除：将玩家标记为已退出，保留在数组中
             room.players[playerIndex].hasLeft = true;
+            room.players[playerIndex].isHost = false;
             let updatedPlayers = room.players;
 
             let updateData = {
@@ -143,12 +156,15 @@ exports.main = async (event, context) => {
                 if (activePlayers.length > 0) {
                     // 自动转移房主权限给第一个活跃玩家
                     const newHost = activePlayers[0];
-                    newHost.isHost = true;
                     newHostId = newHost.id;
+                    updatedPlayers = syncHostFlags(updatedPlayers, newHost);
                     updateData.host = newHost;
+                    updateData.players = updatedPlayers;
                     console.log(`Host transferred from ${openId} to ${newHost.id} (${newHost.name})`);
                 } else {
                     // 房主是最后一人，允许退出（房间变空）
+                    updatedPlayers = syncHostFlags(updatedPlayers, null);
+                    updateData.players = updatedPlayers;
                     console.log(`Last player (host) leaving room ${room.roomId}`);
                 }
             }

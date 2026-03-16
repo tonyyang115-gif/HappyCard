@@ -40,6 +40,26 @@ cloud.init({
     env: cloud.DYNAMIC_CURRENT_ENV
 });
 
+function getIdentityCandidates(entity) {
+    if (!entity) return [];
+    return [entity.id, entity.openId, entity.openid]
+        .filter(value => value !== undefined && value !== null && value !== '')
+        .map(value => String(value));
+}
+
+function isSameUser(left, right) {
+    const leftIds = getIdentityCandidates(left);
+    const rightIds = getIdentityCandidates(right);
+    return leftIds.some(id => rightIds.includes(id));
+}
+
+function syncHostFlags(players, hostPlayer) {
+    return players.map(player => ({
+        ...player,
+        isHost: hostPlayer ? isSameUser(player, hostPlayer) : false
+    }));
+}
+
 exports.resolveRoomDocId = async (db, inputId) => {
     if (!inputId) return null;
     let strId = String(inputId).trim();
@@ -229,18 +249,21 @@ exports.main = async (event, context) => {
             }
 
             // B. Room Capacity & Idempotency
-            const existingPlayer = players.find(p => p.id === openId || p.openid === openId);
+            const currentPlayerIdentity = { id: openId, openId: openId, openid: openId };
+            const existingPlayer = players.find(p => isSameUser(p, currentPlayerIdentity));
 
             if (existingPlayer) {
                 // 如果玩家已存在，检查是否是重新加入（hasLeft = true）
                 if (existingPlayer.hasLeft === true) {
                     // 重新加入：将 hasLeft 改为 false
-                    const updatedPlayers = players.map(p => {
-                        if (p.id === openId || p.openid === openId) {
+                    let updatedPlayers = players.map(p => {
+                        if (isSameUser(p, currentPlayerIdentity)) {
                             return { ...p, hasLeft: false };
                         }
                         return p;
                     });
+
+                    updatedPlayers = syncHostFlags(updatedPlayers, room.host);
 
                     await transaction.collection('rooms').doc(docId).update({
                         data: { players: updatedPlayers }
@@ -300,8 +323,10 @@ exports.main = async (event, context) => {
                 isHost: false
             };
 
+            const updatedPlayers = syncHostFlags([...players, newPlayer], room.host);
+
             await transaction.collection('rooms').doc(docId).update({
-                data: { players: _.push(newPlayer) }
+                data: { players: updatedPlayers }
             });
 
             return {
