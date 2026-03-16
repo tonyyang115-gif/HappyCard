@@ -144,6 +144,12 @@ Page({
         cid: null,
         club: null,
 
+        // 底分设置状态
+        docId: '',
+        baseScore: 1,
+        showBaseScoreModal: false,
+        newBaseScore: '',
+
         // Player count
         activePlayersCount: 0, // 活跃玩家数量
         chartPlayers: [], // 走势图显示所有玩家（包括已退出的）
@@ -538,7 +544,9 @@ Page({
 
                     if (snapshot.docs.length > 0) {
                         const roomData = snapshot.docs[0];
-                        _this.data.docId = roomData._id;
+                        _this.batchUpdater.set({
+                            docId: roomData._id
+                        });
                         _this.currentRoomData = roomData;
 
 
@@ -1408,6 +1416,11 @@ Page({
     },
 
     async submitBaseScore() {
+        if (!this.data.docId) {
+            wx.showToast({ title: '房间数据未就绪', icon: 'none' });
+            return;
+        }
+
         const score = parseInt(this.data.newBaseScore);
         if (isNaN(score) || score <= 0) {
             wx.showToast({ title: '请输入大于0的整数', icon: 'none' });
