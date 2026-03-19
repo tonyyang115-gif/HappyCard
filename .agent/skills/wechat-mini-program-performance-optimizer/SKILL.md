@@ -1,6 +1,6 @@
 ---
-name: performance-optimizer
-description: Analyzes and fixes performance issues like excessive setData, unoptimized lists, and slow cloud functions. Use when user mentions "slow", "laggy", "performance", "optimize", or "improve speed".
+name: wechat-mini-program-performance-optimizer
+description: "Diagnose and optimize mini program performance issues across setData usage, list rendering, image loading, and cloud calls. Use when users report lag, slowness, freezes, dropped frames, or request speed and responsiveness improvements."
 ---
 
 # Performance Optimization Engine

@@ -14,6 +14,14 @@ function isSameUser(left, right) {
     return leftIds.some(id => rightIds.includes(id));
 }
 
+function decoratePlayersWithHost(players, hostPlayer, currentUser) {
+    return players.map(player => ({
+        ...player,
+        isHost: isSameUser(player, hostPlayer),
+        isMe: String(player.id) === String(currentUser.id)
+    }));
+}
+
 // 批量setData工具类
 function BatchSetData(pageContext) {
     this.context = pageContext;
@@ -135,6 +143,12 @@ Page({
         // Club context (for club rooms)
         cid: null,
         club: null,
+
+        // 底分设置状态
+        docId: '',
+        baseScore: 1,
+        showBaseScoreModal: false,
+        newBaseScore: '',
 
         // Player count
         activePlayersCount: 0, // 活跃玩家数量
@@ -530,7 +544,9 @@ Page({
 
                     if (snapshot.docs.length > 0) {
                         const roomData = snapshot.docs[0];
-                        _this.data.docId = roomData._id;
+                        _this.batchUpdater.set({
+                            docId: roomData._id
+                        });
                         _this.currentRoomData = roomData;
 
 
@@ -1056,13 +1072,11 @@ Page({
         };
 
         // Sort players
-        const sorted = [...roomData.players]
-            .map(p => ({
-                ...p,
-                isMe: String(p.id) === String(currentUser.id)
-            }))
+        const decoratedPlayers = decoratePlayersWithHost(roomData.players, roomData.host, currentUser);
+
+        const sorted = [...decoratedPlayers]
             .sort((a, b) => b.totalScore - a.totalScore);
-        const myPlayer = roomData.players.find(p => String(p.id) === String(currentUser.id));
+        const myPlayer = decoratedPlayers.find(p => String(p.id) === String(currentUser.id));
         const myRank = sorted.findIndex(p => String(p.id) === String(currentUser.id)) + 1;
 
         // 计算活跃玩家数量（不包括已退出的）
@@ -1070,6 +1084,7 @@ Page({
 
         const viewRoom = {
             ...roomData,
+            players: decoratedPlayers,
             rounds: [] // View never needs rounds list for the main scoreboard
         };
 
@@ -1095,7 +1110,7 @@ Page({
             cid: cid,
             sortedPlayers: sorted,
             inputPlayers: activePlayers, // 只显示活跃玩家用于记分
-            chartPlayers: roomData.players, // 走势图显示所有玩家（包括已退出的）
+            chartPlayers: decoratedPlayers, // 走势图显示所有玩家（包括已退出的）
             chartRounds: clusteredChartRounds, // Pass clustered data to chart
             myScore: myPlayer ? myPlayer.totalScore : 0,
             myRank: myPlayer ? myRank : '-',
@@ -1401,6 +1416,11 @@ Page({
     },
 
     async submitBaseScore() {
+        if (!this.data.docId) {
+            wx.showToast({ title: '房间数据未就绪', icon: 'none' });
+            return;
+        }
+
         const score = parseInt(this.data.newBaseScore);
         if (isNaN(score) || score <= 0) {
             wx.showToast({ title: '请输入大于0的整数', icon: 'none' });

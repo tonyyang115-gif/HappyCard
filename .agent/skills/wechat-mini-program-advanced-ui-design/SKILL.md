@@ -1,6 +1,6 @@
 ---
-name: advanced-ui-design
-description: Creates iOS-native quality UI components with micro-interactions and animations. Use when user mentions "beautiful UI", "modern design", "button", "card", "modal", "animation", or requests native-feeling components.
+name: wechat-mini-program-advanced-ui-design
+description: "Design polished mini program UI components with iOS-like visual quality, motion tokens, and reusable style patterns. Use when requests focus on beautiful UI, modern components, buttons, cards, modals, animation, or native-feeling UX."
 ---
 
 # Advanced UI Design System

@@ -1,0 +1,4 @@
+interface:
+  display_name: "WeChat Mini Program - Generate Page"
+  short_description: "Build Skyline-optimized pages and scroll layouts"
+  default_prompt: "Use \$wechat-mini-program-generate-page to create a new Skyline page with list, grid, or waterfall layout."

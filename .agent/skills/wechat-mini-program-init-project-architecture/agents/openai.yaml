@@ -1,0 +1,4 @@
+interface:
+  display_name: "WeChat Mini Program - Init Project Architecture"
+  short_description: "Scaffold Skyline-ready miniprogram architecture"
+  default_prompt: "Use \$wechat-mini-program-init-project-architecture to scaffold a new WeChat Mini Program with Skyline defaults."

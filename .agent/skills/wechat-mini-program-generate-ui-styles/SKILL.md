@@ -1,6 +1,6 @@
 ---
-name: generate-ui-styles
-description: Generates minimalist, iOS-native quality WXSS styles. Use when user needs styling for cards, buttons, inputs, or mentions visual design.
+name: wechat-mini-program-generate-ui-styles
+description: "Generate clean, reusable WXSS styling systems with design tokens, component recipes, and safe-area handling. Use when polishing visuals for cards, buttons, inputs, forms, spacing, and modern mini program UI consistency."
 ---
 
 # UI Style Generator

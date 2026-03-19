@@ -1,0 +1,4 @@
+interface:
+  display_name: "WeChat Mini Program - Database Schema Design"
+  short_description: "Design CloudBase schemas, indexes, and CRUD flow"
+  default_prompt: "Use \$wechat-mini-program-database-schema-design to design a CloudBase collection schema and permission strategy."

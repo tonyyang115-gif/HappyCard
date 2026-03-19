@@ -1,0 +1,4 @@
+interface:
+  display_name: "WeChat Mini Program - Select Native Component"
+  short_description: "Pick the best official WeChat native component"
+  default_prompt: "Use \$wechat-mini-program-select-native-component to choose the right native WeChat component for a UI scenario."

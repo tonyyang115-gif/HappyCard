@@ -1,6 +1,6 @@
 ---
-name: integrate-ai-agent
-description: Integrates WeChat Cloud AI Agent capabilities. Use when user mentions "AI", "Agent", "Bot", "Check code", or "DeepSeek" integration.
+name: wechat-mini-program-integrate-ai-agent
+description: "Integrate WeChat Cloud AI Agent messaging with bot setup, streaming responses, and optional cloud-function wrappers. Use when implementing AI chat, bot interactions, DeepSeek-style assistants, or LLM features in mini programs."
 ---
 
 # AI Agent Integration

@@ -1,0 +1,4 @@
+interface:
+  display_name: "WeChat Mini Program - Diagnose and Fix"
+  short_description: "Diagnose mini program errors and apply robust fixes"
+  default_prompt: "Use \$wechat-mini-program-diagnose-and-fix to diagnose a mini program bug and propose verified code fixes."

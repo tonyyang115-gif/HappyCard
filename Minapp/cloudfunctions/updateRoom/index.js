@@ -1,4 +1,3 @@
-// cloudfunctions/createRoom/index.js
 const cloud = require('wx-server-sdk');
 
 cloud.init({
@@ -54,7 +53,14 @@ exports.main = async (event, context) => {
     console.log('Event received:', JSON.stringify(event, null, 2));
 
     const wxContext = cloud.getWXContext();
-    const openId = wxContext.OPENID; // Secure ID
+    // 增加 openId 的鲁棒性获取：有些本地调试环境可能字段不一致
+    const openId = wxContext.OPENID || wxContext.FROM_OPENID || event.userInfo?.openId;
+
+    if (!openId) {
+        console.error('[updateRoom] No OpenID found in context or event');
+        // 在本地调试时，如果没有登录态，collection.get 可能因为缺少凭证而报 missing secretId
+        // 建议用户开启本地调试的“在此处登录”或确保 IDE 已登录
+    }
 
     // 1. 初始化数据库适配器
     const db = new DBAdapter(cloud, event.__env);
@@ -76,49 +82,36 @@ exports.main = async (event, context) => {
 
             console.log(`[updateRoom] Updating logic for room ${roomId} by ${openId}`);
 
-            return await db.runTransaction(async transaction => {
-                // Get Room Doc
-                // If roomId is 6 digits, we need to query first or assume it's passed as DocID?
-                // The frontend passes Doc ID usually for safety in cloud functions, but check `roomId` parameter usage.
-                // In manageClub/createRoom logic, we often use DocId if available.
-                // Let's assume `roomId` passed here is the DocID (_id) for direct access.
-                // If not, we have to query.
-                
-                // Let's try to get by Doc ID
-                let roomDoc;
-                try {
-                    roomDoc = await transaction.collection('rooms').doc(roomId).get();
-                } catch(e) {
-                    // Try querying by display ID if Doc Get fails
-                    const queryRes = await transaction.collection('rooms').where({ roomId: roomId }).get();
-                    if (queryRes.data.length > 0) {
-                        roomDoc = { data: queryRes.data[0] };
-                    } else {
-                         throw new Error('Room not found');
-                    }
+            // 直接获取房间文档进行校验，移除事务以支持本地调试
+            let roomDoc;
+            try {
+                roomDoc = await db.collection('rooms').doc(roomId).get();
+            } catch (e) {
+                const queryRes = await db.collection('rooms').where({ roomId: roomId }).get();
+                if (queryRes.data.length > 0) {
+                    roomDoc = { data: queryRes.data[0] };
+                } else {
+                    throw new Error('Room not found');
                 }
-                
-                const room = roomDoc.data;
+            }
 
-                // Validate Permissions: Only Host can update settings
-                const hostIds = getIdentityCandidates(room.host);
-                if (!hostIds.includes(String(openId))) {
-                    throw new Error('Permission denied: Only host can change settings');
+            const room = roomDoc.data;
+
+            // 增强权限校验逻辑
+            const hostIds = getIdentityCandidates(room.host);
+            if (!hostIds.includes(String(openId))) {
+                throw new Error('Permission denied: Only host can change settings');
+            }
+
+            const targetDocId = room._id;
+
+            await db.collection('rooms').doc(targetDocId).update({
+                data: {
+                    baseScore: Number(baseScore)
                 }
-
-                // Construct Update Data
-                // If using Doc ID, we update by roomId (DocID)
-                // If resolved by query, we use room._id
-                const targetDocId = room._id;
-
-                await transaction.collection('rooms').doc(targetDocId).update({
-                    data: {
-                        baseScore: Number(baseScore)
-                    }
-                });
-
-                return { success: true, baseScore: Number(baseScore) };
             });
+
+            return { success: true, baseScore: Number(baseScore) };
         }
 
         return { success: false, msg: 'Unknown action' };

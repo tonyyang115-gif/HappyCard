@@ -1,6 +1,6 @@
 ---
-name: diagnose-and-fix
-description: Intelligently diagnoses and fixes common errors including navigation issues, cloud function failures, and permission errors. Use when user reports bugs or unexpected behavior.
+name: wechat-mini-program-diagnose-and-fix
+description: "Troubleshoot and fix common mini program runtime, navigation, cloud-function, and permission issues with root-cause guidance. Use when users report bugs, errors, broken flows, unexpected behavior, or need actionable debugging fixes."
 ---
 
 # Intelligent Error Diagnosis & Fix

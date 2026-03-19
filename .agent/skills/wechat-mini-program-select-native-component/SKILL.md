@@ -1,6 +1,6 @@
 ---
-name: select-native-component
-description: Recommends the best native WeChat component for specific UI scenarios. Use when user describes UI needs like popups, lists, pickers, or media upload.
+name: wechat-mini-program-select-native-component
+description: "Recommend the best official WeChat native components for concrete UI and interaction scenarios. Use when choosing between popup, list, picker, upload, modal, portal, or other component implementation options."
 ---
 
 # Native Component Selector
