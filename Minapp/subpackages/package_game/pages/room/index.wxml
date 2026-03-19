@@ -78,38 +78,41 @@
 
   <!-- Main Content -->
   <view class="main-content" wx:if="{{!loading}}">
-     <view class="flex-row justify-between items-center mb-2 px-2">
+     <view class="flex-row justify-between items-center mb-2 px-2 room-meta-row">
           <!-- Left Side Group: Room ID & Base Score -->
-          <view class="flex-row items-center gap-3">
+          <view class="flex-row items-center room-meta-left">
              <!-- Room ID Pill -->
-             <view class="flex-row items-center bg-blue-50 px-3 py-1.5 rounded-lg">
+             <view class="flex-row items-center bg-blue-50 px-3 py-1.5 rounded-lg room-meta-pill">
                  <text class="text-sm font-bold text-blue-500 mr-2">房间号：</text>
-                 <text class="text-base font-bold text-blue-700">{{roomId}}</text>
+                 <text class="text-sm font-bold text-blue-700">{{roomId}}</text>
              </view>
+             <view class="room-meta-divider"></view>
 
              <!-- Base Score Pill (Changed to Blue) -->
-             <view bindtap="openBaseScoreModal" class="flex-row items-center bg-blue-50 px-3 py-1.5 rounded-lg">
+             <view bindtap="openBaseScoreModal" class="flex-row items-center bg-blue-50 px-3 py-1.5 rounded-lg room-meta-pill">
                 <text class="text-sm font-bold text-blue-500 mr-2">底分：</text>
-                <text class="text-base font-bold text-blue-700">{{baseScore}}</text>
-                <text wx:if="{{room.host.id === userInfo.id && !isReadOnly}}" style="font-size: 12px; color: #3b82f6; margin-left: 6px;">✎</text>
+                <text class="text-sm font-bold text-blue-700">{{baseScore}}</text>
+                <text style="font-size: 12px; color: #3b82f6; margin-left: 6px;">✎</text>
              </view>
 
              <!-- Read Only Badge -->
-             <view wx:if="{{isReadOnly}}" class="bg-gray-100 px-2 py-1 rounded-lg">
+             <view wx:if="{{isReadOnly}}" class="bg-gray-100 px-2 py-1 rounded-lg room-meta-pill room-meta-readonly">
                  <text class="text-xs font-bold text-gray-500">历史快照</text>
              </view>
           </view>
+          <view class="room-meta-divider"></view>
           
           <!-- Right Side: Player Count -->
-          <view class="flex-row items-center gap-2">
-              <view class="flex-row items-center bg-gray-50 px-3 py-1.5 rounded-lg">
-                  <text class="text-sm font-bold text-gray-500 mr-2">人数：</text>
-                  <text class="text-base font-bold text-gray-500">{{activePlayersCount}}/{{room.players.length}}</text>
+          <view class="flex-row items-center room-meta-right">
+              <view class="flex-row items-center bg-gray-50 px-3 py-1.5 rounded-lg room-meta-pill player-count-pill">
+                  <text class="text-sm font-bold text-blue-500 mr-2">人数：</text>
+                  <text class="text-sm font-bold text-blue-700">{{activePlayersCount}}/{{room.players.length}}</text>
               </view>
+              <view wx:if="{{!isReadOnly}}" class="room-meta-divider"></view>
               
               <!-- Share Button -->
-              <button open-type="share" class="invite-square-btn" style="width: 64rpx; height: 64rpx; display: flex; align-items: center; justify-content: center; margin: 0;" wx:if="{{!isReadOnly}}">
-                  <text class="plus-icon-lg" style="margin-top: -4rpx;">+</text>
+              <button open-type="share" class="invite-share-btn" wx:if="{{!isReadOnly}}">
+                  邀请好友
               </button>
           </view>
      </view>
