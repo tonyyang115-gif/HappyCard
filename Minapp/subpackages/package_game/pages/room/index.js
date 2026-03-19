@@ -184,9 +184,9 @@ Page({
             // Club room: Emphasize club identity
             const clubName = this.data.club?.name || '圈子';
             if (this.data.isReadOnly) {
-                title = `【${clubName}】对局回顾 - 房间号 ${this.data.roomId}`;
+                title = `【${clubName}】对局回顾，房间号：${this.data.roomId}`;
             } else {
-                title = `快来加入【${clubName}】的对局！房间号：${this.data.roomId}`;
+                title = `快来加入【${clubName}】的对局吧！房间号：${this.data.roomId}`;
             }
 
             // Use club avatar if available
@@ -196,7 +196,7 @@ Page({
         } else {
             // Free room: Highlight quick join
             if (this.data.isReadOnly) {
-                title = `对局回顾：房间号 ${this.data.roomId}`;
+                title = `对局回顾，房间号：${this.data.roomId}`;
             } else {
                 title = `来一起打牌吧！房间号：${this.data.roomId}`;
             }
