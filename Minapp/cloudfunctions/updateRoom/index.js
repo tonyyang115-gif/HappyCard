@@ -41,6 +41,13 @@ class DBAdapter {
     }
 }
 
+function getIdentityCandidates(entity) {
+    if (!entity) return [];
+    return [entity.id, entity.openId, entity.openid]
+        .filter(value => value !== undefined && value !== null && value !== '')
+        .map(value => String(value));
+}
+
 exports.main = async (event, context) => {
     // [DEBUG] Loud Log to confirm code update
     console.log('!!! updateRoom EXECUTION STARTED (INLINED ADAPTER) !!!');
@@ -94,8 +101,8 @@ exports.main = async (event, context) => {
                 const room = roomDoc.data;
 
                 // Validate Permissions: Only Host can update settings
-                const hostId = room.host.id || room.host.openId;
-                if (hostId !== openId) {
+                const hostIds = getIdentityCandidates(room.host);
+                if (!hostIds.includes(String(openId))) {
                     throw new Error('Permission denied: Only host can change settings');
                 }
 

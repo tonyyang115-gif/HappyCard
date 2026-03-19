@@ -67,6 +67,13 @@ cloud.init({
     env: cloud.DYNAMIC_CURRENT_ENV
 });
 
+function getIdentityCandidates(entity) {
+    if (!entity) return [];
+    return [entity.id, entity.openId, entity.openid]
+        .filter(value => value !== undefined && value !== null && value !== '')
+        .map(value => String(value));
+}
+
 exports.main = async (event, context) => {
     const wxContext = cloud.getWXContext();
     const openId = wxContext.OPENID;
@@ -117,7 +124,7 @@ exports.main = async (event, context) => {
 
             // 5. 软删除逻辑：标记玩家已退出（不删除，保留积分和历史）
             let newHostId = null;
-            const isHost = room.host.id === openId || room.host.openId === openId;
+            const isHost = getIdentityCandidates(room.host).includes(String(openId));
 
             // 软删除：将玩家标记为已退出，保留在数组中
             room.players[playerIndex].hasLeft = true;

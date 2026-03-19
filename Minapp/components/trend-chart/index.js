@@ -81,7 +81,7 @@ Component({
             const finalMin = min - padding;
             const finalMax = max + padding;
 
-            // 3. Construct SVG String
+            // 3. Render Chart via OffscreenCanvas
             const minWidth = 350; // Minimum width to fill container
             const step = 40;      // 40px width per round
 
@@ -99,44 +99,27 @@ Component({
             // We want the last point (index N) to be at contentWidth.
             // So: N * xStep = contentWidth  =>  xStep = contentWidth / N.
             const xStep = contentWidth / (sortedRounds.length > 0 ? sortedRounds.length : 1);
-
-            let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">`;
-
-            // --- A. Grid Lines (5 Steps) ---
             const range = finalMax - finalMin;
             const steps = 5;
+
+            // Create offscreen canvas and draw chart primitives.
+            const offscreen = wx.createOffscreenCanvas({ type: '2d', width: width, height: height });
+            const ctx = offscreen.getContext('2d');
+            ctx.clearRect(0, 0, width, height);
+
+            // --- A. Grid Lines (5 Steps) ---
+            ctx.strokeStyle = '#e5e7eb';
+            ctx.lineWidth = 1;
             for (let i = 0; i <= steps; i++) {
                 const val = finalMin + (range * i / steps);
                 const y = height - ((val - finalMin) / range) * height;
-                // Don't draw if out of bounds (safety)
                 if (y >= 0 && y <= height) {
-                    svgContent += `<line x1="0" y1="${y}" x2="${width}" y2="${y}" stroke="#e5e7eb" stroke-width="1" />`;
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(width, y);
+                    ctx.stroke();
                 }
             }
-
-            // --- Helper: Catmull-Rom Spline to Path 'd' ---
-            const getSmoothPath = (points) => {
-                if (points.length < 2) return "";
-                if (points.length === 2) return `M ${points[0].x} ${points[0].y} L ${points[1].x} ${points[1].y}`;
-
-                let d = `M ${points[0].x} ${points[0].y}`;
-
-                for (let i = 0; i < points.length - 1; i++) {
-                    const p0 = points[i === 0 ? 0 : i - 1];
-                    const p1 = points[i];
-                    const p2 = points[i + 1];
-                    const p3 = points[i + 2] || p2; // Duplicate last for end
-
-                    const cp1x = p1.x + (p2.x - p0.x) / 6;
-                    const cp1y = p1.y + (p2.y - p0.y) / 6;
-
-                    const cp2x = p2.x - (p3.x - p1.x) / 6;
-                    const cp2y = p2.y - (p3.y - p1.y) / 6;
-
-                    d += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
-                }
-                return d;
-            };
 
             // --- B. Player Lines & Dots ---
             const legendPaths = [];
@@ -151,7 +134,6 @@ Component({
 
                 // 已退出玩家使用灰色虚线
                 const lineColor = hasLeft ? '#9ca3af' : color;
-                const lineStyle = hasLeft ? 'stroke-dasharray="5,5"' : '';
                 const dotColor = hasLeft ? '#e5e7eb' : 'white';
 
                 // Calculate Points
@@ -161,13 +143,40 @@ Component({
                     return { x: parseFloat(x.toFixed(1)), y: parseFloat(y.toFixed(1)) };
                 });
 
-                // 1. Draw Smooth Path
-                const d = getSmoothPath(pointsObj);
-                svgContent += `<path d="${d}" fill="none" stroke="${lineColor}" stroke-width="2" ${lineStyle} stroke-linecap="round" stroke-linejoin="round" />`;
+                // 1. Draw Smooth Path (Catmull-Rom converted to Bezier controls)
+                ctx.beginPath();
+                ctx.strokeStyle = lineColor;
+                ctx.lineWidth = 2;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.setLineDash(hasLeft ? [5, 5] : []);
+
+                if (pointsObj.length >= 2) {
+                    ctx.moveTo(pointsObj[0].x, pointsObj[0].y);
+                    for (let i = 0; i < pointsObj.length - 1; i++) {
+                        const p0 = pointsObj[i === 0 ? 0 : i - 1];
+                        const p1 = pointsObj[i];
+                        const p2 = pointsObj[i + 1];
+                        const p3 = pointsObj[i + 2] || p2;
+                        const cp1x = p1.x + (p2.x - p0.x) / 6;
+                        const cp1y = p1.y + (p2.y - p0.y) / 6;
+                        const cp2x = p2.x - (p3.x - p1.x) / 6;
+                        const cp2y = p2.y - (p3.y - p1.y) / 6;
+                        ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
+                    }
+                    ctx.stroke();
+                }
 
                 // 2. Draw Dots
+                ctx.setLineDash([]);
                 pointsObj.forEach(pt => {
-                    svgContent += `<circle cx="${pt.x}" cy="${pt.y}" r="3" fill="${dotColor}" stroke="${lineColor}" stroke-width="2" />`;
+                    ctx.beginPath();
+                    ctx.arc(pt.x, pt.y, 3, 0, Math.PI * 2);
+                    ctx.fillStyle = dotColor;
+                    ctx.strokeStyle = lineColor;
+                    ctx.lineWidth = 2;
+                    ctx.fill();
+                    ctx.stroke();
                 });
 
                 // 3. Capture Last Point for Avatar Marker
@@ -194,18 +203,7 @@ Component({
                 });
             });
 
-            svgContent += `</svg>`;
-
-            // Encode
-            // We verify Base64 support. Native implementation: wx.arrayBufferToBase64 usually for buffer.
-            // For simple string, explicit implementation or checking environment works.
-            // Since this is JS env, standard btoa might not exist in generic wxs/mini-program jsCore.
-            // However, most modern environments support it. If not, we use a simple pollyfill or buffer.
-            // Safest: use wx.arrayBufferToBase64 with TextEncoder if available, OR simple Base64 helper.
-            // Actually, for SVG data URI, we can URL Encode it! 'data:image/svg+xml;utf8,...' works in some WebViews but fails in others (iOS issue).
-            // Base64 is safest.
-            const base64 = this.utf8_to_b64(svgContent);
-            const url = 'data:image/svg+xml;base64,' + base64;
+            const url = offscreen.toDataURL('image/png');
 
             // --- Collision Handling: Horizontal Stacking (Leftward) ---
             // Sort by Y Descending to group close scores
@@ -235,25 +233,6 @@ Component({
                 minScore: Math.round(finalMin),
                 maxScore: Math.round(finalMax)
             });
-        },
-
-        // Compatible Base64 Encoder
-        utf8_to_b64(str) {
-            // 1. Encode UTF-8 characters to percent-encoded ASCII
-            const encoded = encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
-                function toSolidBytes(match, p1) {
-                    return String.fromCharCode('0x' + p1);
-                });
-
-            // 2. Convert binary string to ArrayBuffer
-            const buffer = new ArrayBuffer(encoded.length);
-            const view = new Uint8Array(buffer);
-            for (let i = 0; i < encoded.length; i++) {
-                view[i] = encoded.charCodeAt(i);
-            }
-
-            // 3. Use Native API
-            return wx.arrayBufferToBase64(buffer);
         }
     }
 });
