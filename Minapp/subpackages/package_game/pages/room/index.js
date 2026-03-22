@@ -242,6 +242,8 @@ Page({
     onLoad(options) {
         // 初始化批量setData工具
         this.batchUpdater = new BatchSetData(this);
+        this._retryNoticeAt = 0;
+        this._chartCache = { key: '', data: null };
 
         // 1. Get User Info
         let userInfo = wx.getStorageSync('hdpj_user_profile') || app.globalData.userInfo;
@@ -468,6 +470,20 @@ Page({
         if (this.batchUpdater) {
             this.batchUpdater.destroy();
         }
+        this._chartCache = { key: '', data: null };
+    },
+
+    notifyRetryStatus(message) {
+        const now = Date.now();
+        if (this._retryNoticeAt && now - this._retryNoticeAt < 5000) {
+            return;
+        }
+        this._retryNoticeAt = now;
+        wx.showToast({
+            title: message,
+            icon: 'none',
+            duration: 1800
+        });
     },
 
     // Watcher管理方法
@@ -780,31 +796,12 @@ Page({
                     if (currentRetryCount < maxRetries) {
                         const delay = Math.pow(2, currentRetryCount) * 1000;
                         const remainingRetries = maxRetries - currentRetryCount;
-
-                        // 显示明显的重试提示（使用modal而非toast），提供手动重试选项
-                        wx.showModal({
-                            title: '实时连接断开',
-                            content: `正在尝试重新连接... (${remainingRetries}/${maxRetries})`,
-                            showCancel: true,
-                            cancelText: '手动重试',
-                            confirmText: '等待',
-                            confirmColor: '#3b82f6',
-                            success: (res) => {
-                                if (res.cancel) {
-                                    // 用户选择手动重试
-                                    if (_this.data.watchersActive) {
-                                        _this.initRoomWatcher(roomId, currentUser, 0); // 重置重试计数
-                                    }
-                                } else {
-                                    // 用户选择等待，自动重试
-                                    setTimeout(() => {
-                                        if (_this.data.watchersActive) {
-                                            _this.initRoomWatcher(roomId, currentUser, retryCount + 1);
-                                        }
-                                    }, delay);
-                                }
+                        _this.notifyRetryStatus(`实时连接断开，${Math.ceil(delay / 1000)}秒后重试 (${remainingRetries}/${maxRetries})`);
+                        setTimeout(() => {
+                            if (_this.data.watchersActive) {
+                                _this.initRoomWatcher(roomId, currentUser, retryCount + 1);
                             }
-                        });
+                        }, delay);
 
                         console.log(`Retrying Room Watcher in ${delay}ms... (attempt ${currentRetryCount + 1}/${maxRetries})`);
                     } else {
@@ -925,30 +922,12 @@ Page({
                 if (retryCount < maxRetries) {
                     const delay = Math.pow(2, retryCount) * 1000;
                     const remainingRetries = maxRetries - retryCount;
-
-                    wx.showModal({
-                        title: '回合数据连接断开',
-                        content: `正在尝试重新连接... (${remainingRetries}/${maxRetries})`,
-                        showCancel: true,
-                        cancelText: '手动重试',
-                        confirmText: '等待',
-                        confirmColor: '#3b82f6',
-                        success: (res) => {
-                            if (res.cancel) {
-                                // 用户选择手动重试
-                                if (_this.data.watchersActive) {
-                                    _this.initRoundsWatcher(displayRoomId, currentUser, 0); // 重置重试计数
-                                }
-                            } else {
-                                // 用户选择等待，自动重试
-                                setTimeout(() => {
-                                    if (_this.data.watchersActive) {
-                                        _this.initRoundsWatcher(displayRoomId, currentUser, retryCount + 1);
-                                    }
-                                }, delay);
-                            }
+                    _this.notifyRetryStatus(`回合连接断开，${Math.ceil(delay / 1000)}秒后重试 (${remainingRetries}/${maxRetries})`);
+                    setTimeout(() => {
+                        if (_this.data.watchersActive) {
+                            _this.initRoundsWatcher(displayRoomId, currentUser, retryCount + 1);
                         }
-                    });
+                    }, delay);
                     console.log(`Retrying Rounds Watcher in ${delay}ms...`);
                 } else {
                     wx.showModal({
@@ -1041,6 +1020,7 @@ Page({
     invalidateClusterCache() {
         this.lastRoundsHash = null;
         this.clusteredRoundsCache = null;
+        this._chartCache = { key: '', data: null };
     },
 
     updateLocalRoom(currentUser) {
@@ -1184,9 +1164,9 @@ Page({
     onManualScoreInput(e) {
         const id = e.currentTarget.dataset.id;
         const val = e.detail.value;
-        const temp = this.data.tempScores;
-        temp[id] = val;
-        this.setData({ tempScores: temp });
+        this.setData({
+            [`tempScores.${id}`]: val
+        });
     },
 
     async submitRound() {
@@ -1731,6 +1711,19 @@ Page({
     },
 
     async fetchChartData() {
+        const rounds = this.currentRoundsData || [];
+        const newestTs = rounds.length > 0 ? (rounds[0].timestamp || 0) : 0;
+        const oldestTs = rounds.length > 0 ? (rounds[rounds.length - 1].timestamp || 0) : 0;
+        const cacheKey = `${this.data.roomId}_${rounds.length}_${newestTs}_${oldestTs}`;
+
+        if (this._chartCache && this._chartCache.key === cacheKey && this._chartCache.data) {
+            this.setData({
+                chartFullRounds: this._chartCache.data,
+                chartLoading: false
+            });
+            return;
+        }
+
         this.setData({ chartLoading: true });
         wx.showLoading({ title: '加载走势...', mask: true });
 
@@ -1755,6 +1748,10 @@ Page({
                 this.setData({
                     chartFullRounds: clustered
                 });
+                this._chartCache = {
+                    key: cacheKey,
+                    data: clustered
+                };
             }
         } catch (err) {
             console.error('Fetch Chart Error:', err);

@@ -36,6 +36,26 @@
     margin-bottom: 32rpx;
 }
 
+.action-btn-content {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-btn-label {
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: 1;
+}
+
+.action-btn-icon {
+    margin-left: 12rpx;
+    font-size: 30rpx;
+    line-height: 1;
+    width: 32rpx;
+    text-align: center;
+}
+
 .brand-row {
     width: 100%;
     margin-top: 20rpx;

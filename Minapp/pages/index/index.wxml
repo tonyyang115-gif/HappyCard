@@ -17,16 +17,36 @@
 
     <!-- Actions -->
     <view class="actions-wrap w-full max-w-xs flex-col gap-4">
-        <btn fullWidth size="lg" className="rounded-xl shadow-blue" bind:click="createRoom">创建房间</btn>
+        <btn fullWidth size="lg" className="rounded-xl shadow-blue" bind:click="createRoom">
+          <view class="action-btn-content">
+            <text class="action-btn-label">创建房间</text>
+            <text class="action-btn-icon">➕</text>
+          </view>
+        </btn>
         
         <!-- Join Room Button -->
-        <btn fullWidth size="lg" className="rounded-xl shadow-blue" bind:click="openJoinModal">加入房间</btn>
+        <btn fullWidth size="lg" className="rounded-xl shadow-blue" bind:click="openJoinModal">
+          <view class="action-btn-content">
+            <text class="action-btn-label">加入房间</text>
+            <text class="action-btn-icon">🔑</text>
+          </view>
+        </btn>
 
         <!-- Player Clubs Entry -->
-        <btn fullWidth size="lg" className="rounded-xl shadow-blue bg-white text-blue-500 border border-blue-100" bind:click="navigateToClubs">我的牌友圈 👥</btn>
+        <btn fullWidth size="lg" className="rounded-xl shadow-blue bg-white text-blue-500 border border-blue-100" bind:click="navigateToClubs">
+          <view class="action-btn-content">
+            <text class="action-btn-label">牌友圈子</text>
+            <text class="action-btn-icon">👥</text>
+          </view>
+        </btn>
 
         <!-- Boardgame Tools Entry -->
-        <btn fullWidth size="lg" className="rounded-xl shadow-blue bg-white text-blue-500 border border-blue-100" bind:click="navigateToTools">棋牌工具 🀄</btn>
+        <btn fullWidth size="lg" className="rounded-xl shadow-blue bg-white text-blue-500 border border-blue-100" bind:click="navigateToTools">
+          <view class="action-btn-content">
+            <text class="action-btn-label">棋牌工具</text>
+            <text class="action-btn-icon">🧰</text>
+          </view>
+        </btn>
     </view>
 
     <view class="brand-row flex-row items-center justify-center gap-2">
