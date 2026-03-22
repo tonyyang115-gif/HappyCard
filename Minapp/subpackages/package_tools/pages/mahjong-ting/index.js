@@ -74,6 +74,36 @@ function getTargetConcealedCount(meldCount) {
   return Math.max(1, 13 - meldCount * 3);
 }
 
+function getChiTilesBySelection(suitBase, start) {
+  return [suitBase + start, suitBase + start + 1, suitBase + start + 2];
+}
+
+function buildChiStartCards(suitBase) {
+  return CHI_START_OPTIONS.map((start) => ({
+    start,
+    tiles: getChiTilesBySelection(suitBase, start).map((tile) => ({
+      code: tile,
+      image: tileImageByCode(tile)
+    }))
+  }));
+}
+
+function buildSuitCards() {
+  return CHI_SUIT_OPTIONS.map((item) => ({
+    label: item.label,
+    base: item.base,
+    image: tileImageByCode(item.base + 1)
+  }));
+}
+
+function buildTileCards() {
+  return TILE_OPTIONS.map((item) => ({
+    code: item.code,
+    label: item.label,
+    image: tileImageByCode(item.code)
+  }));
+}
+
 function buildExposedTileCountMap(exposedMelds) {
   const countMap = {};
   for (const meld of exposedMelds) {
@@ -113,13 +143,21 @@ Page({
     handCount: 0,
     targetConcealedCount: 13,
     meldGroupCount: 0,
-    chiSuitOptions: CHI_SUIT_OPTIONS.map((item) => item.label),
-    chiStartOptions: CHI_START_OPTIONS.map((item) => `${item}-${item + 2}`),
-    tileOptions: TILE_OPTIONS,
-    chiSuitIndex: 0,
-    chiStartIndex: 0,
-    pengTileIndex: 0,
-    gangTileIndex: 0,
+    chiSuitCards: buildSuitCards(),
+    chiStartCards: buildChiStartCards(CHI_SUIT_OPTIONS[0].base),
+    tileCards: buildTileCards(),
+    pickerSelectedSuit: CHI_SUIT_OPTIONS[0].base,
+    pickerSelectedChiStart: CHI_START_OPTIONS[0],
+    pickerSelectedPengTile: TILE_OPTIONS[0].code,
+    pickerSelectedGangTile: TILE_OPTIONS[0].code,
+    pickerDraftSuit: CHI_SUIT_OPTIONS[0].base,
+    pickerDraftChiStart: CHI_START_OPTIONS[0],
+    pickerDraftTile: TILE_OPTIONS[0].code,
+    selectedChiPreview: [],
+    selectedPengPreview: '',
+    selectedGangPreview: '',
+    showMeldPicker: false,
+    meldPickerType: '',
     tingResults: [],
     isTing: false,
     canClear: false,
@@ -128,6 +166,12 @@ Page({
 
   onLoad() {
     this.refreshState(this.data.selectedTiles, this.data.laiziTile);
+    this.updateMeldSelectionPreview(
+      this.data.pickerSelectedSuit,
+      this.data.pickerSelectedChiStart,
+      this.data.pickerSelectedPengTile,
+      this.data.pickerSelectedGangTile
+    );
   },
 
   handleBack() {
@@ -177,37 +221,103 @@ Page({
     this.refreshState([], null, []);
   },
 
-  onChiSuitChange(e) {
-    this.setData({ chiSuitIndex: Number(e.detail.value) || 0 });
+  openMeldPicker(e) {
+    const type = String(e.currentTarget.dataset.type || '');
+    if (!type) return;
+
+    this.setData({
+      showMeldPicker: true,
+      meldPickerType: type,
+      pickerDraftSuit: this.data.pickerSelectedSuit,
+      pickerDraftChiStart: this.data.pickerSelectedChiStart,
+      pickerDraftTile: type === 'gang' ? this.data.pickerSelectedGangTile : this.data.pickerSelectedPengTile,
+      chiStartCards: buildChiStartCards(this.data.pickerSelectedSuit)
+    });
   },
 
-  onChiStartChange(e) {
-    this.setData({ chiStartIndex: Number(e.detail.value) || 0 });
+  closeMeldPicker() {
+    this.setData({
+      showMeldPicker: false,
+      meldPickerType: ''
+    });
   },
 
-  onPengTileChange(e) {
-    this.setData({ pengTileIndex: Number(e.detail.value) || 0 });
+  preventBubble() {},
+
+  onSelectPickerSuit(e) {
+    const suitBase = Number(e.currentTarget.dataset.base);
+    if (!suitBase) return;
+    this.setData({
+      pickerDraftSuit: suitBase,
+      pickerDraftChiStart: CHI_START_OPTIONS[0],
+      chiStartCards: buildChiStartCards(suitBase)
+    });
   },
 
-  onGangTileChange(e) {
-    this.setData({ gangTileIndex: Number(e.detail.value) || 0 });
+  onSelectPickerChiStart(e) {
+    const start = Number(e.currentTarget.dataset.start);
+    if (!start) return;
+    this.setData({ pickerDraftChiStart: start });
+  },
+
+  onSelectPickerTile(e) {
+    const tile = Number(e.currentTarget.dataset.tile);
+    if (!tile) return;
+    this.setData({ pickerDraftTile: tile });
+  },
+
+  updateMeldSelectionPreview(suitBase, chiStart, pengTileCode, gangTileCode) {
+    const chiTiles = getChiTilesBySelection(suitBase, chiStart);
+    this.setData({
+      selectedChiPreview: chiTiles.map((tile) => tileImageByCode(tile)),
+      selectedPengPreview: tileImageByCode(pengTileCode),
+      selectedGangPreview: tileImageByCode(gangTileCode)
+    });
+  },
+
+  onConfirmMeldPicker() {
+    const { meldPickerType, pickerDraftSuit, pickerDraftChiStart, pickerDraftTile } = this.data;
+    if (!meldPickerType) {
+      this.closeMeldPicker();
+      return;
+    }
+
+    if (meldPickerType === 'chi') {
+      this.setData({
+        pickerSelectedSuit: pickerDraftSuit,
+        pickerSelectedChiStart: pickerDraftChiStart
+      });
+    } else if (meldPickerType === 'peng') {
+      this.setData({ pickerSelectedPengTile: pickerDraftTile });
+    } else {
+      this.setData({ pickerSelectedGangTile: pickerDraftTile });
+    }
+
+    this.updateMeldSelectionPreview(
+      meldPickerType === 'chi' ? pickerDraftSuit : this.data.pickerSelectedSuit,
+      meldPickerType === 'chi' ? pickerDraftChiStart : this.data.pickerSelectedChiStart,
+      meldPickerType === 'peng' ? pickerDraftTile : this.data.pickerSelectedPengTile,
+      meldPickerType === 'gang' ? pickerDraftTile : this.data.pickerSelectedGangTile
+    );
+
+    this.closeMeldPicker();
   },
 
   onAddChiMeld() {
-    const suit = CHI_SUIT_OPTIONS[this.data.chiSuitIndex] || CHI_SUIT_OPTIONS[0];
-    const start = CHI_START_OPTIONS[this.data.chiStartIndex] || 1;
-    const tiles = [suit.base + start, suit.base + start + 1, suit.base + start + 2];
+    const suitBase = this.data.pickerSelectedSuit;
+    const start = this.data.pickerSelectedChiStart;
+    const tiles = getChiTilesBySelection(suitBase, start);
     this.tryAddExposedMeld('chi', tiles);
   },
 
   onAddPengMeld() {
-    const tileOption = TILE_OPTIONS[this.data.pengTileIndex] || TILE_OPTIONS[0];
-    this.tryAddExposedMeld('peng', [tileOption.code, tileOption.code, tileOption.code]);
+    const tile = this.data.pickerSelectedPengTile;
+    this.tryAddExposedMeld('peng', [tile, tile, tile]);
   },
 
   onAddGangMeld() {
-    const tileOption = TILE_OPTIONS[this.data.gangTileIndex] || TILE_OPTIONS[0];
-    this.tryAddExposedMeld('gang', [tileOption.code, tileOption.code, tileOption.code, tileOption.code]);
+    const tile = this.data.pickerSelectedGangTile;
+    this.tryAddExposedMeld('gang', [tile, tile, tile, tile]);
   },
 
   onRemoveMeld(e) {

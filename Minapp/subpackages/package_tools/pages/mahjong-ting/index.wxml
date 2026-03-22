@@ -50,29 +50,29 @@
       <view class="meld-editor">
         <view class="meld-editor-row">
           <text class="meld-editor-label">吃牌</text>
-          <picker class="mini-picker" mode="selector" range="{{chiSuitOptions}}" value="{{chiSuitIndex}}" bindchange="onChiSuitChange">
-            <view class="mini-picker-inner">{{chiSuitOptions[chiSuitIndex]}}</view>
-          </picker>
-          <picker class="mini-picker" mode="selector" range="{{chiStartOptions}}" value="{{chiStartIndex}}" bindchange="onChiStartChange">
-            <view class="mini-picker-inner">{{chiStartOptions[chiStartIndex]}}</view>
-          </picker>
-          <view class="mini-add-btn" bindtap="onAddChiMeld">添加</view>
+          <view class="meld-preview-row">
+            <image wx:for="{{selectedChiPreview}}" wx:key="index" wx:for-item="img" class="meld-preview-tile" src="{{img}}" mode="aspectFit"></image>
+          </view>
+          <view class="mini-action-btn picker-action-btn" data-type="chi" bindtap="openMeldPicker">选择牌型</view>
+          <view class="mini-action-btn add-action-btn" bindtap="onAddChiMeld">添加</view>
         </view>
 
         <view class="meld-editor-row">
           <text class="meld-editor-label">碰牌</text>
-          <picker class="long-picker" mode="selector" range="{{tileOptions}}" range-key="label" value="{{pengTileIndex}}" bindchange="onPengTileChange">
-            <view class="mini-picker-inner">{{tileOptions[pengTileIndex].label}}</view>
-          </picker>
-          <view class="mini-add-btn" bindtap="onAddPengMeld">添加</view>
+          <view class="meld-preview-row">
+            <image class="meld-preview-tile" src="{{selectedPengPreview}}" mode="aspectFit"></image>
+          </view>
+          <view class="mini-action-btn picker-action-btn" data-type="peng" bindtap="openMeldPicker">选择牌型</view>
+          <view class="mini-action-btn add-action-btn" bindtap="onAddPengMeld">添加</view>
         </view>
 
         <view class="meld-editor-row">
           <text class="meld-editor-label">杠牌</text>
-          <picker class="long-picker" mode="selector" range="{{tileOptions}}" range-key="label" value="{{gangTileIndex}}" bindchange="onGangTileChange">
-            <view class="mini-picker-inner">{{tileOptions[gangTileIndex].label}}</view>
-          </picker>
-          <view class="mini-add-btn" bindtap="onAddGangMeld">添加</view>
+          <view class="meld-preview-row">
+            <image class="meld-preview-tile" src="{{selectedGangPreview}}" mode="aspectFit"></image>
+          </view>
+          <view class="mini-action-btn picker-action-btn" data-type="gang" bindtap="openMeldPicker">选择牌型</view>
+          <view class="mini-action-btn add-action-btn" bindtap="onAddGangMeld">添加</view>
         </view>
       </view>
 
@@ -145,4 +145,64 @@
       </view>
     </view>
   </scroll-view>
+
+  <view wx:if="{{showMeldPicker}}" class="picker-overlay" bindtap="closeMeldPicker">
+    <view class="picker-panel" catchtap="preventBubble">
+      <view class="picker-header">
+        <text class="picker-title">{{meldPickerType === 'chi' ? '选择吃牌牌型' : (meldPickerType === 'peng' ? '选择碰牌牌型' : '选择杠牌牌型')}}</text>
+      </view>
+
+      <view wx:if="{{meldPickerType === 'chi'}}" class="picker-body">
+        <view class="picker-subtitle">选择花色</view>
+        <view class="picker-suit-row">
+          <view
+            wx:for="{{chiSuitCards}}"
+            wx:key="base"
+            wx:for-item="suit"
+            class="picker-suit-item {{pickerDraftSuit === suit.base ? 'selected' : ''}}"
+            data-base="{{suit.base}}"
+            bindtap="onSelectPickerSuit"
+          >
+            <image class="picker-suit-image" src="{{suit.image}}" mode="aspectFit"></image>
+            <text class="picker-suit-text">{{suit.label}}</text>
+          </view>
+        </view>
+
+        <view class="picker-subtitle">选择顺子</view>
+        <view class="picker-chi-grid">
+          <view
+            wx:for="{{chiStartCards}}"
+            wx:key="start"
+            wx:for-item="item"
+            class="picker-chi-item {{pickerDraftChiStart === item.start ? 'selected' : ''}}"
+            data-start="{{item.start}}"
+            bindtap="onSelectPickerChiStart"
+          >
+            <image wx:for="{{item.tiles}}" wx:key="code" wx:for-item="tile" class="picker-chi-tile" src="{{tile.image}}" mode="aspectFit"></image>
+          </view>
+        </view>
+      </view>
+
+      <view wx:if="{{meldPickerType === 'peng' || meldPickerType === 'gang'}}" class="picker-body">
+        <view class="picker-tile-grid">
+          <view
+            wx:for="{{tileCards}}"
+            wx:key="code"
+            wx:for-item="tile"
+            class="picker-tile-item {{pickerDraftTile === tile.code ? 'selected' : ''}}"
+            data-tile="{{tile.code}}"
+            bindtap="onSelectPickerTile"
+          >
+            <image class="picker-tile-image" src="{{tile.image}}" mode="aspectFit"></image>
+          </view>
+        </view>
+      </view>
+
+      <view class="picker-actions">
+        <view class="picker-btn picker-btn-secondary" bindtap="closeMeldPicker">取消</view>
+        <view class="picker-btn picker-btn-primary" bindtap="onConfirmMeldPicker">确认添加</view>
+      </view>
+      <view class="picker-safe-space"></view>
+    </view>
+  </view>
 </view>
