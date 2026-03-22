@@ -143,6 +143,9 @@
                 <text class="arrow-right">></text>
             </view>
         </view>
+        <view class="feedback-button-wrap">
+            <button class="feedback-native-btn" open-type="feedback">问题反馈</button>
+        </view>
     </view>
 
     <!-- Environment Indicator -->
@@ -204,6 +207,25 @@
             <view class="modal-footer">
                 <btn size="sm" bind:click="closeNameModal">取消</btn>
                 <btn size="sm" bind:click="saveName">保存</btn>
+            </view>
+        </view>
+    </view>
+
+    <!-- Disclaimer Modal -->
+    <view class="modal-overlay" wx:if="{{showDisclaimerModal}}">
+        <view class="modal-content disclaimer-modal-content">
+            <view class="modal-header">
+                <text class="font-bold text-lg">免责声明</text>
+                <text class="close-btn" bindtap="closeDisclaimerModal">×</text>
+            </view>
+            <scroll-view class="disclaimer-scroll" scroll-y="true">
+                <view class="disclaimer-section" wx:for="{{disclaimerSections}}" wx:key="title">
+                    <text class="disclaimer-title">{{item.title}}</text>
+                    <text class="disclaimer-text" wx:for="{{item.paragraphs}}" wx:key="*this">{{item}}</text>
+                </view>
+            </scroll-view>
+            <view class="modal-footer disclaimer-footer">
+                <btn size="sm" bind:click="closeDisclaimerModal">我知道了</btn>
             </view>
         </view>
     </view>

@@ -47,6 +47,7 @@ Page({
         // 模态框状态管理
         showAvatarModal: false,   // 头像选择模态框显示状态
         showNameModal: false,    // 昵称编辑模态框显示状态
+        showDisclaimerModal: false, // 免责声明弹层显示状态
         tempName: '',           // 临时昵称（用于编辑）
         tempAvatar: '',         // 临时头像（用于选择）
         // 预设主题列表
@@ -57,7 +58,43 @@ Page({
             { id: 'robot', label: '酷炫机器', collection: 'bottts' }
         ],
         currentTheme: 'classic', // 当前选择的主题 ID
-        presetAvatars: [] // 动态生成的头像列表
+        presetAvatars: [], // 动态生成的头像列表
+        disclaimerSections: [
+            {
+                title: '1. 信息收集与使用',
+                paragraphs: [
+                    '本小程序为个人开发的学习与交流项目，不要求用户授权通讯录、短信、通话记录、地理位置、相册读写等与核心功能无关的权限。',
+                    '开发者不会主动收集、上传、分析或出售任何可识别用户身份的个人信息。'
+                ]
+            },
+            {
+                title: '2. 头像与昵称说明',
+                paragraphs: [
+                    '用户可在页面内设置头像与昵称，仅用于当前小程序内的页面展示、对局身份区分与交互标识，不用于站外传播、广告投放或商业画像。',
+                    '若你不希望使用自定义信息，可直接使用系统默认头像与默认昵称。'
+                ]
+            },
+            {
+                title: '3. 数据存储边界',
+                paragraphs: [
+                    '程序运行中产生的数据仅用于实现必要功能与页面显示，不用于建立用户画像，不与第三方共享个人资料。',
+                    '开发者不会基于用户个人身份信息进行追踪、匹配或精准营销。'
+                ]
+            },
+            {
+                title: '4. 使用限制与责任',
+                paragraphs: [
+                    '本小程序仅用于学习、技术演示与娱乐交流，请勿用于任何违法违规用途。',
+                    '因不当使用产生的风险与后果由使用者自行承担，开发者不承担由违规使用引发的责任。'
+                ]
+            },
+            {
+                title: '5. 意见反馈',
+                paragraphs: [
+                    '若你对隐私说明、头像昵称使用或其他功能有疑问，可通过“问题反馈”入口提交意见，开发者会持续优化说明与体验。'
+                ]
+            }
+        ]
     },
 
     /**
@@ -467,14 +504,21 @@ Page({
      * 打开关于我们弹窗
      */
     openAbout() {
-        wx.showModal({ title: '关于我们', content: '快乐打牌记 v1.2.0\n仅供娱乐学习使用', showCancel: false });
+        wx.showModal({ title: '关于我们', content: '快乐打牌记 v1.4.0\n仅供娱乐学习使用', showCancel: false });
     },
 
     /**
      * 打开免责声明弹窗
      */
     openDisclaimer() {
-        wx.showModal({ title: '免责声明', content: '本程序由个人开发者制作，仅用于演示和学习，不涉及任何商业用途或赌博功能。', showCancel: false });
+        this.setData({ showDisclaimerModal: true });
+    },
+
+    /**
+     * 关闭免责声明弹层
+     */
+    closeDisclaimerModal() {
+        this.setData({ showDisclaimerModal: false });
     },
 
     /**
