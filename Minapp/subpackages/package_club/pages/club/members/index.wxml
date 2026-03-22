@@ -54,7 +54,7 @@
             <view class="member-list">
                 <block wx:for="{{members}}" wx:key="openId">
                     <view class="member-item">
-                        <image class="member-avatar" src="{{item.avatar || 'https://api.dicebear.com/7.x/initials/svg?seed=?backgroundColor=c0aede'}}" mode="aspectFill"></image>
+                        <image class="member-avatar" src="{{item.avatar || 'https://api.dicebear.com/7.x/initials/svg?seed=?backgroundColor=c0aede'}}" mode="aspectFill" lazy-load></image>
                         
                         <view class="member-info">
                             <text class="member-name">{{item.name}}</text>

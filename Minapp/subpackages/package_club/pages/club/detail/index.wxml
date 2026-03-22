@@ -20,7 +20,7 @@
       <view class="header-card-refined mb-4 rounded-2xl relative">
           <!-- Top Row: Avatar + Info + Invite (Top Right) -->
           <view class="flex-row items-center">
-              <image src="{{club.avatar || 'https://api.dicebear.com/7.x/adventurer/svg?seed=' + club._id}}" class="rounded-2xl bg-gray-100 shadow-sm" mode="aspectFill" style="width: 110rpx; height: 110rpx; margin-right: 32rpx; border: 1rpx solid #f1f5f9;" binderror="onImageError"></image>
+              <image lazy-load src="{{club.avatar || 'https://api.dicebear.com/7.x/adventurer/svg?seed=' + club._id}}" class="rounded-2xl bg-gray-100 shadow-sm" mode="aspectFill" style="width: 110rpx; height: 110rpx; margin-right: 32rpx; border: 1rpx solid #f1f5f9;" binderror="onImageError"></image>
               <view class="flex-col flex-1 justify-center">
                   <block wx:if="{{!isHydrating}}">
                     <text class="club-name-premium mb-1 fade-in">{{club.name}}</text>
@@ -68,7 +68,7 @@
                    <view class="flex-row items-center mr-3">
                       <block wx:if="{{!isHydrating}}">
                         <block wx:for="{{club.members}}" wx:key="openId" wx:if="{{index < 6}}">
-                            <image src="{{item.avatar}}" class="member-preview-stack-item fade-in" mode="aspectFill"></image>
+                            <image lazy-load src="{{item.avatar}}" class="member-preview-stack-item fade-in" mode="aspectFill"></image>
                         </block>
                       </block>
                       <block wx:else>
@@ -102,7 +102,7 @@
 
               <view class="player-info-row">
                  <block wx:if="{{!isHydrating}}">
-                    <image src="{{stats.champion.avatar}}" class="w-12 h-12 rounded-full bg-gray-100 avatar-honor-gold fade-in" mode="aspectFill"></image>
+                    <image lazy-load src="{{stats.champion.avatar}}" class="w-12 h-12 rounded-full bg-gray-100 avatar-honor-gold fade-in" mode="aspectFill"></image>
                     <view class="flex-col">
                         <text class="player-name-hero truncate fade-in">{{stats.champion.name || '虚位以待'}}</text>
                         <text wx:if="{{stats.champion.games > 0}}" class="stats-detail text-gray-400">{{stats.champion.games}}局 胜率{{stats.champion.winRate}}%</text>
@@ -130,7 +130,7 @@
 
               <view class="player-info-row">
                  <block wx:if="{{!isHydrating}}">
-                    <image src="{{stats.bestPlayer.avatar}}" class="w-12 h-12 rounded-full bg-gray-100 avatar-honor-blue fade-in" mode="aspectFill"></image>
+                    <image lazy-load src="{{stats.bestPlayer.avatar}}" class="w-12 h-12 rounded-full bg-gray-100 avatar-honor-blue fade-in" mode="aspectFill"></image>
                     <view class="flex-col">
                         <text class="player-name-hero truncate fade-in">{{stats.bestPlayer.name || '虚位以待'}}</text>
                         <text wx:if="{{stats.bestPlayer.games > 0}}" class="stats-detail text-gray-400">{{stats.bestPlayer.wins}}/{{stats.bestPlayer.games}}局</text>
@@ -176,7 +176,7 @@
                 <!-- Players Row -->
                 <scroll-view scroll-x class="players-row" enable-flex>
                     <view wx:for="{{item.players}}" wx:for-item="p" wx:key="id" class="player-col">
-                        <image src="{{p.avatarUrl}}" class="history-avatar" mode="aspectFill"></image>
+                        <image lazy-load src="{{p.avatarUrl}}" class="history-avatar" mode="aspectFill"></image>
                         <text class="player-name-sm">{{p.name}}</text>
                         <text class="score-text {{p.totalScore > 0 ? 'text-orange' : (p.totalScore < 0 ? 'text-green' : 'text-gray')}}">
                             {{p.totalScore > 0 ? '+' : ''}}{{p.totalScore}}
