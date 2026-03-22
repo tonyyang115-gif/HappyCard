@@ -1,0 +1,148 @@
+<view class="page-container">
+  <view class="custom-nav">
+    <view class="nav-title-wrap">
+      <text class="back-icon" bindtap="handleBack">‹</text>
+      <text class="nav-title">麻将胡牌听牌</text>
+    </view>
+  </view>
+
+  <scroll-view class="content-area" scroll-y="true">
+    <view class="card section-card">
+      <view class="section-title-row">
+        <view class="section-stick"></view>
+        <text class="section-title">选择麻将牌</text>
+      </view>
+
+      <view class="tip-box">
+        <text class="tip-badge">提示</text>
+        <text class="tip-text">点击牌面添加手牌，长按牌面可设置或取消赖子。</text>
+      </view>
+
+      <view wx:for="{{tileGroups}}" wx:key="name" wx:for-item="group" class="pool-group">
+        <text class="pool-group-title">{{group.name}}</text>
+        <view class="tile-grid">
+          <view
+            wx:for="{{group.tiles}}"
+            wx:key="code"
+            wx:for-item="tile"
+            class="tile-btn {{laiziTile === tile.code ? 'is-laizi' : ''}} {{totalTileCountMap[tile.code] >= 4 ? 'is-disabled' : ''}}"
+            data-tile="{{tile.code}}"
+            bindtap="onAddTile"
+            bindlongpress="onToggleLaizi"
+          >
+            <image class="tile-img" src="{{tile.image}}" mode="aspectFit"></image>
+            <view wx:if="{{laiziTile === tile.code}}" class="laizi-ribbon">
+              <text class="laizi-ribbon-text">百搭</text>
+            </view>
+            <view wx:if="{{totalTileCountMap[tile.code] > 0}}" class="count-chip">{{totalTileCountMap[tile.code]}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="card section-card">
+      <view class="section-title-row">
+        <view class="section-stick"></view>
+        <text class="section-title">吃碰牌录入</text>
+        <text class="count-text">[{{meldGroupCount}}组]</text>
+      </view>
+
+      <view class="meld-editor">
+        <view class="meld-editor-row">
+          <text class="meld-editor-label">吃牌</text>
+          <picker class="mini-picker" mode="selector" range="{{chiSuitOptions}}" value="{{chiSuitIndex}}" bindchange="onChiSuitChange">
+            <view class="mini-picker-inner">{{chiSuitOptions[chiSuitIndex]}}</view>
+          </picker>
+          <picker class="mini-picker" mode="selector" range="{{chiStartOptions}}" value="{{chiStartIndex}}" bindchange="onChiStartChange">
+            <view class="mini-picker-inner">{{chiStartOptions[chiStartIndex]}}</view>
+          </picker>
+          <view class="mini-add-btn" bindtap="onAddChiMeld">添加</view>
+        </view>
+
+        <view class="meld-editor-row">
+          <text class="meld-editor-label">碰牌</text>
+          <picker class="long-picker" mode="selector" range="{{tileOptions}}" range-key="label" value="{{pengTileIndex}}" bindchange="onPengTileChange">
+            <view class="mini-picker-inner">{{tileOptions[pengTileIndex].label}}</view>
+          </picker>
+          <view class="mini-add-btn" bindtap="onAddPengMeld">添加</view>
+        </view>
+
+        <view class="meld-editor-row">
+          <text class="meld-editor-label">杠牌</text>
+          <picker class="long-picker" mode="selector" range="{{tileOptions}}" range-key="label" value="{{gangTileIndex}}" bindchange="onGangTileChange">
+            <view class="mini-picker-inner">{{tileOptions[gangTileIndex].label}}</view>
+          </picker>
+          <view class="mini-add-btn" bindtap="onAddGangMeld">添加</view>
+        </view>
+      </view>
+
+      <view wx:if="{{exposedMeldViews.length > 0}}" class="meld-list">
+        <view wx:for="{{exposedMeldViews}}" wx:key="id" wx:for-item="meld" class="meld-item">
+          <view class="meld-item-head">
+            <text class="meld-tag">{{meld.typeLabel}}</text>
+            <text class="meld-remove" data-id="{{meld.id}}" bindtap="onRemoveMeld">删除</text>
+          </view>
+          <view class="meld-tiles">
+            <view wx:for="{{meld.tiles}}" wx:key="index" wx:for-item="tile" class="meld-tile {{tile.isLaizi ? 'is-laizi' : ''}}">
+              <image class="tile-img" src="{{tile.image}}" mode="aspectFit"></image>
+              <view wx:if="{{tile.isLaizi}}" class="laizi-ribbon">
+                <text class="laizi-ribbon-text">百搭</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view wx:if="{{exposedMeldViews.length === 0}}" class="empty-meld-tip">暂无吃碰牌，默认按13张暗手牌计算</view>
+    </view>
+
+    <view class="card section-card">
+      <view class="section-title-row">
+        <view class="section-stick"></view>
+        <text class="section-title">已选暗手牌</text>
+        <text class="count-text">[{{handCount}}/{{targetConcealedCount}}]</text>
+      </view>
+
+      <view class="hand-grid">
+        <view
+          wx:for="{{handSlots}}"
+          wx:key="index"
+          wx:for-item="slot"
+          class="hand-cell {{slot.empty ? 'cell-empty' : ''}} {{slot.isLaizi ? 'is-laizi' : ''}}"
+          data-index="{{slot.index}}"
+          bindtap="onRemoveTile"
+        >
+          <image wx:if="{{!slot.empty}}" class="tile-img" src="{{slot.image}}" mode="aspectFit"></image>
+          <view wx:if="{{slot.empty}}" class="empty-slot-inner"></view>
+          <view wx:if="{{slot.isLaizi}}" class="laizi-ribbon">
+            <text class="laizi-ribbon-text">百搭</text>
+          </view>
+        </view>
+      </view>
+      <view class="empty-meld-tip">需选择暗手牌 {{targetConcealedCount}} 张后自动计算听牌</view>
+
+      <view class="action-row">
+        <view class="clear-btn clear-light {{canClear ? '' : 'btn-disabled'}}" bindtap="onClearTiles">清空暗手牌</view>
+        <view class="clear-btn {{canClearAll ? '' : 'btn-disabled'}}" bindtap="onClearAll">清空全部</view>
+      </view>
+    </view>
+
+    <view wx:if="{{handCount === targetConcealedCount}}" class="card section-card">
+      <view class="section-title-row">
+        <view class="section-stick"></view>
+        <text class="section-title">计算结果：</text>
+        <text class="result-state {{isTing ? 'state-ok' : 'state-no'}}">{{isTing ? ('已听牌(听：' + tingResults.length + '张)') : '未听牌'}}</text>
+      </view>
+
+      <view wx:if="{{isTing}}" class="result-panel">
+        <view class="result-left">听{{tingResults.length}}张</view>
+        <view class="result-right">
+          <view wx:for="{{tingResults}}" wx:key="tile" wx:for-item="item" class="result-tile-item">
+            <image class="result-tile-img" src="{{item.image}}" mode="aspectFit"></image>
+            <text class="result-remain">剩{{item.remaining}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</view>

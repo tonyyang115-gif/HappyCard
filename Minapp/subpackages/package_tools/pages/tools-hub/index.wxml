@@ -1,0 +1,25 @@
+<view class="page-container">
+  <view class="custom-nav">
+    <view class="back-btn" bindtap="handleBack">
+      <text class="back-icon">‹</text>
+      <text class="back-text">棋牌工具</text>
+    </view>
+  </view>
+
+  <scroll-view class="content-area" scroll-y="true">
+    <view class="section-title">工具列表</view>
+
+    <view class="skill-card tool-card" bindtap="goMahjongTing">
+      <view class="card-row">
+        <view class="card-icon-wrap">
+          <text class="card-icon-text">麻</text>
+        </view>
+        <view class="card-main">
+          <text class="card-title">麻将胡牌听牌</text>
+          <text class="card-desc">选择13张手牌，自动计算听牌与剩余张数</text>
+        </view>
+      </view>
+      <text class="card-arrow">›</text>
+    </view>
+  </scroll-view>
+</view>

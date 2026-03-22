@@ -5,6 +5,13 @@
     ],
     "subpackages": [
         {
+            "root": "subpackages/package_tools",
+            "pages": [
+                "pages/tools-hub/index",
+                "pages/mahjong-ting/index"
+            ]
+        },
+        {
             "root": "subpackages/package_club",
             "pages": [
                 "pages/club/list/index",

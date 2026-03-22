@@ -1,0 +1,5 @@
+Mahjong tile art source:
+- Repository: https://github.com/perthmahjongsoc/mahjong-tiles-svg
+- Upstream base: https://commons.wikimedia.org/wiki/Category:SVG_Oblique_illustrations_of_Mahjong_tiles
+- License: CC BY-SA 4.0
+- License text: https://github.com/perthmahjongsoc/mahjong-tiles-svg/blob/master/LICENSE

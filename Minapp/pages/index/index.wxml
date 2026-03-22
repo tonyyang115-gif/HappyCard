@@ -1,5 +1,5 @@
 <view class="container">
-  <view class="flex-1 flex-col items-center pt-24 px-6 w-full" style="height: 1437rpx; display: flex; box-sizing: border-box; position: relative; left: 0rpx; top: 127rpx">
+  <view class="home-main flex-1 flex-col items-center pt-24 px-6 w-full">
     <!-- User Profile Area -->
     <view class="relative mb-4 cursor-pointer group" bindtap="navigateToProfile">
        <avatar url="{{userInfo.avatarUrl}}" size="xl" className="border-4 border-white shadow-sm"></avatar>
@@ -16,7 +16,7 @@
     <view class="text-gray-400 text-sm mb-20">点击头像或昵称可修改信息</view>
 
     <!-- Actions -->
-    <view class="w-full max-w-xs flex-col gap-4">
+    <view class="actions-wrap w-full max-w-xs flex-col gap-4">
         <btn fullWidth size="lg" className="rounded-xl shadow-blue" bind:click="createRoom">创建房间</btn>
         
         <!-- Join Room Button -->
@@ -24,18 +24,19 @@
 
         <!-- Player Clubs Entry -->
         <btn fullWidth size="lg" className="rounded-xl shadow-blue bg-white text-blue-500 border border-blue-100" bind:click="navigateToClubs">我的牌友圈 👥</btn>
+
+        <!-- Boardgame Tools Entry -->
+        <btn fullWidth size="lg" className="rounded-xl shadow-blue bg-white text-blue-500 border border-blue-100" bind:click="navigateToTools">棋牌工具 🀄</btn>
     </view>
 
-    <view style="position: relative; width: 100%; height: 0;">
-        <view class="flex-row items-center justify-center gap-2" style="position: absolute; top: 250rpx; left: 0; width: 100%;">
-            <view style="width: 70rpx; height: 70rpx; border-radius: 12rpx; overflow: hidden; display: flex; align-items: center; justify-content: center; background: transparent;">
-                <image src="{{appIconUrl}}" mode="aspectFit" style="width: 100%; height: 100%;" wx:if="{{appIconUrl}}"></image>
-            </view>
-            <text class="text-xl font-bold text-blue-500">快乐打牌记</text>
-        </view>
+    <view class="brand-row flex-row items-center justify-center gap-2">
+      <view class="brand-icon-wrap">
+        <image src="{{appIconUrl}}" mode="aspectFit" class="brand-icon" wx:if="{{appIconUrl}}"></image>
+      </view>
+      <text class="text-xl font-bold text-blue-500">快乐打牌记</text>
     </view>
 
-    <view class="text-gray-500 text-sm border-b border-gray-400 pb-0.5 inline-block mt-8 mb-20" style="position: relative; left: 0rpx; top: 299rpx" bindtap="openHelpModal">使用说明</view>
+    <view class="help-link text-gray-500 text-sm border-b border-gray-400 pb-0.5 inline-block" bindtap="openHelpModal">使用说明</view>
   </view>
 
   <!-- Footer -->

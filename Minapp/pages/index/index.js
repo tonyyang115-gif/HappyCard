@@ -99,6 +99,12 @@ Page({
         });
     },
 
+    navigateToTools() {
+        wx.navigateTo({
+            url: '/subpackages/package_tools/pages/tools-hub/index'
+        });
+    },
+
     closeJoinModal() {
         this.setData({ showJoinRoomModal: false });
     },

@@ -159,7 +159,19 @@ Page({
         showBaseScoreModal: false,
         newBaseScore: '',
 
-        appIconUrl: '' // Cloud Icon URL
+        appIconUrl: '', // Cloud Icon URL
+
+        // Bottom tab for room/tools switch
+        activeBottomTab: 'room',
+        roomTools: [
+            {
+                id: 'mahjong-ting',
+                iconText: '麻',
+                name: '麻将胡牌听牌',
+                desc: '选择13张手牌，自动计算听牌与剩余张数',
+                path: '/subpackages/package_tools/pages/mahjong-ting/index'
+            }
+        ]
     },
 
     // 聚类缓存相关
@@ -1461,6 +1473,22 @@ Page({
         this.setData({
             showLeaveModal: true
         });
+    },
+
+    switchToRoomTab() {
+        if (this.data.activeBottomTab === 'room') return;
+        this.setData({ activeBottomTab: 'room' });
+    },
+
+    switchToToolsTab() {
+        if (this.data.activeBottomTab === 'tools') return;
+        this.setData({ activeBottomTab: 'tools' });
+    },
+
+    openRoomTool(e) {
+        const path = e.currentTarget.dataset.path;
+        if (!path) return;
+        wx.navigateTo({ url: path });
     },
 
     closeLeaveModal() {
