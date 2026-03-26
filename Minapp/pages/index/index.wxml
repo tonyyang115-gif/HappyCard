@@ -8,25 +8,55 @@
        </view>
     </view>
     
-    <view class="flex-row items-center gap-2 mb-8 cursor-pointer p-2 rounded-lg hover-bg-gray-100" bindtap="navigateToProfile">
+    <view class="flex-row items-center gap-2 profile-name-row cursor-pointer p-2 rounded-lg hover-bg-gray-100" bindtap="navigateToProfile">
       <text class="text-2xl font-bold text-gray-900">{{userInfo.name}}</text>
       <text class="text-gray-400">✎</text>
     </view>
     
-    <view class="text-gray-400 text-sm mb-20">点击头像或昵称可修改信息</view>
+    <view class="text-gray-400 text-sm profile-edit-tip">点击头像或昵称可修改信息</view>
 
     <!-- Actions -->
     <view class="actions-wrap w-full max-w-xs flex-col gap-4">
-        <btn fullWidth size="lg" className="rounded-xl shadow-blue" bind:click="createRoom">创建房间</btn>
+        <btn fullWidth size="lg" className="rounded-xl shadow-blue" bind:click="createRoom">
+          <view class="action-btn-content">
+            <text class="action-btn-label">创建房间</text>
+            <text class="action-btn-icon">➕</text>
+          </view>
+        </btn>
         
         <!-- Join Room Button -->
-        <btn fullWidth size="lg" className="rounded-xl shadow-blue" bind:click="openJoinModal">加入房间</btn>
+        <btn fullWidth size="lg" className="rounded-xl shadow-blue" bind:click="openJoinModal">
+          <view class="action-btn-content">
+            <text class="action-btn-label">加入房间</text>
+            <text class="action-btn-icon">🔑</text>
+          </view>
+        </btn>
 
         <!-- Player Clubs Entry -->
-        <btn fullWidth size="lg" className="rounded-xl shadow-blue bg-white text-blue-500 border border-blue-100" bind:click="navigateToClubs">我的牌友圈 👥</btn>
+        <btn fullWidth size="lg" className="rounded-xl shadow-blue bg-white text-blue-500 border border-blue-100" bind:click="navigateToClubs">
+          <view class="action-btn-content">
+            <text class="action-btn-label">牌友圈子</text>
+            <text class="action-btn-icon">👥</text>
+          </view>
+        </btn>
 
         <!-- Boardgame Tools Entry -->
-        <btn fullWidth size="lg" className="rounded-xl shadow-blue bg-white text-blue-500 border border-blue-100" bind:click="navigateToTools">棋牌工具 🀄</btn>
+        <btn fullWidth size="lg" className="rounded-xl shadow-blue bg-white text-blue-500 border border-blue-100" bind:click="navigateToTools">
+          <view class="action-btn-content">
+            <text class="action-btn-label">棋牌工具</text>
+            <text class="action-btn-icon">🧰</text>
+          </view>
+        </btn>
+    </view>
+
+    <view class="mini-code-share-card" bindtap="openSharePanel">
+      <image class="mini-code-thumb" src="{{miniCodeUrl}}" mode="aspectFill" lazy-load wx:if="{{miniCodeUrl}}"></image>
+      <view class="mini-code-fallback" wx:else>码</view>
+      <view class="mini-code-share-text">
+        <text class="mini-code-share-title">转发给牌友</text>
+        <text class="mini-code-share-desc">发码图 / 转发小程序，拉人更快</text>
+        <text class="mini-code-share-hint">{{isSavingMiniCode ? '处理中...' : '点按选择分享方式'}}</text>
+      </view>
     </view>
 
     <view class="brand-row flex-row items-center justify-center gap-2">
@@ -96,6 +126,17 @@
         </view>
     </view>
   </view>
+
+  <!-- Share Action Panel -->
+  <view class="share-panel-overlay" wx:if="{{showSharePanel}}" catchtap="closeSharePanel">
+    <view class="share-panel" catchtap="noop">
+      <text class="share-panel-title">选择分享方式</text>
+      <button class="share-panel-btn share-panel-primary" bindtap="handleSendMiniCode">发送码图</button>
+      <button class="share-panel-btn share-panel-secondary" open-type="share" bindtap="handleShareMiniProgram">转发小程序</button>
+      <button class="share-panel-btn share-panel-cancel" bindtap="closeSharePanel">取消</button>
+    </view>
+  </view>
+
   <!-- Help Modal (Native Page Container) -->
   <page-container 
     show="{{showHelpModal}}" 
@@ -118,34 +159,26 @@
         </view>
         
         <view class="flex-col items-center">
-            <!-- Image Container with Shadow -->
-            <image 
-                src="{{helpImages[helpIndex]}}" 
-                mode="widthFix" 
-                class="w-full rounded-xl transition-all duration-300" 
-                style="box-shadow: var(--shadow-md); max-height: 60vh;" 
-            />
+            <!-- Swipe Image Container -->
+            <view
+                class="help-swipe-shell"
+                bindtouchstart="onHelpTouchStart"
+                bindtouchmove="onHelpTouchMove"
+                bindtouchend="onHelpTouchEnd"
+                bindtouchcancel="onHelpTouchCancel"
+            >
+                <image
+                    src="{{helpImages[helpIndex]}}"
+                    mode="widthFix"
+                    class="help-swipe-image {{helpImageAnimating ? 'help-swipe-image-animating' : ''}}"
+                    lazy-load
+                />
+            </view>
             
-            <!-- Navigation -->
-            <view class="flex-row items-center justify-between w-full mt-8 mb-2">
-                <view 
-                    class="skill-btn-secondary {{helpIndex === 0 ? 'opacity-50 pointer-events-none' : ''}}" 
-                    bindtap="prevHelp"
-                    style="min-width: 180rpx;"
-                >
-                    <text>上一页</text>
-                </view>
-                
+            <!-- Pager -->
+            <view class="help-pager-wrap">
                 <view class="text-gray-500 font-medium page-indicator bg-gray-100 px-3 py-1 rounded-full text-xs">
                     {{helpIndex + 1}} / {{helpImages.length}}
-                </view>
-                
-                <view 
-                    class="skill-btn-primary {{helpIndex === helpImages.length - 1 ? 'opacity-50 pointer-events-none' : ''}}" 
-                    bindtap="nextHelp"
-                    style="min-width: 180rpx;"
-                >
-                    <text>下一页</text>
                 </view>
             </view>
         </view>

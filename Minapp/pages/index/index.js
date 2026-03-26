@@ -1,5 +1,6 @@
 const app = getApp();
 const cloudApi = require('../../utils/cloudApi');
+const MINI_CODE_FILE_ID = 'cloud://cloud1-7go9rrf32b9c9cbc.636c-cloud1-7go9rrf32b9c9cbc-1390826004/assets/mini-code-v1.png';
 
 Page({
     data: {
@@ -33,6 +34,11 @@ Page({
         // Help Modal Data
         showHelpModal: false,
         helpIndex: 0,
+        helpTouchStartX: 0,
+        helpTouchStartY: 0,
+        helpTouchDeltaX: 0,
+        helpTouchDeltaY: 0,
+        helpImageAnimating: false,
         helpImages: [
             'cloud://cloud1-7go9rrf32b9c9cbc.636c-cloud1-7go9rrf32b9c9cbc-1390826004/assets/instructions/guide_1.jpg',
             'cloud://cloud1-7go9rrf32b9c9cbc.636c-cloud1-7go9rrf32b9c9cbc-1390826004/assets/instructions/guide_2.jpg',
@@ -41,7 +47,11 @@ Page({
         ],
 
         isProcessing: false, // Interaction Lock
-        appIconUrl: '' // Cloud Icon URL
+        appIconUrl: '', // Cloud Icon URL
+        miniCodeUrl: '', // Mini Program Code URL
+        miniCodeLocalPath: '',
+        showSharePanel: false,
+        isSavingMiniCode: false
     },
 
 
@@ -205,10 +215,18 @@ Page({
         this.updateUserInfo();
         this.fetchHelpImages();
         this.fetchAppIcon();
+        this.fetchMiniCode();
     },
 
     onShow() {
         this.updateUserInfo();
+    },
+
+    onHide() {
+        clearTimeout(this._helpAnimTimer);
+        if (this.data.showSharePanel) {
+            this.setData({ showSharePanel: false });
+        }
     },
 
     updateUserInfo() {
@@ -258,6 +276,186 @@ Page({
                     // but we are removing local file, so maybe show nothing or text.
                 }
             }
+        });
+    },
+
+    fetchMiniCode() {
+        wx.cloud.getTempFileURL({
+            fileList: [MINI_CODE_FILE_ID],
+            success: res => {
+                const file = res.fileList[0];
+                if (file && file.status === 0) {
+                    this.setData({ miniCodeUrl: file.tempFileURL });
+                } else {
+                    console.error('Failed to get Mini Code URL', file ? file.errMsg : 'empty response');
+                }
+            },
+            fail: err => {
+                console.error('Failed to fetch mini code', err);
+            }
+        });
+    },
+
+    onShareAppMessage() {
+        return {
+            title: '转发给牌友，扫码就能进，开局更快',
+            path: '/pages/index/index',
+            imageUrl: this.data.miniCodeUrl || this.data.appIconUrl || ''
+        };
+    },
+
+    openSharePanel() {
+        this.setData({ showSharePanel: true });
+    },
+
+    closeSharePanel() {
+        this.setData({ showSharePanel: false });
+    },
+
+    noop() {},
+
+    handleShareMiniProgram() {
+        this.closeSharePanel();
+    },
+
+    async handleSendMiniCode() {
+        if (this.data.isSavingMiniCode) return;
+        this.closeSharePanel();
+
+        if (!this.data.miniCodeUrl) {
+            wx.showToast({ title: '码图加载中，请稍后重试', icon: 'none' });
+            return;
+        }
+
+        this.setData({ isSavingMiniCode: true });
+        try {
+            const localPath = await this.ensureMiniCodeLocalPath();
+            wx.previewImage({
+                current: localPath,
+                urls: [localPath]
+            });
+
+            const wantSave = await new Promise(resolve => {
+                wx.showModal({
+                    title: '发送码图',
+                    content: '已打开预览，是否保存到相册后发给牌友？',
+                    confirmText: '保存到相册',
+                    cancelText: '先看看',
+                    success: res => resolve(!!res.confirm),
+                    fail: () => resolve(false)
+                });
+            });
+
+            if (wantSave) {
+                await this.saveMiniCodeToAlbum(localPath);
+            }
+        } catch (err) {
+            console.error('handleSendMiniCode failed', err);
+            wx.showToast({ title: '码图处理失败，请稍后重试', icon: 'none' });
+        } finally {
+            this.setData({ isSavingMiniCode: false });
+        }
+    },
+
+    ensureMiniCodeLocalPath() {
+        if (this.data.miniCodeLocalPath) {
+            return Promise.resolve(this.data.miniCodeLocalPath);
+        }
+
+        return new Promise((resolve, reject) => {
+            wx.downloadFile({
+                url: this.data.miniCodeUrl,
+                success: res => {
+                    if (res.statusCode >= 200 && res.statusCode < 400 && res.tempFilePath) {
+                        this.setData({ miniCodeLocalPath: res.tempFilePath });
+                        resolve(res.tempFilePath);
+                        return;
+                    }
+                    reject(new Error(`download status invalid: ${res.statusCode}`));
+                },
+                fail: err => reject(err)
+            });
+        });
+    },
+
+    ensureAlbumPermission() {
+        return new Promise(resolve => {
+            wx.getSetting({
+                success: settingRes => {
+                    const auth = settingRes.authSetting['scope.writePhotosAlbum'];
+                    if (auth === true) {
+                        resolve(true);
+                        return;
+                    }
+
+                    if (auth === false) {
+                        wx.showModal({
+                            title: '需要相册权限',
+                            content: '请开启“保存到相册”权限后重试',
+                            confirmText: '去设置',
+                            success: modalRes => {
+                                if (!modalRes.confirm) {
+                                    resolve(false);
+                                    return;
+                                }
+                                wx.openSetting({
+                                    success: openRes => resolve(!!openRes.authSetting['scope.writePhotosAlbum']),
+                                    fail: () => resolve(false)
+                                });
+                            },
+                            fail: () => resolve(false)
+                        });
+                        return;
+                    }
+
+                    wx.authorize({
+                        scope: 'scope.writePhotosAlbum',
+                        success: () => resolve(true),
+                        fail: () => {
+                            wx.showModal({
+                                title: '需要相册权限',
+                                content: '未授予相册权限，可在设置中开启后继续',
+                                confirmText: '去设置',
+                                success: modalRes => {
+                                    if (!modalRes.confirm) {
+                                        resolve(false);
+                                        return;
+                                    }
+                                    wx.openSetting({
+                                        success: openRes => resolve(!!openRes.authSetting['scope.writePhotosAlbum']),
+                                        fail: () => resolve(false)
+                                    });
+                                },
+                                fail: () => resolve(false)
+                            });
+                        }
+                    });
+                },
+                fail: () => resolve(false)
+            });
+        });
+    },
+
+    async saveMiniCodeToAlbum(filePath) {
+        const granted = await this.ensureAlbumPermission();
+        if (!granted) {
+            wx.showToast({ title: '未获得相册权限', icon: 'none' });
+            return;
+        }
+
+        return new Promise(resolve => {
+            wx.saveImageToPhotosAlbum({
+                filePath,
+                success: () => {
+                    wx.showToast({ title: '已保存，去微信聊天发送图片', icon: 'none', duration: 2200 });
+                    resolve(true);
+                },
+                fail: err => {
+                    console.error('saveMiniCodeToAlbum failed', err);
+                    wx.showToast({ title: '保存失败，可在预览页长按保存', icon: 'none' });
+                    resolve(false);
+                }
+            });
         });
     },
 
@@ -319,27 +517,97 @@ Page({
     openHelpModal() {
         this.setData({
             showHelpModal: true,
-            helpIndex: 0
+            helpIndex: 0,
+            helpTouchStartX: 0,
+            helpTouchStartY: 0,
+            helpTouchDeltaX: 0,
+            helpTouchDeltaY: 0
         });
     },
 
     closeHelpModal() {
-        this.setData({ showHelpModal: false });
+        this.setData({
+            showHelpModal: false,
+            helpImageAnimating: false
+        });
     },
 
-    prevHelp() {
-        if (this.data.helpIndex > 0) {
-            this.setData({
-                helpIndex: this.data.helpIndex - 1
-            });
-        }
+    onHelpTouchStart(e) {
+        const point = e.touches && e.touches[0];
+        if (!point) return;
+
+        this._helpTouchActive = true;
+        this.setData({
+            helpTouchStartX: point.clientX,
+            helpTouchStartY: point.clientY,
+            helpTouchDeltaX: 0,
+            helpTouchDeltaY: 0
+        });
     },
 
-    nextHelp() {
-        if (this.data.helpIndex < this.data.helpImages.length - 1) {
-            this.setData({
-                helpIndex: this.data.helpIndex + 1
-            });
+    onHelpTouchMove(e) {
+        if (!this._helpTouchActive) return;
+        const point = e.touches && e.touches[0];
+        if (!point) return;
+
+        this.setData({
+            helpTouchDeltaX: point.clientX - this.data.helpTouchStartX,
+            helpTouchDeltaY: point.clientY - this.data.helpTouchStartY
+        });
+    },
+
+    onHelpTouchEnd() {
+        if (!this._helpTouchActive) return;
+        this._helpTouchActive = false;
+
+        const deltaX = this.data.helpTouchDeltaX;
+        const deltaY = this.data.helpTouchDeltaY;
+        const absX = Math.abs(deltaX);
+        const absY = Math.abs(deltaY);
+        const threshold = 40;
+
+        this.setData({
+            helpTouchDeltaX: 0,
+            helpTouchDeltaY: 0
+        });
+
+        // Only react to obvious horizontal swipes
+        if (absX < threshold || absX <= absY) {
+            return;
         }
+
+        const total = this.data.helpImages.length;
+        if (!total) return;
+
+        let nextIndex = this.data.helpIndex;
+        if (deltaX > 0) {
+            // Right swipe -> previous page, hard lock at first page
+            if (nextIndex > 0) nextIndex -= 1;
+        } else {
+            // Left swipe -> next page, hard lock at last page
+            if (nextIndex < total - 1) nextIndex += 1;
+        }
+
+        if (nextIndex === this.data.helpIndex) {
+            return;
+        }
+
+        this.setData({
+            helpIndex: nextIndex,
+            helpImageAnimating: true
+        });
+
+        clearTimeout(this._helpAnimTimer);
+        this._helpAnimTimer = setTimeout(() => {
+            this.setData({ helpImageAnimating: false });
+        }, 180);
+    },
+
+    onHelpTouchCancel() {
+        this._helpTouchActive = false;
+        this.setData({
+            helpTouchDeltaX: 0,
+            helpTouchDeltaY: 0
+        });
     }
 })

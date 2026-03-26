@@ -32,7 +32,7 @@
         <!-- Similar list content ... -->
         <view wx:for="{{clubs}}" wx:key="_id" bindtap="gotoDetail" data-id="{{item._id}}" class="club-card">
             <!-- Left: Club Icon -->
-            <image src="{{item.avatar}}" class="club-icon" mode="aspectFill"></image>
+            <image src="{{item.avatar}}" class="club-icon" mode="aspectFill" lazy-load></image>
             
             <!-- Right: Info -->
             <view class="club-info flex-col flex-1">
@@ -45,7 +45,7 @@
                     <view class="flex-row items-center mr-3">
                         <view class="flex-row">
                              <block wx:for="{{item.members}}" wx:for-item="member" wx:key="openId" wx:if="{{index < 3}}">
-                                <image src="{{member.avatar}}" class="avatar-stack-item {{index > 0 ? '-ml-2' : ''}}" mode="aspectFill"></image>
+                                <image src="{{member.avatar}}" class="avatar-stack-item {{index > 0 ? '-ml-2' : ''}}" mode="aspectFill" lazy-load></image>
                             </block>
                         </view>
                         <text class="text-xs text-gray-500 ml-2">{{item.members.length}}人</text>

@@ -2,6 +2,7 @@ const app = getApp();
 const cloudApi = require('../../../../../utils/cloudApi');
 const db = wx.cloud.database();
 const _ = db.command;
+const MINI_CODE_FILE_ID = 'cloud://cloud1-7go9rrf32b9c9cbc.636c-cloud1-7go9rrf32b9c9cbc-1390826004/assets/mini-code-v1.png';
 
 // ===== 内联缓存管理器 =====
 class CacheManager {
@@ -101,7 +102,28 @@ Page({
         refreshBg: '#f6f7f9', // 刷新背景色
         activeRequests: 0,  // 并发请求防护
         lastWatchUpdate: 0,  // Watcher冲突防护
-        loadingState: 'idle'  // 统一加载状态：'idle' | 'loading' | 'refreshing' | 'loading-more'
+        loadingState: 'idle',  // 统一加载状态：'idle' | 'loading' | 'refreshing' | 'loading-more'
+        enableStatsVerify: false, // 默认关闭高频统计校验，仅调试时开启
+        miniCodeUrl: '' // Shared mini code image URL
+    },
+
+    hasServerAggregatedStats(clubData) {
+        const club = clubData || this.data.club;
+        return !!(club && club.stats && club.stats.champion);
+    },
+
+    recordPerf(eventName) {
+        if (!this._perfStats) return;
+        this._perfStats[eventName] = (this._perfStats[eventName] || 0) + 1;
+        const now = Date.now();
+        if (now - this._perfStats.lastLogAt > 15000) {
+            this._perfStats.lastLogAt = now;
+            console.log('[PerfPulse][club/detail]', JSON.stringify({
+                statsCalc: this._perfStats.statsCalc || 0,
+                statsWatcherOnChange: this._perfStats.statsWatcherOnChange || 0,
+                roomsWatcherOnChange: this._perfStats.roomsWatcherOnChange || 0
+            }));
+        }
     },
 
     onLoad(options) {
@@ -112,6 +134,7 @@ Page({
 
         // Initialize instance property (not in data to avoid serialization issues with Map)
         this.timeCache = new Map();
+        this._perfStats = { lastLogAt: Date.now() };
 
         // Calculate Safe Area for Button
         const sys = wx.getSystemInfoSync();
@@ -124,6 +147,7 @@ Page({
             navHeight,
             btnBottom
         });
+        this.fetchMiniCode();
 
         if (options.id) {
             const clubId = options.id;
@@ -165,8 +189,8 @@ Page({
                 this.setData({ watchersActive: true });
                 this.initClubWatcher(clubId);
                 this.initRoomsWatcher(clubId);
-                // Also trigger stats watcher if club data exists (from snapshot)
-                if (this.data.club && this.data.club.clubId) {
+                // 结构优化：优先使用服务端聚合统计，仅在缺失时才启用 stats watcher
+                if (this.data.club && this.data.club.clubId && !this.hasServerAggregatedStats()) {
                     this.initStatsWatcher(this.data.club.clubId);
                 }
             });
@@ -183,7 +207,7 @@ Page({
                 if (this.data.clubId && this.data.cloudReady) {
                     this.initClubWatcher(this.data.clubId);
                     this.initRoomsWatcher(this.data.clubId);
-                    if (this.data.club && this.data.club.clubId) {
+                    if (this.data.club && this.data.club.clubId && !this.hasServerAggregatedStats()) {
                         this.initStatsWatcher(this.data.club.clubId);
                     }
                 }
@@ -218,7 +242,7 @@ Page({
             this.setData({ watchersActive: true });
             this.initClubWatcher(this.data.clubId);
             this.initRoomsWatcher(this.data.clubId);
-            if (this.data.club && this.data.club.clubId) {
+            if (this.data.club && this.data.club.clubId && !this.hasServerAggregatedStats()) {
                 this.initStatsWatcher(this.data.club.clubId);
             }
         }
@@ -228,7 +252,7 @@ Page({
             this.initClubWatcher(this.data.clubId);
             this.initRoomsWatcher(this.data.clubId);
             // Stats watcher needs numeric ID
-            if (this.data.club && this.data.club.clubId) {
+            if (this.data.club && this.data.club.clubId && !this.hasServerAggregatedStats()) {
                 this.initStatsWatcher(this.data.club.clubId);
             }
         }
@@ -251,6 +275,10 @@ Page({
         console.log('Detail page onHide, releasing watchers...');
         this.closeAllWatchers();
         this.setData({ watchersActive: false });
+        if (this._statsCalcTimer) {
+            clearTimeout(this._statsCalcTimer);
+            this._statsCalcTimer = null;
+        }
     },
 
     onUnload() {
@@ -260,6 +288,10 @@ Page({
             app.off('networkResume', this._onNetworkResume);
         }
         app.off('roundUpdate', this.handleRoundUpdate);
+        if (this._statsCalcTimer) {
+            clearTimeout(this._statsCalcTimer);
+            this._statsCalcTimer = null;
+        }
 
         // 清理时间格式化缓存
         if (this.data.timeCache) {
@@ -402,6 +434,7 @@ Page({
                 .limit(20)
                 .watch({
                     onChange: function (snapshot) {
+                        _this.recordPerf('roomsWatcherOnChange');
                         _this.processRoomsUpdate(snapshot.docs);
                     },
                     onError: function (err) {
@@ -460,15 +493,36 @@ Page({
                 .limit(50)
                 .watch({
                     onChange: function (snapshot) {
-                        console.log("Stats Watcher onChange - members count:", snapshot.docs.length);
-                        if (snapshot.docs.length > 0) {
-                            console.log("Sample member data:", JSON.stringify(snapshot.docs[0], null, 2));
-                        }
-                        _this.setData({ clubMembers: snapshot.docs });
-                        // Trigger fetching best player (rate) separately to avoid Top 50 truncation bias
-                        _this.fetchBestPlayer(queryId);
+                        _this.recordPerf('statsWatcherOnChange');
+                        const docs = snapshot.docs || [];
+                        const snapshotKey = docs.map((doc) => {
+                            const stats = doc.stats || {};
+                            return `${doc.openId}:${stats.winCount || 0}:${stats.gameCount || 0}:${stats.totalScore || 0}`;
+                        }).join('|');
 
-                        _this.calculateStats(_this.data.rooms);
+                        // 快照未变化时跳过后续计算，避免重复 setData + DB 查询
+                        if (_this._lastStatsSnapshotKey === snapshotKey) {
+                            return;
+                        }
+                        _this._lastStatsSnapshotKey = snapshotKey;
+
+                        console.log("Stats Watcher onChange - members count:", docs.length);
+                        _this.setData({ clubMembers: snapshot.docs });
+
+                        // fetchBestPlayer 节流，避免 watch 高频触发时重复查库
+                        const now = Date.now();
+                        if (!_this._lastBestPlayerFetchAt || now - _this._lastBestPlayerFetchAt > 15000) {
+                            _this._lastBestPlayerFetchAt = now;
+                            _this.fetchBestPlayer(queryId);
+                        }
+
+                        // 统计计算轻度防抖，避免同一帧内多次重算
+                        if (_this._statsCalcTimer) {
+                            clearTimeout(_this._statsCalcTimer);
+                        }
+                        _this._statsCalcTimer = setTimeout(() => {
+                            _this.calculateStats(_this.data.rooms);
+                        }, 80);
                     },
                     onError: function (err) {
                         console.error('Stats Watcher Error:', err);
@@ -619,7 +673,18 @@ Page({
         // console.log("🔍 Checking Stats Watcher Init...");
         // console.log("  ClubId:", club.clubId, "CloudReady:", this.data.cloudReady);
 
-        if (club.clubId && !isSnapshot && this.data.cloudReady) {
+        const shouldUseServerStats = this.hasServerAggregatedStats(club);
+        if (shouldUseServerStats && this.statsWatcher) {
+            try {
+                this.statsWatcher.close();
+            } catch (e) {
+                console.warn('Close stats watcher failed while switching to server stats:', e);
+            }
+            this.statsWatcher = null;
+            this.data.activeStatsClubId = null;
+        }
+
+        if (club.clubId && !isSnapshot && this.data.cloudReady && !shouldUseServerStats) {
             // Stability Fix: Only re-init if clubId changed or watcher missing
             if (this.statsWatcher && this.data.activeStatsClubId === club.clubId) {
                 // Watcher already active for this club, do nothing
@@ -641,7 +706,7 @@ Page({
             // Mark current ID to prevent duplicate init
             this.data.activeStatsClubId = club.clubId;
             this.initStatsWatcher(club.clubId);
-        } else {
+        } else if (!shouldUseServerStats) {
             console.warn("⚠️ 未满足条件，跳过 Stats Watcher 初始化");
             if (!club.clubId) {
                 console.error("❌ 关键问题：club.clubId 为空！需要检查数据库数据");
@@ -653,21 +718,6 @@ Page({
         }
         if (this.data.rooms.length > 0) {
             this.calculateStats(this.data.rooms);
-        }
-    },
-
-    onShow() {
-        // Refresh data when returning from a room
-        if (this.data.clubId) {
-            // Stage 3: Reactive Invalidation (P0)
-            if (this.data.needsRefresh) {
-                console.log('Detail page: Dirty data detected, refreshing...');
-                this.setData({ isHydrating: true }); // Show skeleton again for stats
-                this.fetchRooms(this.data.clubId);
-                this.data.needsRefresh = false;
-            } else if (!this.data.isLoading) {
-                this.fetchRooms(this.data.clubId);
-            }
         }
     },
 
@@ -976,58 +1026,6 @@ Page({
             // Fallback: Use rooms length temporarily
             totalGames = rooms ? rooms.length : 0;
         }
-
-        // Logic Loop: Trigger Async Verification (Self-Healing)
-        // Decoupled from display logic to ensure it actually runs.
-        if (this.data.clubId) {
-            // Prevention: Debounce or Limit frequency? 
-            // For now, let's allow it to ensure consistency, but we can check if we already requested.
-            // Using a random sampler (10% chance) to avoid heavy load on every render?
-            // User requested "Fix the bug", so we ensure it works. 
-            // We'll run it always if it hasn't been verified this session?
-            // Let's safe-guard with a chaotic check or just always run for now (Count is cheap-ish).
-
-            const shouldVerify = true; // FORCE VERIFY for debugging
-
-            if (shouldVerify) {
-                const targetCollection = cloudApi.collectionName('rooms');
-                const _ = db.command;
-                // LOUD LOG TO PROVE UPDATE
-                console.log(`[StatsDebug] ::: LATEST CODE LOADED ::: Verifying in ${targetCollection}...`);
-
-                db.collection(targetCollection)
-                    .where(_.or([
-                        { clubId: String(this.data.clubId) },
-                        { clubId: Number(this.data.clubId) }
-                    ]))
-                    .count()
-                    .then(res => {
-                        const dbTotal = res.total;
-                        console.log(`[StatsDebug] Count Conclusion: ${dbTotal} (Cache: ${cachedTotal})`);
-
-                        // If DB count differs from cache/current, trigger healing
-                        if (Math.abs(dbTotal - cachedTotal) > 0) {
-                            console.warn(`[StatsDebug] DISCREPANCY! DB(${dbTotal}) vs Cache(${cachedTotal})`);
-
-                            // Trigger Cloud Reconcile (Source of Truth)
-                            cloudApi.call('manageClub', {
-                                action: 'reconcileStats',
-                                clubId: this.data.clubId
-                            }).catch(err => console.error('[StatsDebug] Reconcile failed', err));
-
-                            // Safety: Only update frontend if DB return meaningful data
-                            // IF DB SAYS 0, WE SCREAM BUT DO NOT OVERWRITE IF CACHE > 0
-                            if (dbTotal > 0) {
-                                this.setData({ 'stats.totalGames': dbTotal });
-                            } else {
-                                console.error('[StatsDebug] DB returned 0, refusing to overwrite valid cache!');
-                            }
-                        }
-                    })
-                    .catch(e => console.error("[StatsDebug] Verify failed", e));
-            }
-        }
-
         return totalGames;
     },
 
@@ -1215,6 +1213,7 @@ Page({
     },
 
     calculateStats(rooms) {
+        this.recordPerf('statsCalc');
         // Calculate totalGames from club cache (preferred) or database query
         let totalGames = 0;
 
@@ -1342,13 +1341,6 @@ Page({
             }
 
             this.setData(updatePayload);
-
-            // TRIGGER REPAIR CHECK: If we have rooms (games > 0) but no valid champion (wins=0), we likely need repair
-            // Do this BEFORE returning
-            if (!hasValidChampion && rooms && rooms.length > 0) {
-                console.warn("[StatsRepair] Valid games found but no Champion. Triggering Repair...");
-                this.rebuildMemberStatsFromRooms(rooms);
-            }
 
             // 如果找到了有效的统计数据，直接返回；否则，允许回退到 legacy 逻辑
             if (hasValidChampion || this.data.hasDbBestPlayer) { // Adjusted condition
@@ -1558,11 +1550,28 @@ Page({
         wx.showToast({ title: '请点击右上角分享给好友', icon: 'none' });
     },
 
+    fetchMiniCode() {
+        wx.cloud.getTempFileURL({
+            fileList: [MINI_CODE_FILE_ID],
+            success: res => {
+                const file = res.fileList[0];
+                if (file && file.status === 0) {
+                    this.setData({ miniCodeUrl: file.tempFileURL });
+                } else {
+                    console.error('Failed to get club mini code URL', file ? file.errMsg : 'empty response');
+                }
+            },
+            fail: err => {
+                console.error('Failed to fetch club mini code', err);
+            }
+        });
+    },
+
     onShareAppMessage() {
         return {
             title: `邀请你加入【${this.data.club.name}】牌友圈`,
             path: `/subpackages/package_club/pages/club/detail/index?id=${this.data.clubId}&action=join`,
-            imageUrl: this.data.club.avatar || ''
+            imageUrl: this.data.miniCodeUrl || this.data.club.avatar || ''
         };
     },
 
