@@ -2,6 +2,7 @@ const app = getApp();
 const cloudApi = require('../../../../../utils/cloudApi');
 const db = wx.cloud.database();
 const _ = db.command;
+const MINI_CODE_FILE_ID = 'cloud://cloud1-7go9rrf32b9c9cbc.636c-cloud1-7go9rrf32b9c9cbc-1390826004/assets/mini-code-v1.png';
 
 // ===== 内联缓存管理器 =====
 class CacheManager {
@@ -102,7 +103,8 @@ Page({
         activeRequests: 0,  // 并发请求防护
         lastWatchUpdate: 0,  // Watcher冲突防护
         loadingState: 'idle',  // 统一加载状态：'idle' | 'loading' | 'refreshing' | 'loading-more'
-        enableStatsVerify: false // 默认关闭高频统计校验，仅调试时开启
+        enableStatsVerify: false, // 默认关闭高频统计校验，仅调试时开启
+        miniCodeUrl: '' // Shared mini code image URL
     },
 
     hasServerAggregatedStats(clubData) {
@@ -145,6 +147,7 @@ Page({
             navHeight,
             btnBottom
         });
+        this.fetchMiniCode();
 
         if (options.id) {
             const clubId = options.id;
@@ -1547,11 +1550,28 @@ Page({
         wx.showToast({ title: '请点击右上角分享给好友', icon: 'none' });
     },
 
+    fetchMiniCode() {
+        wx.cloud.getTempFileURL({
+            fileList: [MINI_CODE_FILE_ID],
+            success: res => {
+                const file = res.fileList[0];
+                if (file && file.status === 0) {
+                    this.setData({ miniCodeUrl: file.tempFileURL });
+                } else {
+                    console.error('Failed to get club mini code URL', file ? file.errMsg : 'empty response');
+                }
+            },
+            fail: err => {
+                console.error('Failed to fetch club mini code', err);
+            }
+        });
+    },
+
     onShareAppMessage() {
         return {
             title: `邀请你加入【${this.data.club.name}】牌友圈`,
             path: `/subpackages/package_club/pages/club/detail/index?id=${this.data.clubId}&action=join`,
-            imageUrl: this.data.club.avatar || ''
+            imageUrl: this.data.miniCodeUrl || this.data.club.avatar || ''
         };
     },
 
