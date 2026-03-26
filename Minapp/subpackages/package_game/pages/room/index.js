@@ -1,5 +1,6 @@
 const app = getApp();
 const cloudApi = require('../../../../utils/cloudApi');
+const MINI_CODE_FILE_ID = 'cloud://cloud1-7go9rrf32b9c9cbc.636c-cloud1-7go9rrf32b9c9cbc-1390826004/assets/mini-code-v1.png';
 
 function getIdentityCandidates(entity) {
     if (!entity) return [];
@@ -160,6 +161,7 @@ Page({
         newBaseScore: '',
 
         appIconUrl: '', // Cloud Icon URL
+        miniCodeUrl: '', // Shared mini code image URL
 
         // Bottom tab for room/tools switch
         activeBottomTab: 'room',
@@ -181,7 +183,7 @@ Page({
     onShareAppMessage() {
         let url = `/subpackages/package_game/pages/room/index?roomId=${this.data.roomId}`;
         let title = '';
-        let imageUrl = this.data.appIconUrl || ''; // Use Cloud Icon if available
+        let imageUrl = this.data.miniCodeUrl || this.data.appIconUrl || ''; // Prefer shared mini code
 
         if (this.data.isReadOnly) {
             url += '&readonly=true';
@@ -201,10 +203,6 @@ Page({
                 title = `快来加入【${clubName}】的对局吧！房间号：${this.data.roomId}`;
             }
 
-            // Use club avatar if available
-            if (this.data.club?.avatar) {
-                imageUrl = this.data.club.avatar;
-            }
         } else {
             // Free room: Highlight quick join
             if (this.data.isReadOnly) {
@@ -244,6 +242,7 @@ Page({
         this.batchUpdater = new BatchSetData(this);
         this._retryNoticeAt = 0;
         this._chartCache = { key: '', data: null };
+        this.fetchMiniCode();
 
         // 1. Get User Info
         let userInfo = wx.getStorageSync('hdpj_user_profile') || app.globalData.userInfo;
@@ -309,6 +308,23 @@ Page({
             }
         };
         wx.onNetworkStatusChange(this.networkStatusListener);
+    },
+
+    fetchMiniCode() {
+        wx.cloud.getTempFileURL({
+            fileList: [MINI_CODE_FILE_ID],
+            success: res => {
+                const file = res.fileList[0];
+                if (file && file.status === 0) {
+                    this.setData({ miniCodeUrl: file.tempFileURL });
+                } else {
+                    console.error('Failed to get room mini code URL', file ? file.errMsg : 'empty response');
+                }
+            },
+            fail: err => {
+                console.error('Failed to fetch room mini code', err);
+            }
+        });
     },
 
     // 备用方法：退出前检查docId是否已设置
