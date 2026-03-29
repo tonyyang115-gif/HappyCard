@@ -1,5 +1,6 @@
 const app = getApp();
 const cloudApi = require('../../utils/cloudApi');
+const { getAppMeta } = require('../../utils/versionMeta');
 const MINI_CODE_FILE_ID = 'cloud://cloud1-7go9rrf32b9c9cbc.636c-cloud1-7go9rrf32b9c9cbc-1390826004/assets/mini-code-v1.png';
 
 Page({
@@ -51,7 +52,8 @@ Page({
         miniCodeUrl: '', // Mini Program Code URL
         miniCodeLocalPath: '',
         showSharePanel: false,
-        isSavingMiniCode: false
+        isSavingMiniCode: false,
+        displayVersion: getAppMeta().displayUpper
     },
 
 
@@ -212,6 +214,7 @@ Page({
     },
 
     onLoad(options) {
+        this.syncVersionDisplay();
         this.updateUserInfo();
         this.fetchHelpImages();
         this.fetchAppIcon();
@@ -219,6 +222,7 @@ Page({
     },
 
     onShow() {
+        this.syncVersionDisplay();
         this.updateUserInfo();
     },
 
@@ -234,6 +238,13 @@ Page({
         if (userInfo) {
             this.setData({ userInfo });
         }
+    },
+
+    syncVersionDisplay() {
+        const globalMeta = app.globalData && app.globalData.appMeta;
+        const configMeta = getAppMeta();
+        const displayVersion = (globalMeta && globalMeta.displayUpper) || configMeta.displayUpper;
+        this.setData({ displayVersion });
     },
 
     fetchHelpImages() {

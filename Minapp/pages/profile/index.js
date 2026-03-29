@@ -19,6 +19,7 @@
  */
 const app = getApp();
 const cloudApi = require('../../utils/cloudApi');
+const { getAppMeta } = require('../../utils/versionMeta');
 const { getEnvLabel } = cloudApi;
 
 Page({
@@ -467,7 +468,17 @@ Page({
      * 打开关于我们弹窗
      */
     openAbout() {
-        wx.showModal({ title: '关于我们', content: '快乐打牌记 v1.2.0\n仅供娱乐学习使用', showCancel: false });
+        const globalMeta = app.globalData && app.globalData.appMeta;
+        const configMeta = getAppMeta();
+        const appMeta = globalMeta || configMeta;
+        const appName = appMeta.appName;
+        const displayVersion = appMeta.displayLower;
+        const aboutLine = displayVersion ? `${appName} ${displayVersion}` : appName;
+        wx.showModal({
+            title: '关于我们',
+            content: `${aboutLine}\n仅供娱乐学习使用`,
+            showCancel: false
+        });
     },
 
     /**

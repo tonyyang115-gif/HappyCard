@@ -1,3 +1,5 @@
+const { getAppMeta } = require('./utils/versionMeta');
+
 App({
     onLaunch: function () {
         if (!wx.cloud) {
@@ -47,7 +49,8 @@ App({
 
         this.globalData = {
             userInfo: userInfo,
-            isConnected: true
+            isConnected: true,
+            appMeta: getAppMeta()
         };
 
         // Connectivity Monitoring
@@ -63,7 +66,8 @@ App({
     },
     globalData: {
         userInfo: null,
-        isConnected: true
+        isConnected: true,
+        appMeta: getAppMeta()
     },
 
     // Stage 3: Reactive Event Bus (P0)
