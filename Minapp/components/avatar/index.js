@@ -1,6 +1,10 @@
 Component({
     properties: {
-        url: String,
+        url: {
+            type: String,
+            optionalTypes: [null],
+            value: ''
+        },
         alt: String,
         size: {
             type: String,

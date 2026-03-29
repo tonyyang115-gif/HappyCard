@@ -9,14 +9,30 @@
   <scroll-view class="content-area" scroll-y="true">
     <view class="section-title">工具列表</view>
 
-    <view class="skill-card tool-card" bindtap="goMahjongTing">
+    <view
+      wx:for="{{toolCards}}"
+      wx:key="id"
+      wx:for-item="tool"
+      class="skill-card tool-card"
+      bindtap="openTool"
+      data-path="{{tool.path}}"
+    >
       <view class="card-row">
         <view class="card-icon-wrap">
-          <text class="card-icon-text">麻</text>
+          <image
+            wx:if="{{!toolIconErrorMap[tool.id]}}"
+            class="card-icon-img"
+            src="{{tool.icon}}"
+            mode="aspectFit"
+            data-id="{{tool.id}}"
+            binderror="onToolIconError"
+            aria-label="{{tool.iconAlt}}"
+          />
+          <text wx:else class="card-icon-text">{{tool.iconFallback}}</text>
         </view>
         <view class="card-main">
-          <text class="card-title">麻将胡牌听牌</text>
-          <text class="card-desc">选择13张手牌，自动计算听牌与剩余张数</text>
+          <text class="card-title">{{tool.name}}</text>
+          <text class="card-desc">{{tool.desc}}</text>
         </view>
       </view>
       <text class="card-arrow">›</text>

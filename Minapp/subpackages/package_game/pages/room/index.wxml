@@ -180,7 +180,16 @@
             <view wx:for="{{roomTools}}" wx:key="id" wx:for-item="tool" class="room-tool-card tool-card" bindtap="openRoomTool" data-path="{{tool.path}}">
                 <view class="card-row">
                     <view class="card-icon-wrap">
-                        <text class="card-icon-text">{{tool.iconText}}</text>
+                        <image
+                          wx:if="{{!toolIconErrorMap[tool.id]}}"
+                          class="card-icon-img"
+                          src="{{tool.icon}}"
+                          mode="aspectFit"
+                          data-id="{{tool.id}}"
+                          binderror="onRoomToolIconError"
+                          aria-label="{{tool.iconAlt}}"
+                        />
+                        <text wx:else class="card-icon-text">{{tool.iconFallback}}</text>
                     </view>
                     <view class="card-main">
                         <text class="card-title">{{tool.name}}</text>

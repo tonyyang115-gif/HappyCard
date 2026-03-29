@@ -1,4 +1,4 @@
-const { ALL_TILES, getTingTiles, getTingTilesWithMelds } = require('../../utils/mahjong');
+const { ALL_TILES, buildExposedTileCountMap, getTingTiles, getTingTilesWithMelds } = require('../../utils/mahjong');
 
 const TILE_IMAGE_MAP = {
   11: 'Man1', 12: 'Man2', 13: 'Man3', 14: 'Man4', 15: 'Man5', 16: 'Man6', 17: 'Man7', 18: 'Man8', 19: 'Man9',
@@ -102,16 +102,6 @@ function buildTileCards() {
     label: item.label,
     image: tileImageByCode(item.code)
   }));
-}
-
-function buildExposedTileCountMap(exposedMelds) {
-  const countMap = {};
-  for (const meld of exposedMelds) {
-    for (const tile of meld.tiles) {
-      countMap[tile] = (countMap[tile] || 0) + 1;
-    }
-  }
-  return countMap;
 }
 
 function buildExposedMeldViews(exposedMelds, laiziTile) {

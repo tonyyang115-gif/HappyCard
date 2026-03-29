@@ -30,7 +30,9 @@
             bindtap="onAddTile"
             bindlongpress="onToggleLaizi"
           >
-            <image class="tile-img" src="{{tile.image}}" mode="aspectFit"></image>
+            <view class="tile-face-wrap">
+              <image class="tile-img {{tile.code === 31 || tile.code === 33 ? 'tile-img-tight' : ''}}" src="{{tile.image}}" mode="aspectFit"></image>
+            </view>
             <view wx:if="{{laiziTile === tile.code}}" class="laizi-ribbon">
               <text class="laizi-ribbon-text">百搭</text>
             </view>
@@ -84,7 +86,9 @@
           </view>
           <view class="meld-tiles">
             <view wx:for="{{meld.tiles}}" wx:key="index" wx:for-item="tile" class="meld-tile {{tile.isLaizi ? 'is-laizi' : ''}}">
-              <image class="tile-img" src="{{tile.image}}" mode="aspectFit"></image>
+              <view class="tile-face-wrap">
+                <image class="tile-img {{tile.code === 31 || tile.code === 33 ? 'tile-img-tight' : ''}}" src="{{tile.image}}" mode="aspectFit"></image>
+              </view>
               <view wx:if="{{tile.isLaizi}}" class="laizi-ribbon">
                 <text class="laizi-ribbon-text">百搭</text>
               </view>
@@ -112,7 +116,9 @@
           data-index="{{slot.index}}"
           bindtap="onRemoveTile"
         >
-          <image wx:if="{{!slot.empty}}" class="tile-img" src="{{slot.image}}" mode="aspectFit"></image>
+          <view wx:if="{{!slot.empty}}" class="tile-face-wrap">
+            <image class="tile-img {{slot.tile === 31 || slot.tile === 33 ? 'tile-img-tight' : ''}}" src="{{slot.image}}" mode="aspectFit"></image>
+          </view>
           <view wx:if="{{slot.empty}}" class="empty-slot-inner"></view>
           <view wx:if="{{slot.isLaizi}}" class="laizi-ribbon">
             <text class="laizi-ribbon-text">百搭</text>
@@ -138,7 +144,7 @@
         <view class="result-left">听{{tingResults.length}}张</view>
         <view class="result-right">
           <view wx:for="{{tingResults}}" wx:key="tile" wx:for-item="item" class="result-tile-item">
-            <image class="result-tile-img" src="{{item.image}}" mode="aspectFit"></image>
+            <image class="result-tile-img {{item.tile === 31 || item.tile === 33 ? 'tile-img-tight-result' : ''}}" src="{{item.image}}" mode="aspectFit"></image>
             <text class="result-remain">剩{{item.remaining}}</text>
           </view>
         </view>
@@ -178,7 +184,7 @@
             data-start="{{item.start}}"
             bindtap="onSelectPickerChiStart"
           >
-            <image wx:for="{{item.tiles}}" wx:key="code" wx:for-item="tile" class="picker-chi-tile" src="{{tile.image}}" mode="aspectFit"></image>
+            <image wx:for="{{item.tiles}}" wx:key="code" wx:for-item="tile" class="picker-chi-tile {{tile.code === 31 || tile.code === 33 ? 'tile-img-tight' : ''}}" src="{{tile.image}}" mode="aspectFit"></image>
           </view>
         </view>
       </view>
@@ -193,7 +199,7 @@
             data-tile="{{tile.code}}"
             bindtap="onSelectPickerTile"
           >
-            <image class="picker-tile-image" src="{{tile.image}}" mode="aspectFit"></image>
+            <image class="picker-tile-image {{tile.code === 31 || tile.code === 33 ? 'tile-img-tight' : ''}}" src="{{tile.image}}" mode="aspectFit"></image>
           </view>
         </view>
       </view>

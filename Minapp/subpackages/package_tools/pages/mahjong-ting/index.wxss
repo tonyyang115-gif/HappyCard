@@ -5,6 +5,10 @@ page {
   --text-main: #1A1A1A;
   --text-secondary: #6B7280;
   --teal: #4fd1c5;
+  --tile-top-light: #c7e9d3;
+  --tile-top-mid: #a8d8bb;
+  --tile-top-dark: #8ec7a7;
+  --tile-face-bg: #f7f8f3;
   --shadow-md: 0 8rpx 32rpx rgba(0, 0, 0, 0.08);
 }
 
@@ -137,26 +141,45 @@ page {
 .tile-grid {
   display: grid;
   grid-template-columns: repeat(9, 1fr);
-  gap: 8rpx;
+  gap: 5rpx;
 }
 
 .tile-btn,
 .hand-cell {
   position: relative;
   border-radius: 12rpx;
-  background: #f8fafc;
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    var(--tile-top-light) 0rpx,
+    var(--tile-top-mid) 9rpx,
+    var(--tile-top-dark) 10rpx,
+    var(--tile-face-bg) 11rpx,
+    var(--tile-face-bg) 100%
+  );
+  box-shadow:
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.92),
+    inset -6rpx 0 8rpx rgba(130, 146, 158, 0.16);
+}
+
+.tile-btn::after,
+.hand-cell::after,
+.meld-tile::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 10rpx;
+  bottom: 2rpx;
+  width: 6rpx;
+  border-radius: 0 10rpx 10rpx 0;
+  background: linear-gradient(180deg, rgba(164, 176, 187, 0.42) 0%, rgba(132, 146, 160, 0.3) 100%);
+  pointer-events: none;
 }
 
 .tile-btn {
   border: 1px solid #e5e7eb;
-  height: 116rpx;
-  padding: 2rpx 2rpx 22rpx;
-}
-
-.tile-img {
-  width: 100%;
-  height: 100%;
-  display: block;
+  height: 108rpx;
+  padding: 0;
 }
 
 .is-disabled {
@@ -197,15 +220,15 @@ page {
 .count-chip {
   position: absolute;
   left: 50%;
-  bottom: 5rpx;
+  bottom: 1rpx;
   transform: translateX(-50%);
   min-width: 32rpx;
-  height: 24rpx;
+  height: 22rpx;
   border-radius: 12rpx;
   background: rgba(102, 126, 234, 0.12);
   border: 1px solid rgba(102, 126, 234, 0.26);
   color: #4f46e5;
-  font-size: 16rpx;
+  font-size: 15rpx;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -216,7 +239,7 @@ page {
 .hand-grid {
   display: grid;
   grid-template-columns: repeat(9, 1fr);
-  gap: 8rpx;
+  gap: 5rpx;
 }
 
 .meld-editor {
@@ -477,11 +500,22 @@ page {
 .meld-tile {
   position: relative;
   width: 86rpx;
-  height: 116rpx;
+  height: 108rpx;
   border-radius: 10rpx;
   border: 1px solid #e5e7eb;
-  background: #f8fafc;
-  padding: 2rpx;
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    var(--tile-top-light) 0rpx,
+    var(--tile-top-mid) 9rpx,
+    var(--tile-top-dark) 10rpx,
+    var(--tile-face-bg) 11rpx,
+    var(--tile-face-bg) 100%
+  );
+  padding: 0;
+  box-shadow:
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.92),
+    inset -6rpx 0 8rpx rgba(130, 146, 158, 0.16);
 }
 
 .empty-meld-tip {
@@ -492,22 +526,71 @@ page {
 
 .hand-cell {
   border: 1px dashed #d7dce2;
-  height: 126rpx;
+  height: 108rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rpx;
+  padding: 0;
 }
 
 .cell-empty {
-  background: #f9fafb;
+  background: linear-gradient(
+    180deg,
+    #d2ecd8 0rpx,
+    #bce1c8 9rpx,
+    #a6cfb4 10rpx,
+    #f9fafb 11rpx,
+    #f9fafb 100%
+  );
 }
 
 .empty-slot-inner {
-  width: 74%;
-  height: 84rpx;
+  width: 70%;
+  height: 66rpx;
   border-radius: 8rpx;
   background: #f1f5f9;
+}
+
+.tile-face-wrap {
+  position: absolute;
+  top: 8rpx;
+  left: 3rpx;
+  right: 8rpx;
+  bottom: 6rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tile-btn .tile-face-wrap {
+  left: 1rpx;
+  right: 2rpx;
+  bottom: 8rpx;
+}
+
+.meld-tile .tile-face-wrap,
+.hand-cell .tile-face-wrap {
+  left: 1rpx;
+  right: 2rpx;
+  bottom: 8rpx;
+}
+
+.tile-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.tile-img-tight {
+  width: 95.5%;
+  height: 95.5%;
+  transform: translateX(4rpx);
+}
+
+.tile-img-tight-result {
+  width: 93.5%;
+  height: 93.5%;
+  transform: translateX(4rpx);
 }
 
 .action-row {
@@ -589,10 +672,23 @@ page {
 
 .result-tile-img {
   width: 92rpx;
-  height: 140rpx;
+  height: 126rpx;
   border-radius: 10rpx;
   border: 1px solid rgba(2, 6, 23, 0.06);
-  background: #fff;
+  border-top-color: #8fc9a8;
+  border-top-width: 4rpx;
+  background: linear-gradient(
+    180deg,
+    #d6efdf 0rpx,
+    #bfe1cb 9rpx,
+    #a9cfb8 10rpx,
+    #ffffff 11rpx,
+    #ffffff 100%
+  ),
+  linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(130, 146, 158, 0.2) 100%);
+  box-shadow:
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.92),
+    inset -6rpx 0 8rpx rgba(130, 146, 158, 0.2);
 }
 
 .result-remain {

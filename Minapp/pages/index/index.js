@@ -275,6 +275,9 @@ Page({
                     // Fallback handled by UI (empty or default) logic if needed, 
                     // but we are removing local file, so maybe show nothing or text.
                 }
+            },
+            fail: err => {
+                console.error('Failed to fetch app icon', err);
             }
         });
     },

@@ -8,7 +8,8 @@
             "root": "subpackages/package_tools",
             "pages": [
                 "pages/tools-hub/index",
-                "pages/mahjong-ting/index"
+                "pages/mahjong-ting/index",
+                "pages/dice/index"
             ]
         },
         {

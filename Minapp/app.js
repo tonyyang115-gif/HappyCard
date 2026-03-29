@@ -3,10 +3,7 @@ App({
         if (!wx.cloud) {
             console.error('请使用 2.2.3 或以上的基础库以使用云能力')
         } else {
-            wx.cloud.init({
-                env: 'cloud1-7go9rrf32b9c9cbc',
-                traceUser: true,
-            })
+            this.initCloudSafely();
         }
 
         // Global User Data Management
@@ -61,9 +58,61 @@ App({
             }
         });
     },
+    initCloudSafely() {
+        const envCandidates = ['cloud1-7go9rrf32b9c9cbc'];
+        if (wx.cloud && wx.cloud.DYNAMIC_CURRENT_ENV) {
+            envCandidates.push(wx.cloud.DYNAMIC_CURRENT_ENV);
+        }
+
+        const tryInitAt = (idx) => {
+            if (idx >= envCandidates.length) {
+                console.error('[cloud] init failed on all env candidates');
+                this.globalData = {
+                    ...(this.globalData || {}),
+                    cloudReady: false
+                };
+                return;
+            }
+
+            const env = envCandidates[idx];
+            try {
+                const ret = wx.cloud.init({
+                    env,
+                    traceUser: true
+                });
+
+                if (ret && typeof ret.then === 'function') {
+                    ret.then(() => {
+                        console.log('[cloud] init success:', env);
+                        this.globalData = {
+                            ...(this.globalData || {}),
+                            cloudReady: true
+                        };
+                    }).catch((err) => {
+                        console.error('[cloud] init async failed:', env, err);
+                        tryInitAt(idx + 1);
+                    });
+                    return;
+                }
+
+                // Old base libs may return void here; treat as success path.
+                console.log('[cloud] init triggered:', env);
+                this.globalData = {
+                    ...(this.globalData || {}),
+                    cloudReady: true
+                };
+            } catch (err) {
+                console.error('[cloud] init sync failed:', env, err);
+                tryInitAt(idx + 1);
+            }
+        };
+
+        tryInitAt(0);
+    },
     globalData: {
         userInfo: null,
-        isConnected: true
+        isConnected: true,
+        cloudReady: false
     },
 
     // Stage 3: Reactive Event Bus (P0)

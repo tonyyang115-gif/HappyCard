@@ -51,7 +51,55 @@ function canSequenceStart(tile) {
   return rank >= 1 && rank <= 7;
 }
 
+function hasOnlyValidTiles(tiles) {
+  return Array.isArray(tiles) && tiles.every((tile) => ALL_TILES.includes(tile));
+}
+
+function validateBasicInput(normalTiles, laiziCount) {
+  if (!Number.isInteger(laiziCount) || laiziCount < 0) {
+    return false;
+  }
+  if (!hasOnlyValidTiles(normalTiles)) {
+    return false;
+  }
+  const counts = getCounts(normalTiles);
+  return counts.every((count) => count <= 4);
+}
+
+function validatePhysicalTileLimit(normalTiles, laiziCount, laiziTile, exposedTileCountMap = {}) {
+  if (!validateBasicInput(normalTiles, laiziCount)) {
+    return false;
+  }
+
+  if (laiziTile === null || laiziTile === undefined) {
+    return true;
+  }
+
+  if (!ALL_TILES.includes(laiziTile)) {
+    return false;
+  }
+
+  // Contract: normalTiles should exclude laizi实体牌.
+  if (getTileCount(normalTiles, laiziTile) > 0) {
+    return false;
+  }
+
+  for (const tile of ALL_TILES) {
+    const normalCount = getTileCount(normalTiles, tile);
+    const exposedCount = exposedTileCountMap[tile] || 0;
+    const laiziPhysicalCount = tile === laiziTile ? laiziCount : 0;
+    if (normalCount + exposedCount + laiziPhysicalCount > 4) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 function canWin(normalTiles14, laiziCount) {
+  if (!validateBasicInput(normalTiles14, laiziCount)) {
+    return false;
+  }
   if (normalTiles14.length + laiziCount !== 14) {
     return false;
   }
@@ -462,10 +510,26 @@ function canWinWithMelds(concealedNormalTilesAfterDraw, concealedLaiziCountAfter
   if (melds.length === 0) {
     return canWin(concealedNormalTilesAfterDraw, concealedLaiziCountAfterDraw);
   }
+
+  const exposedTileCountMap = buildExposedTileCountMap(melds);
+  if (!validateBasicInput(concealedNormalTilesAfterDraw, concealedLaiziCountAfterDraw)) {
+    return false;
+  }
+  for (const tile of ALL_TILES) {
+    const concealedCount = getTileCount(concealedNormalTilesAfterDraw, tile);
+    const exposedCount = exposedTileCountMap[tile] || 0;
+    if (concealedCount + exposedCount > 4) {
+      return false;
+    }
+  }
+
   return canWinStandardWithFixedMelds(concealedNormalTilesAfterDraw, concealedLaiziCountAfterDraw, melds.length);
 }
 
 function getTingTiles(normalTiles, laiziCount, laiziTile) {
+  if (!validatePhysicalTileLimit(normalTiles, laiziCount, laiziTile)) {
+    return [];
+  }
   const results = [];
 
   for (const tile of ALL_TILES) {
@@ -513,6 +577,9 @@ function getTingTilesWithMelds(concealedNormalTiles, concealedLaiziCount, laiziT
 
   const results = [];
   const exposedTileCountMap = buildExposedTileCountMap(melds);
+  if (!validatePhysicalTileLimit(concealedNormalTiles, concealedLaiziCount, laiziTile, exposedTileCountMap)) {
+    return [];
+  }
 
   for (const tile of ALL_TILES) {
     const concealedCount = getTileCount(concealedNormalTiles, tile);
@@ -552,6 +619,7 @@ function getTingTilesWithMelds(concealedNormalTiles, concealedLaiziCount, laiziT
 
 module.exports = {
   ALL_TILES,
+  buildExposedTileCountMap,
   getTingTiles,
   getTingTilesWithMelds,
   canWin,
