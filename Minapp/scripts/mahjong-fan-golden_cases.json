@@ -1,0 +1,3779 @@
+{
+  "generatedAt": "2026-04-03T08:54:58.438Z",
+  "cases": [
+    {
+      "id": "sc_bloodwar_v1_c01",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          21,
+          21,
+          21
+        ],
+        "exposedMelds": [],
+        "winTile": 22,
+        "winMode": "zimo",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_WIN_CONTEXT"
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c02",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          21,
+          21,
+          21
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 22,
+        "winMode": "zimo",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c03",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          21,
+          21,
+          21
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 22,
+        "winMode": "zimo",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c04",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          12,
+          12,
+          12,
+          13,
+          13,
+          13,
+          14,
+          14,
+          15,
+          15
+        ],
+        "exposedMelds": [],
+        "winTile": 14,
+        "winMode": "dianpao",
+        "context": {}
+      },
+      "expected": {
+        "ok": true,
+        "totalFan": 5,
+        "totalScore": 32,
+        "appliedRules": [
+          "R_HU_VALID",
+          "R_DUIDUIHU",
+          "R_QINGYISE"
+        ],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": ""
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c05",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          12,
+          12,
+          12,
+          13,
+          13,
+          13,
+          14,
+          14,
+          15,
+          15
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 14,
+        "winMode": "dianpao",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c06",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          12,
+          12,
+          12,
+          13,
+          13,
+          13,
+          14,
+          14,
+          15,
+          15
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 14,
+        "winMode": "dianpao",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c07",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          12,
+          12,
+          13,
+          13,
+          14,
+          14,
+          15,
+          15,
+          16,
+          16,
+          17
+        ],
+        "exposedMelds": [],
+        "winTile": 17,
+        "winMode": "zimo",
+        "context": {}
+      },
+      "expected": {
+        "ok": true,
+        "totalFan": 5,
+        "totalScore": 32,
+        "appliedRules": [
+          "R_HU_VALID",
+          "R_QIDUI",
+          "R_QINGYISE",
+          "R_ZIMO"
+        ],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": ""
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c08",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          12,
+          12,
+          13,
+          13,
+          14,
+          14,
+          15,
+          15,
+          16,
+          16,
+          17
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 17,
+        "winMode": "zimo",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c09",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          12,
+          12,
+          13,
+          13,
+          14,
+          14,
+          15,
+          15,
+          16,
+          16,
+          17
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 17,
+        "winMode": "zimo",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c10",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          21,
+          22,
+          23,
+          24
+        ],
+        "exposedMelds": [],
+        "winTile": 25,
+        "winMode": "zimo",
+        "context": {
+          "haiDi": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_WIN_CONTEXT"
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c11",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          21,
+          22,
+          23,
+          24
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 25,
+        "winMode": "zimo",
+        "context": {
+          "haiDi": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c12",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          21,
+          22,
+          23,
+          24
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 25,
+        "winMode": "zimo",
+        "context": {
+          "haiDi": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c13",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          31,
+          31,
+          32,
+          32
+        ],
+        "exposedMelds": [],
+        "winTile": 33,
+        "winMode": "dianpao",
+        "context": {}
+      },
+      "expected": {
+        "ok": true,
+        "totalFan": 4,
+        "totalScore": 16,
+        "appliedRules": [
+          "R_HU_VALID",
+          "R_PINGHU",
+          "R_QINGYISE"
+        ],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": ""
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c14",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          31,
+          31,
+          32,
+          32
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 33,
+        "winMode": "dianpao",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c15",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          31,
+          31,
+          32,
+          32
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 33,
+        "winMode": "dianpao",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c16",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          41,
+          41,
+          41,
+          42,
+          42,
+          42,
+          43,
+          43,
+          43,
+          44,
+          44,
+          45,
+          45
+        ],
+        "exposedMelds": [],
+        "winTile": 44,
+        "winMode": "zimo",
+        "context": {
+          "menqing": true
+        }
+      },
+      "expected": {
+        "ok": true,
+        "totalFan": 4,
+        "totalScore": 16,
+        "appliedRules": [
+          "R_HU_VALID",
+          "R_DUIDUIHU",
+          "R_ZIMO",
+          "R_MENQING"
+        ],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": ""
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c17",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          41,
+          41,
+          41,
+          42,
+          42,
+          42,
+          43,
+          43,
+          43,
+          44,
+          44,
+          45,
+          45
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 44,
+        "winMode": "zimo",
+        "context": {
+          "menqing": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c18",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          41,
+          41,
+          41,
+          42,
+          42,
+          42,
+          43,
+          43,
+          43,
+          44,
+          44,
+          45,
+          45
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 44,
+        "winMode": "zimo",
+        "context": {
+          "menqing": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c19",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          12,
+          13,
+          11,
+          12,
+          13,
+          11,
+          12,
+          13,
+          21,
+          22,
+          23,
+          24
+        ],
+        "exposedMelds": [],
+        "winTile": 25,
+        "winMode": "zimo",
+        "context": {
+          "gangShangHua": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_WIN_CONTEXT"
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c20",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          12,
+          13,
+          11,
+          12,
+          13,
+          11,
+          12,
+          13,
+          21,
+          22,
+          23,
+          24
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 25,
+        "winMode": "zimo",
+        "context": {
+          "gangShangHua": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c21",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          12,
+          13,
+          11,
+          12,
+          13,
+          11,
+          12,
+          13,
+          21,
+          22,
+          23,
+          24
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 25,
+        "winMode": "zimo",
+        "context": {
+          "gangShangHua": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c22",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          22,
+          22,
+          22,
+          33,
+          33,
+          33,
+          44,
+          44,
+          45,
+          45
+        ],
+        "exposedMelds": [],
+        "winTile": 44,
+        "winMode": "dianpao",
+        "context": {
+          "qiangGangHu": true
+        }
+      },
+      "expected": {
+        "ok": true,
+        "totalFan": 3,
+        "totalScore": 8,
+        "appliedRules": [
+          "R_HU_VALID",
+          "R_DUIDUIHU",
+          "R_QIANG_GANG_HU"
+        ],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": ""
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c23",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          22,
+          22,
+          22,
+          33,
+          33,
+          33,
+          44,
+          44,
+          45,
+          45
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 44,
+        "winMode": "dianpao",
+        "context": {
+          "qiangGangHu": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c24",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          22,
+          22,
+          22,
+          33,
+          33,
+          33,
+          44,
+          44,
+          45,
+          45
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 44,
+        "winMode": "dianpao",
+        "context": {
+          "qiangGangHu": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c25",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          19,
+          19,
+          19,
+          21,
+          21,
+          21,
+          29,
+          29,
+          41,
+          41
+        ],
+        "exposedMelds": [],
+        "winTile": 41,
+        "winMode": "zimo",
+        "context": {
+          "tianHu": true
+        }
+      },
+      "expected": {
+        "ok": true,
+        "totalFan": 3,
+        "totalScore": 16,
+        "appliedRules": [
+          "R_HU_VALID",
+          "R_DUIDUIHU",
+          "R_ZIMO",
+          "R_TIAN_HU"
+        ],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": ""
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c26",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          19,
+          19,
+          19,
+          21,
+          21,
+          21,
+          29,
+          29,
+          41,
+          41
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 41,
+        "winMode": "zimo",
+        "context": {
+          "tianHu": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c27",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          19,
+          19,
+          19,
+          21,
+          21,
+          21,
+          29,
+          29,
+          41,
+          41
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 41,
+        "winMode": "zimo",
+        "context": {
+          "tianHu": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c28",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          12,
+          13,
+          14,
+          22,
+          23,
+          24,
+          32,
+          33,
+          34,
+          45,
+          45,
+          46,
+          46
+        ],
+        "exposedMelds": [],
+        "winTile": 47,
+        "winMode": "dianpao",
+        "context": {
+          "diHu": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_WIN_CONTEXT"
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c29",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          12,
+          13,
+          14,
+          22,
+          23,
+          24,
+          32,
+          33,
+          34,
+          45,
+          45,
+          46,
+          46
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 47,
+        "winMode": "dianpao",
+        "context": {
+          "diHu": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_bloodwar_v1_c30",
+      "templateId": "sc_bloodwar_v1",
+      "request": {
+        "concealedTiles": [
+          12,
+          13,
+          14,
+          22,
+          23,
+          24,
+          32,
+          33,
+          34,
+          45,
+          45,
+          46,
+          46
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 47,
+        "winMode": "dianpao",
+        "context": {
+          "diHu": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_competition_v1_c01",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          21,
+          21,
+          21
+        ],
+        "exposedMelds": [],
+        "winTile": 22,
+        "winMode": "zimo",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_WIN_CONTEXT"
+      }
+    },
+    {
+      "id": "sc_competition_v1_c02",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          21,
+          21,
+          21
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 22,
+        "winMode": "zimo",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_competition_v1_c03",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          21,
+          21,
+          21
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 22,
+        "winMode": "zimo",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_competition_v1_c04",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          12,
+          12,
+          12,
+          13,
+          13,
+          13,
+          14,
+          14,
+          15,
+          15
+        ],
+        "exposedMelds": [],
+        "winTile": 14,
+        "winMode": "dianpao",
+        "context": {}
+      },
+      "expected": {
+        "ok": true,
+        "totalFan": 6,
+        "totalScore": 64,
+        "appliedRules": [
+          "R_HU_VALID",
+          "R_DUIDUIHU",
+          "R_QINGYISE"
+        ],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": ""
+      }
+    },
+    {
+      "id": "sc_competition_v1_c05",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          12,
+          12,
+          12,
+          13,
+          13,
+          13,
+          14,
+          14,
+          15,
+          15
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 14,
+        "winMode": "dianpao",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_competition_v1_c06",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          12,
+          12,
+          12,
+          13,
+          13,
+          13,
+          14,
+          14,
+          15,
+          15
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 14,
+        "winMode": "dianpao",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_competition_v1_c07",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          12,
+          12,
+          13,
+          13,
+          14,
+          14,
+          15,
+          15,
+          16,
+          16,
+          17
+        ],
+        "exposedMelds": [],
+        "winTile": 17,
+        "winMode": "zimo",
+        "context": {}
+      },
+      "expected": {
+        "ok": true,
+        "totalFan": 6,
+        "totalScore": 64,
+        "appliedRules": [
+          "R_HU_VALID",
+          "R_QIDUI",
+          "R_QINGYISE",
+          "R_ZIMO"
+        ],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": ""
+      }
+    },
+    {
+      "id": "sc_competition_v1_c08",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          12,
+          12,
+          13,
+          13,
+          14,
+          14,
+          15,
+          15,
+          16,
+          16,
+          17
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 17,
+        "winMode": "zimo",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_competition_v1_c09",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          12,
+          12,
+          13,
+          13,
+          14,
+          14,
+          15,
+          15,
+          16,
+          16,
+          17
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 17,
+        "winMode": "zimo",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_competition_v1_c10",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          21,
+          22,
+          23,
+          24
+        ],
+        "exposedMelds": [],
+        "winTile": 25,
+        "winMode": "zimo",
+        "context": {
+          "haiDi": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_WIN_CONTEXT"
+      }
+    },
+    {
+      "id": "sc_competition_v1_c11",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          21,
+          22,
+          23,
+          24
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 25,
+        "winMode": "zimo",
+        "context": {
+          "haiDi": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_competition_v1_c12",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          21,
+          22,
+          23,
+          24
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 25,
+        "winMode": "zimo",
+        "context": {
+          "haiDi": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_competition_v1_c13",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          31,
+          31,
+          32,
+          32
+        ],
+        "exposedMelds": [],
+        "winTile": 33,
+        "winMode": "dianpao",
+        "context": {}
+      },
+      "expected": {
+        "ok": true,
+        "totalFan": 5,
+        "totalScore": 32,
+        "appliedRules": [
+          "R_HU_VALID",
+          "R_PINGHU",
+          "R_QINGYISE"
+        ],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": ""
+      }
+    },
+    {
+      "id": "sc_competition_v1_c14",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          31,
+          31,
+          32,
+          32
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 33,
+        "winMode": "dianpao",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_competition_v1_c15",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          31,
+          31,
+          32,
+          32
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 33,
+        "winMode": "dianpao",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_competition_v1_c16",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          41,
+          41,
+          41,
+          42,
+          42,
+          42,
+          43,
+          43,
+          43,
+          44,
+          44,
+          45,
+          45
+        ],
+        "exposedMelds": [],
+        "winTile": 44,
+        "winMode": "zimo",
+        "context": {
+          "menqing": true
+        }
+      },
+      "expected": {
+        "ok": true,
+        "totalFan": 3,
+        "totalScore": 8,
+        "appliedRules": [
+          "R_HU_VALID",
+          "R_DUIDUIHU",
+          "R_ZIMO",
+          "R_MENQING"
+        ],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": ""
+      }
+    },
+    {
+      "id": "sc_competition_v1_c17",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          41,
+          41,
+          41,
+          42,
+          42,
+          42,
+          43,
+          43,
+          43,
+          44,
+          44,
+          45,
+          45
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 44,
+        "winMode": "zimo",
+        "context": {
+          "menqing": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_competition_v1_c18",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          41,
+          41,
+          41,
+          42,
+          42,
+          42,
+          43,
+          43,
+          43,
+          44,
+          44,
+          45,
+          45
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 44,
+        "winMode": "zimo",
+        "context": {
+          "menqing": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_competition_v1_c19",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          12,
+          13,
+          11,
+          12,
+          13,
+          11,
+          12,
+          13,
+          21,
+          22,
+          23,
+          24
+        ],
+        "exposedMelds": [],
+        "winTile": 25,
+        "winMode": "zimo",
+        "context": {
+          "gangShangHua": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_WIN_CONTEXT"
+      }
+    },
+    {
+      "id": "sc_competition_v1_c20",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          12,
+          13,
+          11,
+          12,
+          13,
+          11,
+          12,
+          13,
+          21,
+          22,
+          23,
+          24
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 25,
+        "winMode": "zimo",
+        "context": {
+          "gangShangHua": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_competition_v1_c21",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          12,
+          13,
+          11,
+          12,
+          13,
+          11,
+          12,
+          13,
+          21,
+          22,
+          23,
+          24
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 25,
+        "winMode": "zimo",
+        "context": {
+          "gangShangHua": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_competition_v1_c22",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          22,
+          22,
+          22,
+          33,
+          33,
+          33,
+          44,
+          44,
+          45,
+          45
+        ],
+        "exposedMelds": [],
+        "winTile": 44,
+        "winMode": "dianpao",
+        "context": {
+          "qiangGangHu": true
+        }
+      },
+      "expected": {
+        "ok": true,
+        "totalFan": 3,
+        "totalScore": 8,
+        "appliedRules": [
+          "R_HU_VALID",
+          "R_DUIDUIHU",
+          "R_QIANG_GANG_HU"
+        ],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": ""
+      }
+    },
+    {
+      "id": "sc_competition_v1_c23",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          22,
+          22,
+          22,
+          33,
+          33,
+          33,
+          44,
+          44,
+          45,
+          45
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 44,
+        "winMode": "dianpao",
+        "context": {
+          "qiangGangHu": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_competition_v1_c24",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          22,
+          22,
+          22,
+          33,
+          33,
+          33,
+          44,
+          44,
+          45,
+          45
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 44,
+        "winMode": "dianpao",
+        "context": {
+          "qiangGangHu": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_competition_v1_c25",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          19,
+          19,
+          19,
+          21,
+          21,
+          21,
+          29,
+          29,
+          41,
+          41
+        ],
+        "exposedMelds": [],
+        "winTile": 41,
+        "winMode": "zimo",
+        "context": {
+          "tianHu": true
+        }
+      },
+      "expected": {
+        "ok": true,
+        "totalFan": 3,
+        "totalScore": 16,
+        "appliedRules": [
+          "R_HU_VALID",
+          "R_DUIDUIHU",
+          "R_ZIMO",
+          "R_TIAN_HU"
+        ],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": ""
+      }
+    },
+    {
+      "id": "sc_competition_v1_c26",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          19,
+          19,
+          19,
+          21,
+          21,
+          21,
+          29,
+          29,
+          41,
+          41
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 41,
+        "winMode": "zimo",
+        "context": {
+          "tianHu": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_competition_v1_c27",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          19,
+          19,
+          19,
+          21,
+          21,
+          21,
+          29,
+          29,
+          41,
+          41
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 41,
+        "winMode": "zimo",
+        "context": {
+          "tianHu": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_competition_v1_c28",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          12,
+          13,
+          14,
+          22,
+          23,
+          24,
+          32,
+          33,
+          34,
+          45,
+          45,
+          46,
+          46
+        ],
+        "exposedMelds": [],
+        "winTile": 47,
+        "winMode": "dianpao",
+        "context": {
+          "diHu": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_WIN_CONTEXT"
+      }
+    },
+    {
+      "id": "sc_competition_v1_c29",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          12,
+          13,
+          14,
+          22,
+          23,
+          24,
+          32,
+          33,
+          34,
+          45,
+          45,
+          46,
+          46
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 47,
+        "winMode": "dianpao",
+        "context": {
+          "diHu": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "sc_competition_v1_c30",
+      "templateId": "sc_competition_v1",
+      "request": {
+        "concealedTiles": [
+          12,
+          13,
+          14,
+          22,
+          23,
+          24,
+          32,
+          33,
+          34,
+          45,
+          45,
+          46,
+          46
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 47,
+        "winMode": "dianpao",
+        "context": {
+          "diHu": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "placeholder_v1_c01",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          21,
+          21,
+          21
+        ],
+        "exposedMelds": [],
+        "winTile": 22,
+        "winMode": "zimo",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_WIN_CONTEXT"
+      }
+    },
+    {
+      "id": "placeholder_v1_c02",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          21,
+          21,
+          21
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 22,
+        "winMode": "zimo",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "placeholder_v1_c03",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          21,
+          21,
+          21
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 22,
+        "winMode": "zimo",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "placeholder_v1_c04",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          12,
+          12,
+          12,
+          13,
+          13,
+          13,
+          14,
+          14,
+          15,
+          15
+        ],
+        "exposedMelds": [],
+        "winTile": 14,
+        "winMode": "dianpao",
+        "context": {}
+      },
+      "expected": {
+        "ok": true,
+        "totalFan": 0,
+        "totalScore": 1,
+        "appliedRules": [
+          "R_HU_VALID"
+        ],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": ""
+      }
+    },
+    {
+      "id": "placeholder_v1_c05",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          12,
+          12,
+          12,
+          13,
+          13,
+          13,
+          14,
+          14,
+          15,
+          15
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 14,
+        "winMode": "dianpao",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "placeholder_v1_c06",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          12,
+          12,
+          12,
+          13,
+          13,
+          13,
+          14,
+          14,
+          15,
+          15
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 14,
+        "winMode": "dianpao",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "placeholder_v1_c07",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          12,
+          12,
+          13,
+          13,
+          14,
+          14,
+          15,
+          15,
+          16,
+          16,
+          17
+        ],
+        "exposedMelds": [],
+        "winTile": 17,
+        "winMode": "zimo",
+        "context": {}
+      },
+      "expected": {
+        "ok": true,
+        "totalFan": 0,
+        "totalScore": 1,
+        "appliedRules": [
+          "R_HU_VALID"
+        ],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": ""
+      }
+    },
+    {
+      "id": "placeholder_v1_c08",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          12,
+          12,
+          13,
+          13,
+          14,
+          14,
+          15,
+          15,
+          16,
+          16,
+          17
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 17,
+        "winMode": "zimo",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "placeholder_v1_c09",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          12,
+          12,
+          13,
+          13,
+          14,
+          14,
+          15,
+          15,
+          16,
+          16,
+          17
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 17,
+        "winMode": "zimo",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "placeholder_v1_c10",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          21,
+          22,
+          23,
+          24
+        ],
+        "exposedMelds": [],
+        "winTile": 25,
+        "winMode": "zimo",
+        "context": {
+          "haiDi": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_WIN_CONTEXT"
+      }
+    },
+    {
+      "id": "placeholder_v1_c11",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          21,
+          22,
+          23,
+          24
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 25,
+        "winMode": "zimo",
+        "context": {
+          "haiDi": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "placeholder_v1_c12",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          21,
+          22,
+          23,
+          24
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 25,
+        "winMode": "zimo",
+        "context": {
+          "haiDi": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "placeholder_v1_c13",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          31,
+          31,
+          32,
+          32
+        ],
+        "exposedMelds": [],
+        "winTile": 33,
+        "winMode": "dianpao",
+        "context": {}
+      },
+      "expected": {
+        "ok": true,
+        "totalFan": 0,
+        "totalScore": 1,
+        "appliedRules": [
+          "R_HU_VALID"
+        ],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": ""
+      }
+    },
+    {
+      "id": "placeholder_v1_c14",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          31,
+          31,
+          32,
+          32
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 33,
+        "winMode": "dianpao",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "placeholder_v1_c15",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          31,
+          31,
+          32,
+          32
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 33,
+        "winMode": "dianpao",
+        "context": {}
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "placeholder_v1_c16",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          41,
+          41,
+          41,
+          42,
+          42,
+          42,
+          43,
+          43,
+          43,
+          44,
+          44,
+          45,
+          45
+        ],
+        "exposedMelds": [],
+        "winTile": 44,
+        "winMode": "zimo",
+        "context": {
+          "menqing": true
+        }
+      },
+      "expected": {
+        "ok": true,
+        "totalFan": 0,
+        "totalScore": 1,
+        "appliedRules": [
+          "R_HU_VALID"
+        ],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": ""
+      }
+    },
+    {
+      "id": "placeholder_v1_c17",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          41,
+          41,
+          41,
+          42,
+          42,
+          42,
+          43,
+          43,
+          43,
+          44,
+          44,
+          45,
+          45
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 44,
+        "winMode": "zimo",
+        "context": {
+          "menqing": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "placeholder_v1_c18",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          41,
+          41,
+          41,
+          42,
+          42,
+          42,
+          43,
+          43,
+          43,
+          44,
+          44,
+          45,
+          45
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 44,
+        "winMode": "zimo",
+        "context": {
+          "menqing": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "placeholder_v1_c19",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          12,
+          13,
+          11,
+          12,
+          13,
+          11,
+          12,
+          13,
+          21,
+          22,
+          23,
+          24
+        ],
+        "exposedMelds": [],
+        "winTile": 25,
+        "winMode": "zimo",
+        "context": {
+          "gangShangHua": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_WIN_CONTEXT"
+      }
+    },
+    {
+      "id": "placeholder_v1_c20",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          12,
+          13,
+          11,
+          12,
+          13,
+          11,
+          12,
+          13,
+          21,
+          22,
+          23,
+          24
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 25,
+        "winMode": "zimo",
+        "context": {
+          "gangShangHua": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "placeholder_v1_c21",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          12,
+          13,
+          11,
+          12,
+          13,
+          11,
+          12,
+          13,
+          21,
+          22,
+          23,
+          24
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 25,
+        "winMode": "zimo",
+        "context": {
+          "gangShangHua": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "placeholder_v1_c22",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          22,
+          22,
+          22,
+          33,
+          33,
+          33,
+          44,
+          44,
+          45,
+          45
+        ],
+        "exposedMelds": [],
+        "winTile": 44,
+        "winMode": "dianpao",
+        "context": {
+          "qiangGangHu": true
+        }
+      },
+      "expected": {
+        "ok": true,
+        "totalFan": 0,
+        "totalScore": 1,
+        "appliedRules": [
+          "R_HU_VALID"
+        ],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": ""
+      }
+    },
+    {
+      "id": "placeholder_v1_c23",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          22,
+          22,
+          22,
+          33,
+          33,
+          33,
+          44,
+          44,
+          45,
+          45
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 44,
+        "winMode": "dianpao",
+        "context": {
+          "qiangGangHu": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "placeholder_v1_c24",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          22,
+          22,
+          22,
+          33,
+          33,
+          33,
+          44,
+          44,
+          45,
+          45
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 44,
+        "winMode": "dianpao",
+        "context": {
+          "qiangGangHu": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "placeholder_v1_c25",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          19,
+          19,
+          19,
+          21,
+          21,
+          21,
+          29,
+          29,
+          41,
+          41
+        ],
+        "exposedMelds": [],
+        "winTile": 41,
+        "winMode": "zimo",
+        "context": {
+          "tianHu": true
+        }
+      },
+      "expected": {
+        "ok": true,
+        "totalFan": 0,
+        "totalScore": 1,
+        "appliedRules": [
+          "R_HU_VALID"
+        ],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": ""
+      }
+    },
+    {
+      "id": "placeholder_v1_c26",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          19,
+          19,
+          19,
+          21,
+          21,
+          21,
+          29,
+          29,
+          41,
+          41
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 41,
+        "winMode": "zimo",
+        "context": {
+          "tianHu": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "placeholder_v1_c27",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          11,
+          11,
+          11,
+          19,
+          19,
+          19,
+          21,
+          21,
+          21,
+          29,
+          29,
+          41,
+          41
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 41,
+        "winMode": "zimo",
+        "context": {
+          "tianHu": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "placeholder_v1_c28",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          12,
+          13,
+          14,
+          22,
+          23,
+          24,
+          32,
+          33,
+          34,
+          45,
+          45,
+          46,
+          46
+        ],
+        "exposedMelds": [],
+        "winTile": 47,
+        "winMode": "dianpao",
+        "context": {
+          "diHu": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_WIN_CONTEXT"
+      }
+    },
+    {
+      "id": "placeholder_v1_c29",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          12,
+          13,
+          14,
+          22,
+          23,
+          24,
+          32,
+          33,
+          34,
+          45,
+          45,
+          46,
+          46
+        ],
+        "exposedMelds": [
+          {
+            "type": "peng",
+            "tiles": [
+              11,
+              11,
+              11
+            ]
+          }
+        ],
+        "winTile": 47,
+        "winMode": "dianpao",
+        "context": {
+          "diHu": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    },
+    {
+      "id": "placeholder_v1_c30",
+      "templateId": "placeholder_v1",
+      "request": {
+        "concealedTiles": [
+          12,
+          13,
+          14,
+          22,
+          23,
+          24,
+          32,
+          33,
+          34,
+          45,
+          45,
+          46,
+          46
+        ],
+        "exposedMelds": [
+          {
+            "type": "chi",
+            "tiles": [
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "winTile": 47,
+        "winMode": "dianpao",
+        "context": {
+          "diHu": true
+        }
+      },
+      "expected": {
+        "ok": false,
+        "totalFan": 0,
+        "totalScore": 0,
+        "appliedRules": [],
+        "removedByConflict": [],
+        "templateHash": "",
+        "errorCode": "INVALID_TILE_COUNT"
+      }
+    }
+  ]
+}

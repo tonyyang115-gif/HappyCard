@@ -1,0 +1,190 @@
+<view class="page-shell" wx:if="{{!loading}}">
+  <view class="custom-nav">
+    <view class="nav-row">
+      <text class="back-icon" bindtap="handleBack">‹</text>
+      <text class="nav-title">本场总分</text>
+      <view class="nav-placeholder"></view>
+    </view>
+  </view>
+
+  <view class="floating-tools left-tools">
+    <view class="float-btn" bindtap="onShareWorkbench">
+      <text class="float-ico">↗</text>
+      <text class="float-text">分享</text>
+    </view>
+    <view class="float-btn danger" bindtap="onFinishWorkbench">
+      <text class="float-ico">⏻</text>
+      <text class="float-text">结束</text>
+    </view>
+  </view>
+
+  <view class="floating-tools right-tools">
+    <view class="float-btn" bindtap="onOpenConfig">
+      <text class="float-ico">≡</text>
+      <text class="float-text">规则</text>
+    </view>
+    <view class="float-btn" bindtap="onOpenManual">
+      <text class="float-ico">▤</text>
+      <text class="float-text">说明书</text>
+    </view>
+  </view>
+
+  <scroll-view class="workbench-scroll" scroll-y="true">
+    <view class="hero-board">
+      <text class="hero-caption">本场总分</text>
+      <text class="hero-total">{{vm.totalScore}}</text>
+      <view class="hero-subrow">
+        <text class="hero-round-label">本局总分</text>
+        <text class="hero-round-score">{{vm.roundScore}}</text>
+        <view class="hero-mini-btn save" bindtap="onSaveRound">保存</view>
+        <view class="hero-mini-btn more" bindtap="onOpenMore">更多</view>
+      </view>
+      <text class="hero-summary">{{templateName}} · {{draftSummary}}</text>
+    </view>
+
+    <view class="board-columns">
+      <view class="score-card income-card">
+        <view class="card-header">
+          <view class="header-badge income">收</view>
+          <text class="header-score">{{vm.income.subtotal}}</text>
+        </view>
+
+        <view class="module-block">
+          <view class="module-head">
+            <text class="module-title">刮风下雨</text>
+            <text class="module-score">{{vm.income.windRain.subtotal}}分</text>
+          </view>
+          <view wx:for="{{configDraft.windRainRules}}" wx:key="id" class="counter-row">
+            <text class="counter-name">{{item.name}}</text>
+            <view class="counter-box">
+              <view class="counter-btn" data-rule-id="{{item.id}}" data-delta="-1" bindtap="onAdjustIncomeWindRain">-</view>
+              <text class="counter-value">{{boardState.income.windRainCounts[item.id] || 0}}</text>
+              <view class="counter-btn" data-rule-id="{{item.id}}" data-delta="1" bindtap="onAdjustIncomeWindRain">+</view>
+            </view>
+            <text class="counter-meta">{{item.displayValue}}</text>
+          </view>
+        </view>
+
+        <view class="module-block">
+          <view class="module-head">
+            <text class="module-title">胡牌区</text>
+            <text class="module-score">{{vm.income.huTotal}}分</text>
+          </view>
+          <view class="chip-grid">
+            <view class="rule-chip {{boardState.income.includeBase ? 'rule-chip-active' : ''}}" bindtap="onToggleIncomeBase">底分</view>
+            <view wx:for="{{configDraft.huRules}}" wx:key="id" class="rule-chip {{boardState.income.selectedHuRuleIds.indexOf(item.id) > -1 ? 'rule-chip-active' : ''}}" data-rule-id="{{item.id}}" bindtap="onToggleIncomeRule">
+              {{item.name}}
+              <text class="rule-value">{{item.displayValue}}</text>
+            </view>
+          </view>
+          <view class="family-row">
+            <view wx:for="{{familyCountOptions}}" wx:key="*this" class="family-chip {{boardState.income.familyCount === item ? 'family-chip-active' : ''}}" data-count="{{item}}" bindtap="onSelectIncomeFamily">{{item}}家</view>
+          </view>
+        </view>
+      </view>
+
+      <view class="score-card outcome-card">
+        <view class="card-header">
+          <view class="header-badge outcome">出</view>
+          <text class="header-score">{{vm.outcomeTotal}}</text>
+        </view>
+
+        <view wx:for="{{vm.players}}" wx:key="id" class="player-card">
+          <view class="player-head">
+            <text class="player-name">{{item.name}}</text>
+            <text class="player-score">{{item.panel.subtotal}}分</text>
+          </view>
+          <view class="module-head inner">
+            <text class="module-title">刮风下雨</text>
+            <text class="module-score">{{item.panel.windRain.subtotal}}分</text>
+          </view>
+          <view wx:for="{{configDraft.windRainRules}}" wx:key="id" wx:for-item="windRule" class="counter-row compact">
+            <text class="counter-name">{{windRule.name}}</text>
+            <view class="counter-box">
+              <view class="counter-btn" data-player-id="{{item.id}}" data-rule-id="{{windRule.id}}" data-delta="-1" bindtap="onAdjustPlayerWindRain">-</view>
+              <text class="counter-value">{{item.windRainCounts[windRule.id] || 0}}</text>
+              <view class="counter-btn" data-player-id="{{item.id}}" data-rule-id="{{windRule.id}}" data-delta="1" bindtap="onAdjustPlayerWindRain">+</view>
+            </view>
+          </view>
+
+          <view class="module-head inner second">
+            <text class="module-title">胡牌区</text>
+            <text class="module-score">{{item.panel.huTotal}}分</text>
+          </view>
+          <view class="chip-grid dense">
+            <view class="rule-chip {{item.includeBase ? 'rule-chip-active' : ''}}" data-player-id="{{item.id}}" bindtap="onTogglePlayerBase">底分</view>
+            <view wx:for="{{configDraft.huRules}}" wx:key="id" wx:for-item="rule" class="rule-chip {{item.selectedHuRuleIds.indexOf(rule.id) > -1 ? 'rule-chip-active' : ''}}" data-player-id="{{item.id}}" data-rule-id="{{rule.id}}" bindtap="onTogglePlayerRule">
+              {{rule.name}}
+              <text class="rule-value">{{rule.displayValue}}</text>
+            </view>
+          </view>
+                    <view class="family-row compact-row">
+            <view wx:for="{{familyCountOptions}}" wx:key="*this" wx:for-item="count" class="family-chip {{item.familyCount === count ? 'family-chip-active' : ''}}" data-player-id="{{item.id}}" data-count="{{count}}" bindtap="onSelectPlayerFamily">{{count}}家</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <view wx:if="{{showConfigPopup}}" class="overlay" bindtap="onCloseConfig">
+    <view class="config-dialog" catchtap="noop">
+      <view class="dialog-head">
+        <text class="dialog-title">麻将规则配置</text>
+        <view class="dialog-close" bindtap="onCloseConfig">×</view>
+      </view>
+
+      <scroll-view class="config-scroll" scroll-y="true">
+        <view class="config-top-card">
+          <view class="config-row top-row" data-type="baseScore" bindtap="onOpenBasePicker">
+            <text class="config-name active">打好大</text>
+            <view class="config-value-wrap"><text class="config-value">{{configPopupDraft.baseScore}}分</text><text class="config-arrow">▼</text></view>
+          </view>
+          <view class="config-row top-row" data-type="maxFan" bindtap="onOpenBasePicker">
+            <text class="config-name active">最多几番</text>
+            <view class="config-value-wrap"><text class="config-value">{{configPopupDraft.maxFan}}番</text><text class="config-arrow">▼</text></view>
+          </view>
+          <view class="config-row top-row plain">
+            <text class="config-name active">好多封顶</text>
+            <view class="hard-cap-box" data-type="hardCap" bindtap="onOpenBasePicker">{{configPopupDraft.hardCap}}</view>
+          </view>
+        </view>
+
+        <view class="config-list">
+          <view wx:for="{{configPopupDraft.windRainRules}}" wx:key="id" class="config-row" data-rule-id="{{item.id}}" data-group="windRain" bindtap="onOpenRulePicker">
+            <text class="config-name">{{item.name}}</text>
+            <view class="config-value-wrap"><text class="config-value">{{item.displayValue}}</text><text class="config-arrow">▼</text></view>
+          </view>
+          <view wx:for="{{configPopupDraft.huRules}}" wx:key="id" class="config-row" data-rule-id="{{item.id}}" data-group="hu" bindtap="onOpenRulePicker" bindlongpress="onRuleLongPress">
+            <text class="config-name">{{item.name}}</text>
+            <view class="config-value-wrap"><text class="config-value">{{item.displayValue}}</text><text class="config-arrow">▼</text></view>
+          </view>
+        </view>
+
+        <view class="add-rule-box" bindtap="onAddRule">+ 添加规则</view>
+        <text class="rule-tip">长按规则名可删除自定义规则</text>
+        <text class="template-tip">当前模板：{{templateName}}</text>
+      </scroll-view>
+
+      <view class="dialog-actions">
+        <view class="dialog-btn ghost" bindtap="onCloseConfig">取消</view>
+        <view class="dialog-btn success" bindtap="onSaveTemplate">存为模板</view>
+        <view class="dialog-btn danger" bindtap="onApplyConfig">开始</view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{showValuePicker}}" class="overlay picker-overlay" bindtap="onPickerCancel">
+    <view class="picker-sheet" catchtap="noop">
+      <text class="picker-title">{{pickerTitle}}</text>
+      <scroll-view class="picker-list" scroll-y="true">
+        <view wx:for="{{pickerOptions}}" wx:key="key" class="picker-option {{pickerSelectedKey === (item.key || item.value) ? 'picker-option-active' : ''}}" data-key="{{item.key || item.value}}" bindtap="onPickerSelect">
+          {{item.label}}
+        </view>
+      </scroll-view>
+      <view class="dialog-actions picker-actions">
+        <view class="dialog-btn ghost" bindtap="onPickerCancel">取消</view>
+        <view class="dialog-btn success" bindtap="onPickerConfirm">确定</view>
+      </view>
+    </view>
+  </view>
+</view>

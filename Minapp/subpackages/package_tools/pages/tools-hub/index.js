@@ -19,6 +19,15 @@ Page({
         name: '掷骰子',
         desc: '支持1颗或2颗掷骰，自动记录最近20条历史',
         path: '/subpackages/package_tools/pages/dice/index'
+      },
+      {
+        id: 'mahjong-fan',
+        icon: '/assets/tool-icons/mahjong-tool.png',
+        iconAlt: '算翻',
+        iconFallback: '翻',
+        name: '麻将算翻',
+        desc: '首页先配规则，再进入收分/出分双栏计分工作台',
+        path: '/subpackages/package_tools/pages/mahjong-fan/index'
       }
     ]
   },

@@ -1,0 +1,140 @@
+<view class="page-container">
+  <view class="custom-nav">
+    <view class="nav-row">
+      <text class="back-icon" bindtap="handleBack">‹</text>
+      <text class="nav-title">麻将算翻</text>
+      <view class="nav-holder"></view>
+    </view>
+  </view>
+
+  <scroll-view class="content-area" scroll-y="true">
+    <view class="hero-card">
+      <view class="hero-badge">计分工作台</view>
+      <text class="hero-title">麻将算翻</text>
+      <text class="hero-desc">支持规则模板、收支分栏、本局结算与最近记录，先配规则再进入正式算番页面。</text>
+      <view class="hero-meta">
+        <view class="hero-meta-chip">默认模板：{{activeTemplate ? activeTemplate.name : '未选择'}}</view>
+        <view class="hero-meta-chip subtle">{{currentSummary}}</view>
+      </view>
+      <view class="hero-action" bindtap="onStartTap">开始算番</view>
+    </view>
+
+    <view class="card block-card">
+      <view class="section-title-row">
+        <view class="section-stick"></view>
+        <text class="section-title">功能说明</text>
+      </view>
+      <view class="feature-list">
+        <view class="feature-item">
+          <text class="feature-dot"></text>
+          <text class="feature-text">首页先配置规则，再进入正式计分工作台，流程更接近实际牌局操作。</text>
+        </view>
+        <view class="feature-item">
+          <text class="feature-dot"></text>
+          <text class="feature-text">支持收分区 / 出分区双栏计算，并为玩家1、玩家2、玩家3分别配置支出。</text>
+        </view>
+        <view class="feature-item">
+          <text class="feature-dot"></text>
+          <text class="feature-text">规则弹窗、值选择器、说明书页均按工具化工作台风格重新设计。</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="card block-card">
+      <view class="section-title-row">
+        <view class="section-stick"></view>
+        <text class="section-title">模板选择</text>
+      </view>
+      <view class="template-chip-wrap">
+        <view
+          wx:for="{{templates}}"
+          wx:key="id"
+          class="template-chip {{activeTemplateId === item.id ? 'template-chip-active' : ''}}"
+          data-id="{{item.id}}"
+          bindtap="onTemplateChange"
+          bindlongpress="onDeleteTemplate"
+        >
+          {{item.name}}
+        </view>
+      </view>
+    </view>
+
+    <view class="card block-card recent-card">
+      <view class="section-title-row">
+        <view class="section-stick"></view>
+        <text class="section-title">最近一次</text>
+      </view>
+      <text class="recent-template">{{recentTemplateName}}</text>
+      <text class="recent-summary">{{recentSummary}}</text>
+      <text class="recent-time">{{recentUpdatedAtText}}</text>
+    </view>
+  </scroll-view>
+
+  <view wx:if="{{showConfigPopup}}" class="overlay" bindtap="onCloseConfig">
+    <view class="config-dialog" catchtap="noop">
+      <view class="dialog-head">
+        <text class="dialog-title">麻将规则配置</text>
+        <view class="dialog-close" bindtap="onCloseConfig">×</view>
+      </view>
+
+      <scroll-view class="config-scroll" scroll-y="true">
+        <view class="config-top-card">
+          <view class="config-row top-row" data-type="baseScore" bindtap="onOpenBasePicker">
+            <text class="config-name active">打好大</text>
+            <view class="config-value-wrap"><text class="config-value">{{configDraft.baseScore}}分</text><text class="config-arrow">▼</text></view>
+          </view>
+          <view class="config-row top-row" data-type="maxFan" bindtap="onOpenBasePicker">
+            <text class="config-name active">最多几番</text>
+            <view class="config-value-wrap"><text class="config-value">{{configDraft.maxFan}}番</text><text class="config-arrow">▼</text></view>
+          </view>
+          <view class="config-row top-row plain">
+            <text class="config-name active">好多封顶</text>
+            <view class="hard-cap-box" data-type="hardCap" bindtap="onOpenBasePicker">{{configDraft.hardCap}}</view>
+          </view>
+        </view>
+
+        <view class="config-list">
+          <view wx:for="{{configDraft.windRainRules}}" wx:key="id" class="config-row" data-rule-id="{{item.id}}" data-group="windRain" bindtap="onOpenRulePicker">
+            <text class="config-name">{{item.name}}</text>
+            <view class="config-value-wrap"><text class="config-value">{{item.displayValue}}</text><text class="config-arrow">▼</text></view>
+          </view>
+          <view wx:for="{{configDraft.huRules}}" wx:key="id" class="config-row" data-rule-id="{{item.id}}" data-group="hu" bindtap="onOpenRulePicker" bindlongpress="onRuleLongPress">
+            <text class="config-name">{{item.name}}</text>
+            <view class="config-value-wrap"><text class="config-value">{{item.displayValue}}</text><text class="config-arrow">▼</text></view>
+          </view>
+        </view>
+
+        <view class="add-rule-box" bindtap="onAddRule">+ 添加规则</view>
+        <text class="rule-tip">长按规则名可删除自定义规则</text>
+        <text class="template-tip">当前模板：{{activeTemplate ? activeTemplate.name : '未选择模板'}}</text>
+      </scroll-view>
+
+      <view class="dialog-actions">
+        <view class="dialog-btn ghost" bindtap="onCloseConfig">取消</view>
+        <view class="dialog-btn success" bindtap="onSaveTemplate">存为模板</view>
+        <view class="dialog-btn danger" bindtap="onBeginWorkbench">开始</view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{showValuePicker}}" class="overlay picker-overlay" bindtap="onPickerCancel">
+    <view class="picker-sheet" catchtap="noop">
+      <text class="picker-title">{{pickerTitle}}</text>
+      <scroll-view class="picker-list" scroll-y="true">
+        <view
+          wx:for="{{pickerOptions}}"
+          wx:key="key"
+          class="picker-option {{pickerSelectedKey === (item.key || item.value) ? 'picker-option-active' : ''}}"
+          data-key="{{item.key || item.value}}"
+          bindtap="onPickerSelect"
+        >
+          {{item.label}}
+        </view>
+      </scroll-view>
+      <view class="dialog-actions picker-actions">
+        <view class="dialog-btn ghost" bindtap="onPickerCancel">取消</view>
+        <view class="dialog-btn success" bindtap="onPickerConfirm">确定</view>
+      </view>
+    </view>
+  </view>
+</view>

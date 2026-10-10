@@ -1,0 +1,17 @@
+<view class="page-container">
+  <view class="custom-nav">
+    <view class="nav-row">
+      <text class="back-icon" bindtap="handleBack">‹</text>
+      <text class="nav-title">算翻说明书</text>
+      <view class="nav-holder"></view>
+    </view>
+  </view>
+
+  <scroll-view class="content-area" scroll-y="true">
+    <text class="doc-title">算翻我最行说明书</text>
+    <view wx:for="{{sections}}" wx:key="title" class="doc-section">
+      <text class="section-title">{{item.title}}</text>
+      <text wx:for="{{item.lines}}" wx:key="index" class="section-line">{{index + 1}}. {{item}}</text>
+    </view>
+  </scroll-view>
+</view>

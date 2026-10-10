@@ -5,7 +5,8 @@
     "main": "app.js",
     "scripts": {
         "test": "node scripts/mahjong-regression.js",
-        "test:mahjong": "node scripts/mahjong-regression.js"
+        "test:mahjong": "node scripts/mahjong-regression.js",
+        "test:mahjong-fan": "node scripts/mahjong-fan-regression.js"
     },
     "keywords": [],
     "author": "",

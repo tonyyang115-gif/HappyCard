@@ -9,7 +9,10 @@
             "pages": [
                 "pages/tools-hub/index",
                 "pages/mahjong-ting/index",
-                "pages/dice/index"
+                "pages/dice/index",
+                "pages/mahjong-fan/index",
+                "pages/mahjong-fan-workbench/index",
+                "pages/mahjong-fan-manual/index"
             ]
         },
         {
